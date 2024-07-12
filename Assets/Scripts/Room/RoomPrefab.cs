@@ -14,6 +14,8 @@ public class RoomPrefab: MonoBehaviour
     GameObject partyBoxInst;
     SpriteRenderer partyBoxRenderer;
 
+    public District district;
+
     public List<RoomPrefab> AdjacentRooms;
     public List<RoomPrefab> AdjacentConnectedRooms;
 
@@ -42,6 +44,11 @@ public class RoomPrefab: MonoBehaviour
     public bool BoundsContains(Vector2 coord)
     {
         return this.box.bounds.Contains(coord);
+    }
+
+    public void SetDistrict(District district)
+    {
+        this.district = district;
     }
 
     /// <summary>
@@ -162,6 +169,11 @@ public class RoomPrefab: MonoBehaviour
     public void AddAdjacentRoom(RoomPrefab room)
     {
         AdjacentRooms.Add(room);
+    }
+
+    public void RemoveAdjacentRooms()
+    {
+        AdjacentRooms.Clear();
     }
 
     public void AddConnectedRoom(RoomPrefab room)
@@ -526,6 +538,12 @@ public class RoomPrefab: MonoBehaviour
         {
             grid.Remove(cell);
         });
+    }
+
+    private void OnDestroy()
+    {
+        if (district != null)
+            Map.Instance.RemoveDistrict(district.id);
     }
 }
 

@@ -14,8 +14,8 @@ public class GameManager : Singleton<GameManager>
 
     public List<Party> PartyList = new List<Party>();
 
-    public int democrats = 0;
-    public int republicans = 0;
+    public int democraticDistricts = 0;
+    public int republicanDistricts = 0;
 
     private void OnEnable()
     {
@@ -35,10 +35,26 @@ public class GameManager : Singleton<GameManager>
         days = GameObject.Find(Consts.DaysGo).GetComponent<Days>();
     }
 
+    public void AddPartyVoter(Party party)
+    {
+        if (party == Party.Republican)
+            republicanDistricts++;
+        if (party == Party.Democrat)
+            democraticDistricts++;
+    }
+
+    public void RemovePartyVoter(Party party)
+    {
+        if (party == Party.Republican)
+            republicanDistricts--;
+        if (party == Party.Democrat)
+            democraticDistricts--;
+    }
+
     public void InitVoterComposition()
     {
-        democrats = (int) (population* DemocratPct);
-        republicans = (int)(population * RepublicanPct);
+        int democrats = (int) (population* DemocratPct);
+        int republicans = (int)(population * RepublicanPct);
 
         for (int i=0; i< democrats; i++)
         {
@@ -51,9 +67,9 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public void CalculateScore ()
+    public void UpdateScore ()
     {
-
+        score.SetScore(democraticDistricts, republicanDistricts);
     }
 
     // Update is called once per frame

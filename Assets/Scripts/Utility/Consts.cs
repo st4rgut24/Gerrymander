@@ -15,9 +15,7 @@ public class Consts
     public const string DaysGo = "Days";
 
     // time
-    public const float minSickSec = 20;
-    public const float maxSickSec = 40;
-    public const float immunityCooldownSec = 20;
+    public const float waitTimeForRoomAction = 1;
 
     public const float expandDuration = .03f;
 

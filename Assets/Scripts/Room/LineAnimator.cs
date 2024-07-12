@@ -123,6 +123,7 @@ public class LineAnimator: Singleton<LineAnimator>
         {
             ToggleAnimationState(false);
             IsAnimating = false;
+            Map.Instance.RecalculatePartyLines();
         }
     }
 }
