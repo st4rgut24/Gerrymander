@@ -24,6 +24,12 @@ public class Map : Singleton<Map>
 
     List<RoomPrefab> Rooms;
 
+    Dictionary<Party, Color> PartyColors = new Dictionary<Party, Color>()
+    {
+        { Party.Democrat, new Color(0, 249f / 255f, 255f / 255f) },
+        { Party.Republican, new Color(255f / 255f, 87f / 255f, 60f / 255f) }
+    };
+
     Grid grid;
 
     bool IsFirstRoomCreated = false;
@@ -75,7 +81,13 @@ public class Map : Singleton<Map>
 
     private void ColorDistrictByParty(Party party, List<RoomPrefab> district)
     {
-        // TODO
+        if (party == Party.None)
+            return; // set a default color
+
+        district.ForEach((area) =>
+        {
+            area.SetPartyBox(PartyColors[party]);
+        });
     }
 
     private Party RecalculatePartyLines(RoomPrefab room)
@@ -123,6 +135,8 @@ public class Map : Singleton<Map>
                 }
             }
         };
+
+        Debug.Log("Republican count " + repubCount + " Democrat Count " + democratCount);
 
 
 

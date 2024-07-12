@@ -8,6 +8,12 @@ using UnityEngine.UIElements;
  */
 public class RoomPrefab: MonoBehaviour
 {
+    [SerializeField]
+    GameObject partyBox;
+
+    GameObject partyBoxInst;
+    SpriteRenderer partyBoxRenderer;
+
     public List<RoomPrefab> AdjacentRooms;
     public List<RoomPrefab> AdjacentConnectedRooms;
 
@@ -83,6 +89,26 @@ public class RoomPrefab: MonoBehaviour
         }
 
         return cells;
+    }
+
+    public void SetPartyBox(Color color)
+    {
+        if (partyBoxInst == null)
+        {
+            partyBoxInst = Instantiate(partyBox, transform);
+            partyBoxRenderer = partyBoxInst.GetComponent<SpriteRenderer>();
+        }
+
+        // TODO: Place the party box
+        partyBoxInst.transform.position = box.bounds.center;
+        partyBoxInst.transform.localScale = new Vector2(box.bounds.size.x, box.bounds.size.y);
+
+        ColorRoom(color);
+    }
+
+    private void ColorRoom(Color color)
+    {
+        partyBoxRenderer.color = color;
     }
 
     private void AddUniqueCell(Vector2Int cellLoc, HashSet<Vector2Int> uniqueCells, List<Cell> cellList)
