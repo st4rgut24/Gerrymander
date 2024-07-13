@@ -140,10 +140,13 @@ public class Map : Singleton<Map>
 
             Party party = CheckDistrictParty(connectedRoomList);
 
-            if (room.district != null)
+            connectedRoomList.ForEach((room) =>
             {
-                GameObject.Destroy(room.district.gameObject);
-            }
+                if (room.district != null)
+                {
+                    GameObject.Destroy(room.district.gameObject);
+                }
+            });
 
             District district = AddDistrict(party);
             ColorDistrictByParty(party, connectedRoomList, district.gameObject);
