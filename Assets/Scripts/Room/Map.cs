@@ -144,7 +144,7 @@ public class Map : Singleton<Map>
             {
                 if (room.district != null)
                 {
-                    GameObject.Destroy(room.district.gameObject);
+                    GameObject.DestroyImmediate(room.district.gameObject);
                 }
             });
 
