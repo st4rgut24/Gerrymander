@@ -2,8 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public enum Difficulty
+{
+    Easy,
+    Medium,
+    Hard
+}
+
 public class GameManager : Singleton<GameManager>
 {
+    bool PlayerTurn;
+    public bool GameOver = false;
+
     Score score;
     Days days;
 
@@ -17,6 +27,9 @@ public class GameManager : Singleton<GameManager>
     public int democraticDistricts = 0;
     public int republicanDistricts = 0;
 
+    Agent agent;
+    Party PlayerAffiliation;
+
     private void OnEnable()
     {
 
@@ -24,8 +37,19 @@ public class GameManager : Singleton<GameManager>
 
     private void Awake()
     {
+        PlayerTurn = true;
+        InitPartyAffiliations(Party.Democrat, Difficulty.Hard);
         RepublicanPct = 1 - DemocratPct;
         InitVoterComposition();
+    }
+
+    public void InitPartyAffiliations(Party PlayerParty, Difficulty difficulty)
+    {
+        this.PlayerAffiliation = PlayerParty;
+
+        Party AgentParty = PlayerParty == Party.Republican ? Party.Democrat : Party.Republican;
+
+        agent = new Agent(difficulty, AgentParty, PlayerAffiliation);
     }
 
     // Use this for initialization
@@ -66,6 +90,28 @@ public class GameManager : Singleton<GameManager>
         for (int i = 0; i < republicans; i++)
         {
             PartyList.Add(Party.Republican);
+        }
+    }
+
+    // player has finished their turn
+    public void FinishTurn()
+    {
+        PlayerTurn = !PlayerTurn;
+
+        if (!PlayerTurn)
+        {
+            agent.DivideRoom();
+            NextDay();
+        }
+    }
+
+    public void NextDay()
+    {
+        DaysTilElection--;
+
+        if (DaysTilElection == 0)
+        {
+            GameOver = true;
         }
     }
 

@@ -51,6 +51,11 @@ public class RoomPrefab: MonoBehaviour
         this.district = district;
     }
 
+    public Party GetParty()
+    {
+        return district.party;
+    }
+
     /// <summary>
     /// Find all shared edges with another room
     /// </summary>

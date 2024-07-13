@@ -53,6 +53,9 @@ public class Controller : MonoBehaviour
 
     private void SendTouchEvent(Vector3 touchPos)
     {
+        if (GameManager.Instance.GameOver) // no more touch input after the game is over
+            return;
+
         if (IsSingleTouch(touchPos))
         {
             TouchEvent?.Invoke(touchPos);

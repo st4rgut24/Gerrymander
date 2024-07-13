@@ -33,7 +33,7 @@ public class Map : Singleton<Map>
     List<RoomPrefab> roomsToRecalculate; // room that we need to determine political boundaries for
     GameObject districtToDelete;
 
-    List<RoomPrefab> Rooms;
+    public List<RoomPrefab> Rooms;
 
     Dictionary<int, District> DistrictMap = new Dictionary<int, District>();
 
@@ -121,6 +121,21 @@ public class Map : Singleton<Map>
         });
     }
 
+    /// <summary>
+    /// calcualte what party affiliation a district that a room belongs to has
+    /// </summary>
+    public Party GetPartyFromRoom(RoomPrefab room)
+    {
+        HashSet<RoomPrefab> SeenRoomSet = new HashSet<RoomPrefab>();
+        GetAllConnectedRooms(room, SeenRoomSet);
+
+        List<RoomPrefab> connectedRoomList = new List<RoomPrefab>(SeenRoomSet);
+
+        Party party = CheckDistrictParty(connectedRoomList);
+
+        return party;
+    }
+
     public void RecalculatePartyLines()
     {
         List<RoomPrefab> recalculatedRoomList = new List<RoomPrefab>();
@@ -164,6 +179,8 @@ public class Map : Singleton<Map>
 
         roomsToRecalculate.Clear();
         districtToDelete = null;
+
+        GameManager.Instance.FinishTurn();
     }
 
     private Party CheckDistrictParty(List<RoomPrefab> areas)
@@ -262,6 +279,27 @@ public class Map : Singleton<Map>
         return Rooms.Find((room) => room.Contains(coord) != null);
     }
 
+    private RoomPrefab PretendCreateRoom(Vector2Int minCoord, Vector2Int maxCoord, bool ShowPerimeter)
+    {
+        List<Cell> cells = grid.GetCells(minCoord, maxCoord);
+        Box box = new Box(cells, minCoord, maxCoord);
+
+        GameObject RoomObject = Instantiate(RoomGo);
+
+        RoomObject.transform.parent = RoomDaddy;
+
+        roomId++;
+
+        RoomPrefab room = RoomObject.GetComponent<RoomPrefab>();
+
+        room.roomId = roomId;
+        RoomObject.name = "Room " + room.roomId.ToString();
+
+        room.AnnexSpace(box);
+
+        return room;
+    }
+
     public RoomPrefab CreateRoom(Vector2Int minCoord, Vector2Int maxCoord, bool ShowPerimeter)
     {
         List<Cell> cells = grid.GetCells(minCoord, maxCoord);
@@ -347,14 +385,23 @@ public class Map : Singleton<Map>
     /// removes the room that is divided
     /// </summary>
     /// <param name="plotCoord">coord where user wants to split into new rooms</param>
-    private void DivideRoom(RoomPrefab room)
+    public void DivideRoom(RoomPrefab room)
     {
         if (room.district != null)
             districtToDelete = room.district.gameObject;
 
         Box box = room.box;
         RemoveRoom(room);
-        CreateDividedRooms(box);
+        CreateDividedRooms(box, false);
+    }
+
+    public List<RoomPrefab> PretendDivideRoom(RoomPrefab room)
+    {
+        Box box = room.box;
+
+        CreateDividedRooms(box, true);
+
+        return roomsToRecalculate;
     }
 
     private float GetAspect()
@@ -366,7 +413,7 @@ public class Map : Singleton<Map>
     /// Should divide the room vertically or horizontally depending on orientation and previous cut
     /// </summary>
     /// <param name="roomAspectRatio">aspect ratio fo room being dividied</param>
-    private void CreateDividedRooms(Box box)
+    private void CreateDividedRooms(Box box, bool pretendDivide)
     {
         //Debug.Log("Aspect camera " + Camera.main.aspect);
         float aspect = GetAspect();
@@ -387,17 +434,24 @@ public class Map : Singleton<Map>
         Vector2Int box2Min = DivideHor ? new Vector2Int(box1Min.x, box1Max.y) : new Vector2Int(box1Max.x, box1Min.y); 
         Vector2Int box2Max = box.max;
 
+        RoomPrefab room2;
+        RoomPrefab room1;
         // bounds will be created in room 1, bounds will be shared with room 2
-        RoomPrefab room2 = CreateRoom(box2Min, box2Max, false);
-        RoomPrefab room1 = CreateRoom(box1Min, box1Max, true);
+        if (pretendDivide)
+        {
+            room2 = PretendCreateRoom(box2Min, box2Max, false);
+            room1 = PretendCreateRoom(box1Min, box1Max, true);
+        }
+        else
+        {
+            room2 = CreateRoom(box2Min, box2Max, false);
+            room1 = CreateRoom(box1Min, box1Max, true);
+        }
 
         room1.AddAdjacentRoom(room2);
         room2.AddAdjacentRoom(room1);
 
-
         roomsToRecalculate = new List<RoomPrefab>() { room1, room2 };
-        //RecalculatePartyLines(room1);
-        //RecalculatePartyLines(room2);
     }
 
     private void RemoveRoom(RoomPrefab room)
