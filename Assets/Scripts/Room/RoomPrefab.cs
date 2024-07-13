@@ -98,13 +98,13 @@ public class RoomPrefab: MonoBehaviour
         return cells;
     }
 
-    public void SetPartyBox(Color color)
+    public void SetPartyBox(Color color, GameObject DistrictGo)
     {
-        if (partyBoxInst == null)
-        {
-            partyBoxInst = Instantiate(partyBox, transform);
-            partyBoxRenderer = partyBoxInst.GetComponent<SpriteRenderer>();
-        }
+        //if (partyBoxInst == null)
+        //{
+        partyBoxInst = Instantiate(partyBox, DistrictGo.transform);
+        partyBoxRenderer = partyBoxInst.GetComponent<SpriteRenderer>();
+        //}
 
         // TODO: Place the party box
         partyBoxInst.transform.position = box.bounds.center;
@@ -538,12 +538,6 @@ public class RoomPrefab: MonoBehaviour
         {
             grid.Remove(cell);
         });
-    }
-
-    private void OnDestroy()
-    {
-        if (district != null)
-            Map.Instance.RemoveDistrict(district.id);
     }
 }
 

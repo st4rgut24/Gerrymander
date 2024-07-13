@@ -11,7 +11,13 @@ using System.Linq;
 public class Map : Singleton<Map>
 {
     [SerializeField]
+    private GameObject DistrictGoPrefab;
+
+    [SerializeField]
     private Transform RoomDaddy;
+
+    [SerializeField]
+    private Transform DistrictDaddy;
 
     [SerializeField]
     private Transform EdgeDaddy;
@@ -25,6 +31,7 @@ public class Map : Singleton<Map>
     public int DistrictId = 0;
 
     List<RoomPrefab> roomsToRecalculate; // room that we need to determine political boundaries for
+    GameObject districtToDelete;
 
     List<RoomPrefab> Rooms;
 
@@ -32,6 +39,7 @@ public class Map : Singleton<Map>
 
     Dictionary<Party, Color> PartyColors = new Dictionary<Party, Color>()
     {
+        { Party.None, Color.grey },
         { Party.Democrat, new Color(0, 249f / 255f, 255f / 255f) },
         { Party.Republican, new Color(255f / 255f, 87f / 255f, 60f / 255f) }
     };
@@ -72,32 +80,24 @@ public class Map : Singleton<Map>
         CreateMap();
 
         RoomPrefab room = CreateRoom(Vector2Int.zero, new Vector2Int(horCells, vertCells), true);
+        District district = AddDistrict(Party.None);
+
+        ColorDistrictByParty(Party.None, new List<RoomPrefab>() { room }, district.gameObject);
+
+        room.SetDistrict(district);
     }
 
     District AddDistrict(Party party)
     {
         DistrictId++;
 
-        District partyDistrict = new District(DistrictId, party);
-        DistrictMap.Add(DistrictId, partyDistrict);
+        GameObject DistrictGo = Instantiate(DistrictGoPrefab, DistrictDaddy);
+        District partyDistrict = DistrictGo.GetComponent<District>();
+        partyDistrict.Init(DistrictId, party);
 
         GameManager.Instance.AddPartyVoter(party);
 
         return partyDistrict;
-    }
-
-    public void RemoveDistrict(int districtId)
-    {
-        if (DistrictMap.ContainsKey(districtId))
-        {
-            District district = DistrictMap[districtId];
-
-            Party party = district.party;
-
-            DistrictMap.Remove(districtId);
-
-            GameManager.Instance.RemovePartyVoter(party);
-        }
     }
 
     void GetAllConnectedRooms(RoomPrefab room, HashSet<RoomPrefab> SeenRooms)
@@ -113,36 +113,54 @@ public class Map : Singleton<Map>
         });
     }
 
-    private void ColorDistrictByParty(Party party, List<RoomPrefab> district)
+    private void ColorDistrictByParty(Party party, List<RoomPrefab> connectedRooms, GameObject DistrictGo)
     {
-        if (party == Party.None)
-            return; // set a default color
-
-        district.ForEach((area) =>
+        connectedRooms.ForEach((area) =>
         {
-            area.SetPartyBox(PartyColors[party]);
+            area.SetPartyBox(PartyColors[party], DistrictGo);
         });
     }
 
     public void RecalculatePartyLines()
     {
-        roomsToRecalculate.ForEach((room) =>
+        List<RoomPrefab> recalculatedRoomList = new List<RoomPrefab>();
+
+        foreach (RoomPrefab room in roomsToRecalculate)
         {
+            if (recalculatedRoomList.Contains(room))
+            {
+                // skip recalculating this room as it was a connected room to a previously recalculated room
+                continue;
+            }
+
             HashSet<RoomPrefab> SeenRoomSet = new HashSet<RoomPrefab>();
             GetAllConnectedRooms(room, SeenRoomSet);
 
-            List<RoomPrefab> roomList = new List<RoomPrefab>(SeenRoomSet);
-            Party party = CheckDistrictParty(roomList);
+            List<RoomPrefab> connectedRoomList = new List<RoomPrefab>(SeenRoomSet);
 
-            ColorDistrictByParty(party, roomList);
+            Party party = CheckDistrictParty(connectedRoomList);
 
-            room.SetDistrict(AddDistrict(party));
+            if (room.district != null)
+            {
+                GameObject.Destroy(room.district.gameObject);
+            }
 
-            Debug.Log("The winning party is " + party);
-        });
+            District district = AddDistrict(party);
+            ColorDistrictByParty(party, connectedRoomList, district.gameObject);
+
+            connectedRoomList.ForEach((room) => room.SetDistrict(district));
+
+            recalculatedRoomList.AddRange(connectedRoomList);
+            recalculatedRoomList.Add(room);
+        };
+
+        if (districtToDelete != null)
+            GameObject.DestroyImmediate(districtToDelete);
 
         GameManager.Instance.UpdateScore();
+
         roomsToRecalculate.Clear();
+        districtToDelete = null;
     }
 
     private Party CheckDistrictParty(List<RoomPrefab> areas)
@@ -303,7 +321,7 @@ public class Map : Singleton<Map>
         room2.AddConnectedRoom(room1);
 
         roomsToRecalculate = new List<RoomPrefab>() { room1 };
-        //StartCoroutine(RecalculatePartyLines(room1)); // room1 is joined to room2 so only need to run for room1
+        RecalculatePartyLines(); // dont need to wait for edge animation to complete
     }
 
     /// <summary>
@@ -314,6 +332,7 @@ public class Map : Singleton<Map>
         room.CreatePerimeter(true);
 
         roomsToRecalculate = new List<RoomPrefab>() { room };
+
         roomsToRecalculate.AddRange(room.AdjacentRooms);
         //RecalculatePartyLines(room);
 
@@ -327,6 +346,9 @@ public class Map : Singleton<Map>
     /// <param name="plotCoord">coord where user wants to split into new rooms</param>
     private void DivideRoom(RoomPrefab room)
     {
+        if (room.district != null)
+            districtToDelete = room.district.gameObject;
+
         Box box = room.box;
         RemoveRoom(room);
         CreateDividedRooms(box);
@@ -377,6 +399,9 @@ public class Map : Singleton<Map>
 
     private void RemoveRoom(RoomPrefab room)
     {
+        District roomDistrict = room.district;
+
+
         Rooms.Remove(room);
         room.RemoveEdgeCollider();
         GameObject.Destroy(room.gameObject);

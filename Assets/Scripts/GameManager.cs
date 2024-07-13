@@ -37,6 +37,7 @@ public class GameManager : Singleton<GameManager>
 
     public void AddPartyVoter(Party party)
     {
+        Debug.Log("Add party voter for " + party);
         if (party == Party.Republican)
             republicanDistricts++;
         if (party == Party.Democrat)
@@ -45,6 +46,7 @@ public class GameManager : Singleton<GameManager>
 
     public void RemovePartyVoter(Party party)
     {
+        Debug.Log("Remove party voter for " + party);
         if (party == Party.Republican)
             republicanDistricts--;
         if (party == Party.Democrat)
