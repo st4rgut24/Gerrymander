@@ -108,7 +108,7 @@ public class GameManager : Singleton<GameManager>
     public void NextDay()
     {
         DaysTilElection--;
-
+        days.SetDays(GameManager.Instance.DaysTilElection);
         if (DaysTilElection == 0)
         {
             GameOver = true;

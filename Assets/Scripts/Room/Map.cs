@@ -40,7 +40,7 @@ public class Map : Singleton<Map>
     Dictionary<Party, Color> PartyColors = new Dictionary<Party, Color>()
     {
         { Party.None, Color.grey },
-        { Party.Democrat, new Color(0, 249f / 255f, 255f / 255f) },
+        { Party.Democrat, new Color(0, 151f / 255f, 255f / 255f) },
         { Party.Republican, new Color(255f / 255f, 87f / 255f, 60f / 255f) }
     };
 

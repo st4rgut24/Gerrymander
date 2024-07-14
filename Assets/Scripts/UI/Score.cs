@@ -24,7 +24,7 @@ public class Score : MonoBehaviour
 
     public void SetScore(int democratDistricts, int republicanDistricts)
     {
-        string scoreStr = democratDistricts.ToString() + " : " + republicanDistricts.ToString();
+        string scoreStr = "<color=blue>" + democratDistricts.ToString() + "</color> : <color=red>" + republicanDistricts.ToString() + "</color>";
         scoreText.text = scoreStr;
     }
 }

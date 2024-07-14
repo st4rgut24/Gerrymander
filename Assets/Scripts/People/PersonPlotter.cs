@@ -16,6 +16,12 @@ public class PersonPlotter : Singleton<PersonPlotter>
 	private int sickCount;
 
 	[SerializeField]
+	private Sprite RepubSprite;
+
+    [SerializeField]
+    private Sprite DemoSprite;
+
+    [SerializeField]
 	private GameObject PersonPrefabInst;
 
 	[SerializeField]
@@ -25,15 +31,26 @@ public class PersonPlotter : Singleton<PersonPlotter>
 
 	private float buffer = 150; // pixels
 
-	Dictionary<Party, Color> PartyColors = new Dictionary<Party, Color>()
-	{
-		{ Party.Democrat, Color.blue },
-		{ Party.Republican, Color.red }
-	};
+	//Dictionary<Party, Color> PartyColors = new Dictionary<Party, Color>()
+	//{
+	//	{ Party.Democrat, Color.blue },
+	//	{ Party.Republican, Color.red }
+	//};
+
+	Dictionary<Party, Sprite> PartyColors;
 
     private void OnEnable()
     {
         Controller.DragEvent += OnDrag;
+    }
+
+    private void Awake()
+    {
+        PartyColors = new Dictionary<Party, Sprite>()
+    {
+        { Party.Democrat, DemoSprite },
+        { Party.Republican, RepubSprite }
+    };
     }
 
     public void OnDrag(Vector3 dragStart, Vector3 dragEnd)

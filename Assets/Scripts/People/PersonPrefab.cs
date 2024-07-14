@@ -39,10 +39,12 @@ public class PersonPrefab : MonoBehaviour
         }
     }
 
-    public void setPartyAffiliation(Party party, Color partyColor)
+    //public void setPartyAffiliation(Party party, Color partyColor)
+    public void setPartyAffiliation(Party party, Sprite partySprite)
     {
         this.party = party;
-        spriteRenderer.color = partyColor;
+        //spriteRenderer.color = partyColor;
+        spriteRenderer.sprite = partySprite;
     }
 
     public void SetTargetPosition(Vector3 targetPosition)
