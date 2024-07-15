@@ -14,6 +14,15 @@ public class Consts
     public const string ScoreGo = "Score";
     public const string DaysGo = "Days";
 
+    public const string VoteContainer = "VoteContainer";
+    public const string VoteCheckbox = "VoteCheckbox";
+    public const string VoteText = "VoteText";
+    public const string Slogans = "Slogans";
+    public const string Picture = "Picture";
+
+    public const string ElectionHeader = "ElectionHeader";
+    public const string Summary = "Summary";
+
     // time
     public const float waitTimeForRoomAction = 1;
 
