@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+
 
 public enum Matches
 {
@@ -11,16 +13,22 @@ public enum Matches
 public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 {
     [SerializeField]
+    private Toggle DemocratCheckbox;
+
+    [SerializeField]
+    private Toggle RepublicanCheckbox;
+
+    [SerializeField]
     private Transform DemocratContainer;
 
     [SerializeField]
     private Transform RepublicanContainer;
 
     [SerializeField]
-    private Sprite TrumpPic;
+    private SpriteRenderer RepublicanPic;
 
     [SerializeField]
-    private Sprite BidenPic;
+    private SpriteRenderer DemocratPic;
 
     [SerializeField]
     private GameObject DemocraticChip;
@@ -41,8 +49,8 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
                 new ElectionDetails(
                     "Having survived an assasination attempt, former president Trump rematches Biden in a tense election.",
                     2024,
-                    new PartyDetails(BidenPic, "Joe Biden", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
-                    new PartyDetails(TrumpPic, "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f)
+                    new PartyDetails("biden", "Joe Biden", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
+                    new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f)
                     )
             }
         };
@@ -51,12 +59,37 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
     // Start is called before the first frame update
     void Start()
     {
+        DemocratCheckbox.isOn = false;
+        RepublicanCheckbox.isOn = false;
+
+        DemocratCheckbox.onValueChanged.AddListener(delegate
+        {
+            ToggleDemocratValueChanged(DemocratCheckbox);
+        });
+
+        RepublicanCheckbox.onValueChanged.AddListener(delegate
+        {
+            ToggleRepublicanValueChanged(RepublicanCheckbox);
+        });
+
         ElectionDetails details = ElectionMap[Matches.TrumpBiden];
 
         InitOverviewUI(details.year, details.summary);
 
         InitPartyUI(details, DemocratContainer, DemocraticChip, details.GetDemDetails(), details.GetDemSlogan());
         InitPartyUI(details, RepublicanContainer, RepublicanChip, details.GetRepubDetails(), details.GetRepSlogan());
+    }
+
+    void ToggleRepublicanValueChanged(Toggle change)
+    {
+        if (change.isOn && DemocratCheckbox.isOn)
+            DemocratCheckbox.isOn = false;
+    }
+
+    void ToggleDemocratValueChanged(Toggle change)
+    {
+        if (change.isOn && RepublicanCheckbox.isOn)
+            RepublicanCheckbox.isOn = false;
     }
 
     public void InitOverviewUI(int electionYear, string summary)
@@ -75,7 +108,7 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 
         TextMeshProUGUI SloganText = PartyContainer.Find(Consts.Slogans).GetComponent<TextMeshProUGUI>();
 
-        string sloganText = "Slogans\n";
+        string sloganText = "Slogans\n\n";
 
         slogans.ForEach((slogan) =>
         {
@@ -87,6 +120,11 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 
         TextMeshProUGUI VoteText = PartyContainer.Find(Consts.VoteText).GetComponent<TextMeshProUGUI>();
         VoteText.text = partyDetails.popVotePct.ToString() + "% Popular Vote";
+
+        Image partyPic = PartyContainer.Find(Consts.Picture).GetComponent<Image>();
+        Sprite sprite = Resources.Load<Sprite>(partyDetails.picFile);
+
+        partyPic.sprite = sprite;
     }
 
     public void InitVoteContainer(Transform VoteTransform, int popVoteCount, GameObject partyPrefab)

@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class PartyDetails
 {
-    Sprite pic;
     string candidate;
     Party party;
     public List<string> slogans;
     public int popVoteCount;
     public int popVotePct;
+    public string picFile;
 
-    public PartyDetails(Sprite pic, string candidate, Party party, List<string> slogans, float pctPopVote)
+    public PartyDetails(string picFile, string candidate, Party party, List<string> slogans, float pctPopVote)
 	{
-        this.pic = pic;
+        this.picFile = picFile;
+
         this.slogans = slogans;
 
         this.popVotePct = (int) (pctPopVote * 100);
