@@ -7,6 +7,8 @@ public class VerticalScrollSelector : MonoBehaviour
     public RectTransform content;
     public RectTransform[] items; // Reference to the UI elements representing selectable items
 
+    public int selectedIdx;
+
     private float itemHeight;
     private int itemCount;
 
@@ -32,6 +34,7 @@ public class VerticalScrollSelector : MonoBehaviour
 
     void SetSelection(int index)
     {
+        selectedIdx = index;
         // Deselect all items
         foreach (var item in items)
         {

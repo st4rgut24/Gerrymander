@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public enum Difficulty
 {
@@ -17,8 +19,11 @@ public class GameManager : Singleton<GameManager>
     Score score;
     Days days;
 
-    public int DaysTilElection = 20;
+    public int ElectionYear;
+    Party PlayerParty;
     public float DemocratPct = .5f;
+
+    public int DaysTilElection = 20;
     public float RepublicanPct;
     public int population = 50;
 
@@ -28,7 +33,6 @@ public class GameManager : Singleton<GameManager>
     public int republicanDistricts = 0;
 
     Agent agent;
-    Party PlayerAffiliation;
 
     private void OnEnable()
     {
@@ -37,26 +41,67 @@ public class GameManager : Singleton<GameManager>
 
     private void Awake()
     {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        _instance = this;
+
+        DontDestroyOnLoad(this.gameObject);
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         PlayerTurn = true;
-        InitPartyAffiliations(Party.Democrat, Difficulty.Hard);
+    }
+
+    public void InitPlayerParty(float DemPartyPct, Party PlayerParty)
+    {
+        DemocratPct = DemPartyPct;
         RepublicanPct = 1 - DemocratPct;
+
+        InitPartyAffiliations(PlayerParty, Difficulty.Hard);
         InitVoterComposition();
+    }
+
+    public void LoadElectionDetailsScene()
+    {
+        VerticalScrollSelector scrollSelector = GameObject.Find(Consts.ScrollRect).GetComponent<VerticalScrollSelector>();
+        Transform Year = scrollSelector.transform.Find(Consts.ContentGo).GetChild(scrollSelector.selectedIdx).Find(Consts.YearBanner).Find(Consts.Year);
+        string yearText = Year.GetComponent<TextMeshProUGUI>().text;
+
+        ElectionYear = int.Parse(yearText);
+        Debug.Log("Election Year is " + ElectionYear);
+        SceneManager.LoadScene(Consts.ElectionDetails);
+    }
+
+    public void LoadGameScene(float DemPartyPct, Party PlayerParty)
+    {
+        InitPlayerParty(DemPartyPct, PlayerParty);
+        SceneManager.LoadScene(Consts.Game);
     }
 
     public void InitPartyAffiliations(Party PlayerParty, Difficulty difficulty)
     {
-        this.PlayerAffiliation = PlayerParty;
-
         Party AgentParty = PlayerParty == Party.Republican ? Party.Democrat : Party.Republican;
 
-        agent = new Agent(difficulty, AgentParty, PlayerAffiliation);
+        agent = new Agent(difficulty, AgentParty, PlayerParty);
     }
 
     // Use this for initialization
     void Start()
 	{
-        score = GameObject.Find(Consts.ScoreGo).GetComponent<Score>();
-        days = GameObject.Find(Consts.DaysGo).GetComponent<Days>();
+
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name.Equals(Consts.Game))
+        {
+            score = GameObject.Find(Consts.ScoreGo).GetComponent<Score>();
+            days = GameObject.Find(Consts.DaysGo).GetComponent<Days>();
+        }
     }
 
     public void AddPartyVoter(Party party)
@@ -128,6 +173,12 @@ public class GameManager : Singleton<GameManager>
 
     private void OnDisable()
     {
+    }
+
+    void OnDestroy()
+    {
+        // Unsubscribe from the scene loaded event
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
 

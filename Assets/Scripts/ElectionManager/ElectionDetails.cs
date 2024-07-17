@@ -20,6 +20,11 @@ public class ElectionDetails
         this.repDetails = repDetails;
     }
 
+    public float GetDemPartyPct()
+    {
+        return demDetails.PartyPct;
+    }
+
     public List<string> GetRepSlogan()
     {
         return repDetails.slogans;

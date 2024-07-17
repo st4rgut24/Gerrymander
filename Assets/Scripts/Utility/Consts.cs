@@ -8,12 +8,22 @@ public class Consts
     public const float CurrentDist = 2f;
     public const float ImmunizeRadius = .75f;
 
+    //scenes
+    public const string PlayMenu = "PlayMenu";
+    public const string ElectionDetails = "ElectionDetails";
+    public const string Game = "Game";
+
     // names
     public const string PeopleGo = "People";
     public const string EdgesGo = "Edges";
     public const string ScoreGo = "Score";
     public const string DaysGo = "Days";
+    public const string ContentGo = "Content";
 
+    public const string DetailsPlayBtn = "PlayBtn";
+    public const string ScrollRect = "ScrollRect";
+    public const string YearBanner = "YearBanner";
+    public const string Year = "Year";
     public const string VoteContainer = "VoteContainer";
     public const string VoteCheckbox = "VoteCheckbox";
     public const string VoteText = "VoteText";

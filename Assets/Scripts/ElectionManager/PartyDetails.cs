@@ -10,6 +10,7 @@ public class PartyDetails
     public int popVoteCount;
     public int popVotePct;
     public string picFile;
+    public float PartyPct;
 
     public PartyDetails(string picFile, string candidate, Party party, List<string> slogans, float pctPopVote)
 	{
@@ -20,6 +21,7 @@ public class PartyDetails
         this.popVotePct = (int) (pctPopVote * 100);
 
         popVoteCount = (int)(ElectionDetailsManager.populationSize * pctPopVote);
+        PartyPct = ((float)popVotePct / 100f);
 
         // grid initialize
     }

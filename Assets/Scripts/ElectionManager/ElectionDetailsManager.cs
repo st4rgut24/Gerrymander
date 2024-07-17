@@ -4,12 +4,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-
-public enum Matches
-{
-    TrumpBiden
-}
-
 public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 {
     [SerializeField]
@@ -36,16 +30,24 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
     [SerializeField]
     private GameObject RepublicanChip;
 
-    public const int populationSize = 50;
+    Button playBtn;
 
-    public Dictionary<Matches, ElectionDetails> ElectionMap;
+    public ElectionDetails details;
+    public const int populationSize = 50;
+    public float DemPartyPct;
+
+    Party PlayerParty = Party.None;
+
+    public Dictionary<int, ElectionDetails> ElectionMap;
 
     private void Awake()
     {
-        ElectionMap = new Dictionary<Matches, ElectionDetails>()
+        playBtn = GameObject.Find(Consts.DetailsPlayBtn).GetComponent<Button>();
+
+        ElectionMap = new Dictionary<int, ElectionDetails>()
         {
             {
-                Matches.TrumpBiden,
+                2024,
                 new ElectionDetails(
                     "Having survived an assasination attempt, former president Trump rematches Biden in a tense election.",
                     2024,
@@ -72,24 +74,52 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
             ToggleRepublicanValueChanged(RepublicanCheckbox);
         });
 
-        ElectionDetails details = ElectionMap[Matches.TrumpBiden];
+        details = ElectionMap[GameManager.Instance.ElectionYear];
 
         InitOverviewUI(details.year, details.summary);
 
         InitPartyUI(details, DemocratContainer, DemocraticChip, details.GetDemDetails(), details.GetDemSlogan());
         InitPartyUI(details, RepublicanContainer, RepublicanChip, details.GetRepubDetails(), details.GetRepSlogan());
+
+    }
+
+    public void InitGame()
+    {
+        GameManager.Instance.LoadGameScene(details.GetDemPartyPct(), PlayerParty);
     }
 
     void ToggleRepublicanValueChanged(Toggle change)
     {
         if (change.isOn && DemocratCheckbox.isOn)
             DemocratCheckbox.isOn = false;
+
+        if (change.isOn)
+        {
+            PlayerParty = Party.Republican;
+            playBtn.interactable = true;
+        }
+        else
+        {
+            PlayerParty = Party.None;
+            playBtn.interactable = false;
+        }
     }
 
     void ToggleDemocratValueChanged(Toggle change)
     {
         if (change.isOn && RepublicanCheckbox.isOn)
             RepublicanCheckbox.isOn = false;
+
+        if (change.isOn)
+        {
+            PlayerParty = Party.Democrat;
+            playBtn.interactable = true;
+        }
+        else
+        {
+            PlayerParty = Party.None;
+            playBtn.interactable = false;
+        }
     }
 
     public void InitOverviewUI(int electionYear, string summary)
