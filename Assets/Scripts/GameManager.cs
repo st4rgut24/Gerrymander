@@ -13,6 +13,9 @@ public enum Difficulty
 
 public class GameManager : Singleton<GameManager>
 {
+    public bool PVP = false;
+
+
     bool PlayerTurn;
     public bool GameOver = false;
 
@@ -73,6 +76,8 @@ public class GameManager : Singleton<GameManager>
 
         ElectionYear = int.Parse(yearText);
         Debug.Log("Election Year is " + ElectionYear);
+
+        PVP = scrollSelector.selectedIdx == 0;
         SceneManager.LoadScene(Consts.ElectionDetails);
     }
 
@@ -101,6 +106,14 @@ public class GameManager : Singleton<GameManager>
         {
             score = GameObject.Find(Consts.ScoreGo).GetComponent<Score>();
             days = GameObject.Find(Consts.DaysGo).GetComponent<Days>();
+        }
+        else if (scene.name.Equals(Consts.PlayMenu))
+        {
+            //if (GameManager.Instance.PVP)
+            //{
+            GameManager.Instance.PVP = false;
+            //}
+            Connection.Instance.SendLeaveState();
         }
     }
 
@@ -143,7 +156,7 @@ public class GameManager : Singleton<GameManager>
     {
         PlayerTurn = !PlayerTurn;
 
-        if (!PlayerTurn)
+        if (!PlayerTurn && !PVP) // if vs AI
         {
             agent.DivideRoom();
             NextDay();

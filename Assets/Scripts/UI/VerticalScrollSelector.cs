@@ -25,7 +25,6 @@ public class VerticalScrollSelector : MonoBehaviour
     {
         // Calculate the index of the currently selected item based on scroll position
         float normalizedPosition = 1 - scrollRect.verticalNormalizedPosition;
-        Debug.Log("Normalized position " + normalizedPosition);
         int selectedIndex = Mathf.Clamp(Mathf.FloorToInt(normalizedPosition * (itemCount - 1)), 0, itemCount - 1);
 
         // Set the selected item based on the scroll position

@@ -380,6 +380,15 @@ public class Map : Singleton<Map>
         room.RemoveAdjacentRooms();
     }
 
+    public void DivideRoomById(int id)
+    {
+        RoomPrefab room = Rooms.Find((room) => room.roomId == id);
+        if (room != null)
+        {
+            DivideRoom(room);
+        }
+    }
+
     /// <summary>
     /// creates new rooms on either side of a divider and
     /// removes the room that is divided
@@ -387,6 +396,11 @@ public class Map : Singleton<Map>
     /// <param name="plotCoord">coord where user wants to split into new rooms</param>
     public void DivideRoom(RoomPrefab room)
     {
+        if (GameManager.Instance.PVP)
+        {
+            Connection.Instance.SendDivideRoomPlay(roomId);
+        }
+
         if (room.district != null)
             districtToDelete = room.district.gameObject;
 

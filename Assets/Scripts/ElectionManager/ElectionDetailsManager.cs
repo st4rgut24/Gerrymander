@@ -81,6 +81,10 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         InitPartyUI(details, DemocratContainer, DemocraticChip, details.GetDemDetails(), details.GetDemSlogan());
         InitPartyUI(details, RepublicanContainer, RepublicanChip, details.GetRepubDetails(), details.GetRepSlogan());
 
+        if (GameManager.Instance.PVP)
+        {
+            Connection.Instance.SendReadyState();
+        }
     }
 
     public void InitGame()
@@ -165,9 +169,21 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         }
     }
 
+    public void BeginMatch()
+    {
+        InitGame();
+    }
+
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private void OnDestroy()
+    {
+        //if (GameManager.Instance.PVP) {
+        //    Connection.Instance.SendLeaveState();
+        //}
     }
 }
