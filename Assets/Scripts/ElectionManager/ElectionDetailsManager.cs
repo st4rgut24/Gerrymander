@@ -19,18 +19,26 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
     private Transform RepublicanContainer;
 
     [SerializeField]
-    private SpriteRenderer RepublicanPic;
-
-    [SerializeField]
-    private SpriteRenderer DemocratPic;
-
-    [SerializeField]
     private GameObject DemocraticChip;
 
     [SerializeField]
     private GameObject RepublicanChip;
 
+    [SerializeField]
+    private RectTransform DemVoteContainer;
+
+    [SerializeField]
+    private RectTransform RepVoteContainer;
+
+    [SerializeField]
+    private RectTransform BoxOpening;
+
+    [SerializeField]
+    private GameObject Funnel;
+
     Button playBtn;
+
+    bool IsFunneling = false;
 
     public ElectionDetails details;
     public const int populationSize = 50;
@@ -40,8 +48,14 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 
     public Dictionary<int, ElectionDetails> ElectionMap;
 
+    public List<GameObject> PartyObjects;
+
+    const float boxOpeningWidth = 300;
+    const float boxOpeningHeight = 381;
+
     private void Awake()
     {
+        PartyObjects = new List<GameObject>();
         playBtn = GameObject.Find(Consts.DetailsPlayBtn).GetComponent<Button>();
 
         ElectionMap = new Dictionary<int, ElectionDetails>()
@@ -88,8 +102,64 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         GameManager.Instance.LoadGameScene(details.GetDemPartyPct(), PlayerParty);
     }
 
+    void CreateFunnel()
+    {
+        Rect boxRect = RectTransformToScreenSpace(BoxOpening);
+        Vector2 openingHorWallBegin = new Vector2(boxRect.x, boxRect.y + boxRect.height);
+        Vector2 openingHorWallEnd = new Vector2(boxRect.x + boxRect.width, boxRect.y + boxRect.height);
+        EdgeCollider2D openingEdgeCollider = Funnel.AddComponent<EdgeCollider2D>();
+        openingEdgeCollider.points = new Vector2[] { openingHorWallBegin, openingHorWallEnd };
+
+        // now create the edge collider sides (2 on each side)
+        Rect DemRect = RectTransformToScreenSpace(DemVoteContainer);
+        EdgeCollider2D DemWallCollider = CreateVertWallForVoteContainer(DemRect, 0);
+        EdgeCollider2D slantDemCollider = Funnel.AddComponent<EdgeCollider2D>();
+        slantDemCollider.points = new Vector2[] { DemWallCollider.points[1], openingEdgeCollider.points[0] };
+
+        Rect RepRect = RectTransformToScreenSpace(RepVoteContainer);
+        EdgeCollider2D RepWallCollider = CreateVertWallForVoteContainer(RepRect, RepRect.width);
+        EdgeCollider2D slantRepCollider = Funnel.AddComponent<EdgeCollider2D>();
+        slantRepCollider.points = new Vector2[] { RepWallCollider.points[1], openingEdgeCollider.points[1] };
+    }
+
+    public EdgeCollider2D CreateVertWallForVoteContainer(Rect rect, float xOffset)
+    {
+        Vector2 demVertWallBegin = new Vector2(rect.x + xOffset, rect.y + rect.size.y);
+        Vector2 demVertWallEnd = new Vector2(rect.x + xOffset, rect.y);
+        EdgeCollider2D wallCollider = Funnel.AddComponent<EdgeCollider2D>();
+        wallCollider.points = new Vector2[] { demVertWallBegin, demVertWallEnd };
+
+        return wallCollider;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("box opening triggered by " + collision.gameObject.name);
+    }
+
+    public static Rect RectTransformToScreenSpace(RectTransform transform)
+    {
+        Vector2 size = Vector2.Scale(transform.rect.size, transform.lossyScale);
+        return new Rect((Vector2)transform.position - (size * transform.pivot), size);
+    }
+
+    void FunnelPartyTokens()
+    {
+        IsFunneling = true;
+        CreateFunnel();
+        PartyObjects.ForEach((partyGo) =>
+        {
+            partyGo.GetComponent<Rigidbody2D>().isKinematic = false;
+        });
+    }
+
     void ToggleRepublicanValueChanged(Toggle change)
     {
+        if (IsFunneling)
+        {
+            return;
+        }
+
         if (change.isOn && DemocratCheckbox.isOn)
             DemocratCheckbox.isOn = false;
 
@@ -103,10 +173,17 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
             PlayerParty = Party.None;
             playBtn.interactable = false;
         }
+
+        FunnelPartyTokens();
     }
 
     void ToggleDemocratValueChanged(Toggle change)
     {
+        if (IsFunneling)
+        {
+            return;
+        }
+
         if (change.isOn && RepublicanCheckbox.isOn)
             RepublicanCheckbox.isOn = false;
 
@@ -120,6 +197,8 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
             PlayerParty = Party.None;
             playBtn.interactable = false;
         }
+
+        FunnelPartyTokens();
     }
 
     public void InitOverviewUI(int electionYear, string summary)
@@ -127,8 +206,8 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         TextMeshProUGUI ElectionYearText = GameObject.Find(Consts.ElectionHeader).GetComponent<TextMeshProUGUI>();
         ElectionYearText.text = electionYear.ToString() + " Election";
 
-        TextMeshProUGUI ElectionSummaryText = GameObject.Find(Consts.Summary).GetComponent<TextMeshProUGUI>();
-        ElectionSummaryText.text = summary;
+        //TextMeshProUGUI ElectionSummaryText = GameObject.Find(Consts.Summary).GetComponent<TextMeshProUGUI>();
+        //ElectionSummaryText.text = summary;
     }
 
     public void InitPartyUI(ElectionDetails details, Transform PartyContainer, GameObject partyPrefab, PartyDetails partyDetails, List<string> slogans)
@@ -161,7 +240,8 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
     {
         for (int i = 0; i < popVoteCount; i++)
         {
-            Instantiate(partyPrefab, VoteTransform);
+            GameObject partyGo = Instantiate(partyPrefab, VoteTransform);
+            PartyObjects.Add(partyGo);
         }
     }
 
