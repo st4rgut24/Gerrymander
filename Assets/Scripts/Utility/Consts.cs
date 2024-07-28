@@ -51,5 +51,6 @@ public class Consts
     // tags
     public const string PersonTag = "Person";
     public const string RoomTag = "Room";
+    public const string chipUI = "chip";
 }
 

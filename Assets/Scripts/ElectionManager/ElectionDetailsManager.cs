@@ -107,19 +107,20 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         Rect boxRect = RectTransformToScreenSpace(BoxOpening);
         Vector2 openingHorWallBegin = new Vector2(boxRect.x, boxRect.y + boxRect.height);
         Vector2 openingHorWallEnd = new Vector2(boxRect.x + boxRect.width, boxRect.y + boxRect.height);
-        EdgeCollider2D openingEdgeCollider = Funnel.AddComponent<EdgeCollider2D>();
-        openingEdgeCollider.points = new Vector2[] { openingHorWallBegin, openingHorWallEnd };
+        //EdgeCollider2D openingEdgeCollider = Funnel.AddComponent<EdgeCollider2D>();
+        //openingEdgeCollider.points = new Vector2[] { openingHorWallBegin, openingHorWallEnd };
+        //openingEdgeCollider.isTrigger = true;
 
         // now create the edge collider sides (2 on each side)
         Rect DemRect = RectTransformToScreenSpace(DemVoteContainer);
         EdgeCollider2D DemWallCollider = CreateVertWallForVoteContainer(DemRect, 0);
         EdgeCollider2D slantDemCollider = Funnel.AddComponent<EdgeCollider2D>();
-        slantDemCollider.points = new Vector2[] { DemWallCollider.points[1], openingEdgeCollider.points[0] };
+        slantDemCollider.points = new Vector2[] { DemWallCollider.points[1], openingHorWallBegin };
 
         Rect RepRect = RectTransformToScreenSpace(RepVoteContainer);
         EdgeCollider2D RepWallCollider = CreateVertWallForVoteContainer(RepRect, RepRect.width);
         EdgeCollider2D slantRepCollider = Funnel.AddComponent<EdgeCollider2D>();
-        slantRepCollider.points = new Vector2[] { RepWallCollider.points[1], openingEdgeCollider.points[1] };
+        slantRepCollider.points = new Vector2[] { RepWallCollider.points[1], openingHorWallEnd };
     }
 
     public EdgeCollider2D CreateVertWallForVoteContainer(Rect rect, float xOffset)
@@ -132,9 +133,17 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         return wallCollider;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private IEnumerator StartGame()
     {
-        Debug.Log("box opening triggered by " + collision.gameObject.name);
+        float start = Time.time;
+        float maxDuration = 3;
+
+        while (Time.time - start < maxDuration)
+        {
+            yield return null;
+        }
+
+        InitGame();
     }
 
     public static Rect RectTransformToScreenSpace(RectTransform transform)
@@ -151,6 +160,7 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         {
             partyGo.GetComponent<Rigidbody2D>().isKinematic = false;
         });
+        StartCoroutine(StartGame());
     }
 
     void ToggleRepublicanValueChanged(Toggle change)
