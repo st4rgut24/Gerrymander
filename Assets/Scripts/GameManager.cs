@@ -65,6 +65,16 @@ public class GameManager : Singleton<GameManager>
         InitVoterComposition();
     }
 
+    public void LoadPlayMenu()
+    {
+        SceneManager.LoadScene(Consts.PlayMenu);
+    }
+
+    public void LoadTutorial()
+    {
+        SceneManager.LoadScene(Consts.TutorialScene);
+    }
+
     public void LoadElectionDetailsScene()
     {
         VerticalScrollSelector scrollSelector = GameObject.Find(Consts.ScrollRect).GetComponent<VerticalScrollSelector>();
@@ -145,8 +155,13 @@ public class GameManager : Singleton<GameManager>
 
         if (!PlayerTurn)
         {
+            Timer.Instance.SuspendTimer();
             agent.DivideRoom();
             NextDay();
+        }
+        else // player's turn
+        {
+            StartCoroutine(Timer.Instance.StartTimer());
         }
     }
 
