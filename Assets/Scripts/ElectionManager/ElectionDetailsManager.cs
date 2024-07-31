@@ -36,8 +36,6 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
     [SerializeField]
     private GameObject Funnel;
 
-    Button playBtn;
-
     bool IsFunneling = false;
 
     public ElectionDetails details;
@@ -56,15 +54,14 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
     private void Awake()
     {
         PartyObjects = new List<GameObject>();
-        playBtn = GameObject.Find(Consts.DetailsPlayBtn).GetComponent<Button>();
 
         ElectionMap = new Dictionary<int, ElectionDetails>()
         {
             {
-                2024,
+                2020,
                 new ElectionDetails(
                     "Having survived an assasination attempt, former president Trump rematches Biden in a tense election.",
-                    2024,
+                    2020,
                     new PartyDetails("biden", "Joe Biden", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f)
                     )
@@ -176,12 +173,10 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         if (change.isOn)
         {
             PlayerParty = Party.Republican;
-            playBtn.interactable = true;
         }
         else
         {
             PlayerParty = Party.None;
-            playBtn.interactable = false;
         }
 
         FunnelPartyTokens();
@@ -200,12 +195,10 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         if (change.isOn)
         {
             PlayerParty = Party.Democrat;
-            playBtn.interactable = true;
         }
         else
         {
             PlayerParty = Party.None;
-            playBtn.interactable = false;
         }
 
         FunnelPartyTokens();
@@ -227,7 +220,7 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 
         TextMeshProUGUI SloganText = PartyContainer.Find(Consts.Slogans).GetComponent<TextMeshProUGUI>();
 
-        string sloganText = "Slogans\n\n";
+        string sloganText = "";
 
         slogans.ForEach((slogan) =>
         {
@@ -238,7 +231,7 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 
 
         TextMeshProUGUI VoteText = PartyContainer.Find(Consts.VoteText).GetComponent<TextMeshProUGUI>();
-        VoteText.text = partyDetails.popVotePct.ToString() + "% Popular Vote";
+        VoteText.text = partyDetails.popVoteCount.ToString() + " Voters";
 
         Image partyPic = PartyContainer.Find(Consts.Picture).GetComponent<Image>();
         Sprite sprite = Resources.Load<Sprite>(partyDetails.picFile);

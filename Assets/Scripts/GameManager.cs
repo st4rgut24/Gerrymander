@@ -72,6 +72,7 @@ public class GameManager : Singleton<GameManager>
 
     public void LoadTutorial()
     {
+        InitPlayerParty(.5f, Party.Democrat);
         SceneManager.LoadScene(Consts.TutorialScene);
     }
 
@@ -83,8 +84,19 @@ public class GameManager : Singleton<GameManager>
 
         ElectionYear = int.Parse(yearText);
         Debug.Log("Election Year is " + ElectionYear);
+
         SceneManager.LoadScene(Consts.ElectionDetails);
     }
+
+    //public void InitElectionDetailsScene()
+    //{
+    //    VerticalScrollSelector scrollSelector = GameObject.Find(Consts.ScrollRect).GetComponent<VerticalScrollSelector>();
+    //    Transform Year = scrollSelector.transform.Find(Consts.ContentGo).GetChild(scrollSelector.selectedIdx).Find(Consts.YearBanner).Find(Consts.Year);
+    //    string yearText = Year.GetComponent<TextMeshProUGUI>().text;
+
+    //    ElectionYear = int.Parse(yearText);
+    //    Debug.Log("Election Year is " + ElectionYear);
+    //}
 
     public void LoadGameScene(float DemPartyPct, Party PlayerParty)
     {
@@ -99,18 +111,14 @@ public class GameManager : Singleton<GameManager>
         agent = new Agent(difficulty, AgentParty, PlayerParty);
     }
 
-    // Use this for initialization
-    void Start()
-	{
-
-    }
-
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name.Equals(Consts.Game))
+        if (scene.name.Equals(Consts.Game) || scene.name.Equals(Consts.TutorialScene))
         {
             score = GameObject.Find(Consts.ScoreGo).GetComponent<Score>();
             days = GameObject.Find(Consts.DaysGo).GetComponent<Days>();
+
+            StartCoroutine(Timer.Instance.StartTimer());
         }
     }
 

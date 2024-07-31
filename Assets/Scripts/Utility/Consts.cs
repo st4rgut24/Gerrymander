@@ -9,9 +9,11 @@ public class Consts
     public const float ImmunizeRadius = .75f;
 
     //scenes
+    public const string LandingScene = "LandingPage";
     public const string PlayMenu = "PlayMenu";
     public const string ElectionDetails = "ElectionDetails";
     public const string Game = "Game";
+    public const string TutorialScene = "Tutorial";
 
     // names
     public const string PeopleGo = "People";

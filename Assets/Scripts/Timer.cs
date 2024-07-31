@@ -46,14 +46,15 @@ public class Timer : Singleton<Timer>
     public IEnumerator StartTimer()
     {
         SuspendTimerFlag = false;
-
+        
         float secLeft = SecToMove;
 
         while (secLeft > 0 && !SuspendTimerFlag)
         {
-            secLeft -= Time.deltaTime;
             timerText.text = FormatTime(secLeft);
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(1f);
+
+            secLeft -= 1f; // maybe no
         }
 
         if (!SuspendTimerFlag) // timer has not been suspended, so trigger an action
