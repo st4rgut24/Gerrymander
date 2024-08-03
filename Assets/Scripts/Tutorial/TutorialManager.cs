@@ -98,6 +98,7 @@ public class TutorialManager : Singleton<TutorialManager>
 
     RoomPrefab playerPartyFirstRoom;
 
+    bool PauseCursorMovement = false; // pause cursor during transition of slides to prevent overwrriting next cursors's position
     bool PartyLineDrawn = false;
     bool StartDrawPartyLine = false;
 
@@ -118,6 +119,7 @@ public class TutorialManager : Singleton<TutorialManager>
 
         slideIdx++;
 
+        PauseCursorMovement = true;
         if (ActiveSlide != null)
         {
             ActiveSlide.SetActive(false);
@@ -131,6 +133,7 @@ public class TutorialManager : Singleton<TutorialManager>
                 yield return null;
         }
 
+        PauseCursorMovement = false;
         Timer.Instance.UnpauseTimer();
         SetupSlideEnvironment();
 
@@ -321,23 +324,6 @@ public class TutorialManager : Singleton<TutorialManager>
         return defaultRoom;
     }
 
-    //public RoomPrefab GetAdjacentDistrictByParty(RoomPrefab room, Party party)
-    //{
-    //    RoomPrefab defaultRoom = room.AdjacentRooms[0];
-
-    //    foreach (RoomPrefab adjRoom in room.AdjacentRooms)
-    //    {
-    //        if (adjRoom.GetParty() == party)
-    //        {
-    //            defaultRoom = adjRoom;
-    //            break;
-    //        }
-    //    }
-
-    //    Debug.Log("Couldnt find adjacent district with party " + party);
-    //    return defaultRoom;
-    //}
-
     public RoomPrefab GetOpponentDistrict()
     {
         foreach (RoomPrefab district in Map.Instance.Rooms)
@@ -445,14 +431,15 @@ public class TutorialManager : Singleton<TutorialManager>
                 SetCursorUIPosition();
                 break;
             case (int)Slide.EndGameCondition:
-                resetCursorPos();
                 DynamicBackgroundPos = topHalfWorldCenter;
                 SetBackgroundUIPosition();
-                return; // dont set cursor locations again
+                break; // dont set cursor locations again
         }
 
         if (DynamicCursorPos.Equals(Vector2.zero) && Cursors[slideIdx] != null)
         {
+            Vector2 firstCursorPos = Cursors[0].GetComponent<RectTransform>().position;
+            Vector2 lastCursorPos = Cursors[Cursors.Length - 1].GetComponent<RectTransform>().position;
             DynamicCursorPos = Camera.main.ScreenToWorldPoint(Cursors[slideIdx].GetComponent<RectTransform>().position);
         }
         //else
@@ -538,6 +525,9 @@ public class TutorialManager : Singleton<TutorialManager>
 
     void MoveCursor()
     {
+        if (PauseCursorMovement)
+            return;
+
         // Calculate the fraction of time elapsed since movement started
         float elapsedTime = (Time.time - startTime) / duration;
 
@@ -650,7 +640,7 @@ public class TutorialManager : Singleton<TutorialManager>
         }
         if (slideIdx == (int)Slide.JoinRoom && JoinedRoomExists())
         {
-            StartCoroutine(AdvanceSlide());
+            StartCoroutine(DelayNextSlide(5)); // time for ai to move
         }
         if (slideIdx == (int)Slide.RebuildRoom)
         {
