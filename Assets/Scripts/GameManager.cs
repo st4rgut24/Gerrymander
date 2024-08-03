@@ -77,7 +77,7 @@ public class GameManager : Singleton<GameManager>
     public void LoadTutorial()
     {
         IsTutorial = true;
-        InitPlayerParty(.6f, Consts.PlayerTutorialParty);
+        InitPlayerParty(.55f, Consts.PlayerTutorialParty);
         SceneManager.LoadScene(Consts.TutorialScene);
     }
 
@@ -103,9 +103,11 @@ public class GameManager : Singleton<GameManager>
     //    Debug.Log("Election Year is " + ElectionYear);
     //}
 
-    public void LoadGameScene(float DemPartyPct, Party PlayerParty)
+    public void LoadGameScene(float DemPartyPct, float RepPartyPct, Party PlayerParty)
     {
-        InitPlayerParty(DemPartyPct, PlayerParty);
+        float partyPctShare = DemPartyPct / (DemPartyPct + RepPartyPct);
+
+        InitPlayerParty(partyPctShare, PlayerParty);
         SceneManager.LoadScene(Consts.Game);
     }
 

@@ -635,11 +635,12 @@ public class TutorialManager : Singleton<TutorialManager>
                 {
                     Debug.Log("advancing slide because oooionent party exists");
                 }
-                StartCoroutine(DelayNextSlide(2)); // time for ai to move
+                StartCoroutine(DelayNextSlide(5)); // time for ai to move
             }
         }
         if (slideIdx == (int)Slide.JoinRoom && JoinedRoomExists())
         {
+            PauseCursorMovement = true; // stop dragging indicator
             StartCoroutine(DelayNextSlide(5)); // time for ai to move
         }
         if (slideIdx == (int)Slide.RebuildRoom)

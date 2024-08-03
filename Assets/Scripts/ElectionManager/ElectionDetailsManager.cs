@@ -60,13 +60,86 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
             {
                 2020,
                 new ElectionDetails(
-                    "Having survived an assasination attempt, former president Trump rematches Biden in a tense election.",
+                    "Having survived an assassination attempt, former president Trump rematches Biden in a tense election.",
                     2020,
                     new PartyDetails("biden", "Joe Biden", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f)
-                    )
+                )
+            },
+            {
+                2016,
+                new ElectionDetails(
+                    "In a shocking outcome, Donald Trump wins against Hillary Clinton, marking a dramatic shift in American politics.",
+                    2016,
+                    new PartyDetails("clinton", "Hillary Clinton", Party.Democrat, new List<string>() {"Clinton Foundation Experience", "Expand Healthcare"}, .48f),
+                    new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"Make America Great Again", "Immigration Reform"}, .46f)
+                )
+            },
+            {
+                2012,
+                new ElectionDetails(
+                    "Barack Obama secures a second term against Mitt Romney amid a struggling economy and ongoing foreign conflicts.",
+                    2012,
+                    new PartyDetails("obama", "Barack Obama", Party.Democrat, new List<string>() {"Affordable Care Act", "Economic Recovery"}, .51f),
+                    new PartyDetails("romney", "Mitt Romney", Party.Republican, new List<string>() {"Economic Reform", "Reduce Government Spending"}, .47f)
+                )
+            },
+            {
+                2008,
+                new ElectionDetails(
+                    "Barack Obama makes history as the first African American president, defeating John McCain in a historic election.",
+                    2008,
+                    new PartyDetails("obama", "Barack Obama", Party.Democrat, new List<string>() {"Change", "End the Iraq War"}, .53f),
+                    new PartyDetails("mccain", "John McCain", Party.Republican, new List<string>() {"Stay the Course in Iraq", "Tax Cuts"}, .46f)
+                )
+            },
+            {
+                2004,
+                new ElectionDetails(
+                    "Incumbent President George W. Bush defeats John Kerry in a close race dominated by foreign policy and national security issues.",
+                    2004,
+                    new PartyDetails("kerry", "John Kerry", Party.Democrat, new List<string>() {"End the Iraq War", "Healthcare Reform"}, .48f),
+                    new PartyDetails("bush", "George W. Bush", Party.Republican, new List<string>() {"War on Terror", "Tax Cuts"}, .51f)
+                )
+            },
+            {
+                2000,
+                new ElectionDetails(
+                    "George W. Bush wins a contentious election against Al Gore, which is decided by a narrow margin in Florida.",
+                    2000,
+                    new PartyDetails("gore", "Al Gore", Party.Democrat, new List<string>() {"Environmental Protection", "Social Security Reform"}, .48f),
+                    new PartyDetails("bush", "George W. Bush", Party.Republican, new List<string>() {"Tax Cuts", "Education Reform"}, .48f)
+                )
+            },
+            {
+                1996,
+                new ElectionDetails(
+                    "Bill Clinton wins re-election against Bob Dole, as the economy continues to improve and the political landscape shifts.",
+                    1996,
+                    new PartyDetails("clinton", "Bill Clinton", Party.Democrat, new List<string>() {"Economic Prosperity", "Welfare Reform"}, .49f),
+                    new PartyDetails("dole", "Bob Dole", Party.Republican, new List<string>() {"Tax Cuts", "Balanced Budget"}, .41f)
+                )
+            },
+            {
+                1992,
+                new ElectionDetails(
+                    "Bill Clinton defeats incumbent George H. W. Bush, capitalizing on economic dissatisfaction and his appeal as a 'new Democrat'.",
+                    1992,
+                    new PartyDetails("clinton", "Bill Clinton", Party.Democrat, new List<string>() {"Economic Growth", "Healthcare Reform"}, .43f),
+                    new PartyDetails("bush", "George H. W. Bush", Party.Republican, new List<string>() {"Foreign Policy Experience", "Tax Increases"}, .37f)
+                )
+            },
+            {
+                1988,
+                new ElectionDetails(
+                    "George H. W. Bush wins against Michael Dukakis, emphasizing his experience and promising to continue Reagan's policies.",
+                    1988,
+                    new PartyDetails("dukakis", "Michael Dukakis", Party.Democrat, new List<string>() {"Healthcare Reform", "Education Investment"}, .46f),
+                    new PartyDetails("bush", "George H. W. Bush", Party.Republican, new List<string>() {"Continue Reagan's Policies", "Strengthen Defense"}, .53f)
+                )
             }
-        };
+        };  
+
     }
 
     // Start is called before the first frame update
@@ -96,7 +169,7 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 
     public void InitGame()
     {
-        GameManager.Instance.LoadGameScene(details.GetDemPartyPct(), PlayerParty);
+        GameManager.Instance.LoadGameScene(details.GetDemPartyPct(), details.GetRepPartyPct(), PlayerParty);
     }
 
     void CreateFunnel()
