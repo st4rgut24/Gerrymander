@@ -78,6 +78,7 @@ public class TutorialController : Singleton<TutorialController>
                 break;
             case (int)Slide.RebuildRoom:
                 PauseDragEvent = true;
+                PauseTouchEvent = false;
                 break;
             case (int)Slide.EndGameCondition:
                 PauseTouchEvent = true;

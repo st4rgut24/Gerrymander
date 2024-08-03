@@ -466,7 +466,6 @@ public class Map : Singleton<Map>
     {
         District roomDistrict = room.district;
 
-
         Rooms.Remove(room);
         room.RemoveEdgeCollider();
         RemoveRoomEvent?.Invoke(room);

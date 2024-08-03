@@ -77,6 +77,12 @@ public class TutorialManager : Singleton<TutorialManager>
     Vector2 topHalfWorldCenter;
     Vector2 bottomHalfWorldCenter;
 
+    RoomPrefab joinedRoom1;
+    RoomPrefab joinedRoom2;
+
+    Vector2 joinedRoomCenter;
+    Vector2 joinedRoomBackgroundPos;
+
     Vector2 DynamicBackgroundPos;
     Vector2 DynamicCursorPos;
 
@@ -92,27 +98,23 @@ public class TutorialManager : Singleton<TutorialManager>
 
     RoomPrefab playerPartyFirstRoom;
 
-    RoomPrefab removedRoom;
-
     bool PartyLineDrawn = false;
+    bool StartDrawPartyLine = false;
 
-    int playerScoreTracker = 0;
-    int aiScoreTracker = 0;
-
+    int democratScoreTracker = 0;
+    int republicanScoreTracker = 0;
+    
     void setPrevTurnState()
     {
         PartyLineDrawn = false;
 
-        playerScoreTracker = GameManager.Instance.democraticDistricts;
-        aiScoreTracker = GameManager.Instance.republicanDistricts;
+        democratScoreTracker = GameManager.Instance.democraticDistricts;
+        republicanScoreTracker = GameManager.Instance.republicanDistricts;
     }
 
-    public void AdvanceSlide()
+    public IEnumerator AdvanceSlide()
     {
         setPrevTurnState();
-
-        Debug.Log("Player score " + playerScoreTracker);
-        Debug.Log("AI score " + aiScoreTracker);
 
         slideIdx++;
 
@@ -122,6 +124,14 @@ public class TutorialManager : Singleton<TutorialManager>
         }
 
         TutorialController.Instance.SetSlideIdx(slideIdx);
+
+        if (slideIdx != (int)Slide.OpponentTurn) // don't want to wait for line to finish drawing for this slide
+        {
+            while (StartDrawPartyLine && !PartyLineDrawn) // don't advance to next slide state until political layout is stabilized
+                yield return null;
+        }
+
+        Timer.Instance.UnpauseTimer();
         SetupSlideEnvironment();
 
         ActiveSlide = Slides[slideIdx];
@@ -212,23 +222,38 @@ public class TutorialManager : Singleton<TutorialManager>
         DynamicBackgroundPos = worldPos;
     }
 
-    public string GetEvaluationText(int delta, int oppDelta, Party party)
+    public string GetEvaluationSubText(int delta)
     {
-        string playerParty = party == Party.Democrat ? "Democrats" : "Republicans";
-        string oppositeParty = party == Party.Democrat ? "Republicans" : "Democrats";
-
-        if (delta == 0)
+        if (delta < 0)
         {
-            if (oppDelta == 0)
-                return "didn't change the voting demographic.";
-            else
-                return "surrendered " + oppDelta.ToString() + " vote to the " + oppositeParty;
+            return "lost a vote";
+        }
+        else if (delta == 0)
+        {
+            return "votes remain unchanged";
         }
         else
         {
-            return "gained " + delta.ToString() + " vote for the " + playerParty;
+            return "gained a vote";
         }
     }
+
+    public string GetEvaluationText(Party party)
+    {
+        int deltaDem = GameManager.Instance.democraticDistricts - democratScoreTracker;
+        int deltaRep = GameManager.Instance.republicanDistricts - republicanScoreTracker;
+
+        if (party == Party.Democrat)
+        {
+            return "The Democrats " + GetEvaluationSubText(deltaDem) + "and the Republicans " + GetEvaluationSubText(deltaRep); 
+        }
+        else
+        {
+            return "The Republicans " + GetEvaluationSubText(deltaRep) + "and the Democrats " + GetEvaluationSubText(deltaDem);
+        }
+    }
+
+
 
     private int getScore(Party party)
     {
@@ -251,15 +276,9 @@ public class TutorialManager : Singleton<TutorialManager>
             yield return null;
         }
 
-        int updatedAIScore = getScore(aiParty);
-        int updatedDemScore = getScore(playerParty);
+        yield return new WaitForSeconds(1);
 
-        if (isPlayersTurn)
-            slideText.text = "Your move " + GetEvaluationText(updatedDemScore - playerScoreTracker, updatedAIScore - aiScoreTracker, playerParty);
-        else
-            slideText.text = "Your opponent's move " + GetEvaluationText(updatedAIScore - aiScoreTracker, updatedDemScore - playerScoreTracker, aiParty);
-
-        slideText.text = prefix + slideText.text;
+        slideText.text = prefix + GetEvaluationText(isPlayersTurn ? playerParty : aiParty);
 
         StartCoroutine(DelayNextSlide(3));
     }
@@ -268,7 +287,7 @@ public class TutorialManager : Singleton<TutorialManager>
     {
         AdvancingSlide = true;
         yield return new WaitForSeconds(seconds);
-        AdvanceSlide();
+        StartCoroutine(AdvanceSlide());
         AdvancingSlide = false;
     }
 
@@ -285,9 +304,21 @@ public class TutorialManager : Singleton<TutorialManager>
         return null;
     }
 
-    public RoomPrefab GetAdjacentDistrict(RoomPrefab room)
+    public RoomPrefab GetAdjacentDistrictByParty(RoomPrefab room, Party party)
     {
-        return room.AdjacentRooms[0];
+        RoomPrefab defaultRoom = room.AdjacentRooms[0];
+
+        foreach (RoomPrefab adjRoom in room.AdjacentRooms)
+        {
+            if (adjRoom.GetParty() == party)
+            {
+                defaultRoom = adjRoom;
+                break;
+            }
+        }
+
+        Debug.Log("Couldnt find adjacent district with party " + party);
+        return defaultRoom;
     }
 
     public RoomPrefab GetOpponentDistrict()
@@ -366,21 +397,38 @@ public class TutorialManager : Singleton<TutorialManager>
                     toDistrict = Map.Instance.Rooms[0]; // get any room
                 }
 
-                RoomPrefab fromDistrict = GetAdjacentDistrict(toDistrict);
+                RoomPrefab fromDistrict = GetAdjacentDistrictByParty(toDistrict, playerParty);
+
+                joinedRoom1 = toDistrict;
+                joinedRoom2 = fromDistrict;
 
                 // set to cursor
                 // set from cursor
                 SetCursorPositionFromRoom(fromDistrict);
                 cursorEndLoc = toDistrict.GetCenter();
+                Debug.Log("To district " + toDistrict.GetCenter());
+                Debug.Log("From district " + fromDistrict.GetCenter());
+
+                joinedRoomCenter = cursorEndLoc;
+                bool isFartherCenter = Vector2.Distance(topHalfWorldCenter, joinedRoomCenter) < Vector2.Distance(bottomHalfWorldCenter, joinedRoomCenter);
+                joinedRoomBackgroundPos = Vector2.Distance(topHalfWorldCenter, joinedRoomCenter) < Vector2.Distance(bottomHalfWorldCenter, joinedRoomCenter) ?
+                    bottomHalfWorldCenter :
+                    topHalfWorldCenter;
+
+
+                DynamicBackgroundPos = joinedRoomBackgroundPos;
+                SetBackgroundUIPosition();
                 break;
             case (int)Slide.RebuildRoom:
-                //SetBackgroundUIPosition();
-                //SetCursorUIPosition();
+                DynamicCursorPos = joinedRoomCenter;
+                SetBackgroundPosition(joinedRoomBackgroundPos);
+
+                SetBackgroundUIPosition();
+                SetCursorUIPosition();
                 break;
             case (int)Slide.EndGameCondition:
-                if (IsTopRoomFlag)
-                    DynamicBackgroundPos += Vector2.up * .7f;
-
+                resetCursorPos();
+                DynamicBackgroundPos = topHalfWorldCenter;
                 SetBackgroundUIPosition();
                 return; // dont set cursor locations again
         }
@@ -398,6 +446,12 @@ public class TutorialManager : Singleton<TutorialManager>
         {
             cursorEndLoc = cursorStartLocation + Vector2.up * .1f;
         }
+    }
+
+    void resetCursorPos()
+    {
+        DynamicCursorPos = Vector2.zero;
+        cursorEndLoc = Vector2.zero;
     }
 
     public void SetCustomStartEndCursorLocation(float distance, Vector2 startPos)
@@ -427,25 +481,25 @@ public class TutorialManager : Singleton<TutorialManager>
 
     private void OnEnable()
     {
-        Map.RemoveRoomEvent += OnRoomRemoved;
         LineAnimator.PartyLineDrawn += OnPartyLineDrawn;
+        LineAnimator.DrawPartyLine += OnDrawingPartyLine;
+    }
+
+    void OnDrawingPartyLine()
+    {
+        StartDrawPartyLine = true;
     }
 
     void OnPartyLineDrawn()
     {
         playCount++;
         PartyLineDrawn = true;
+        StartDrawPartyLine = false;
     }
 
     private void OnDisable()
     {
-        Map.RemoveRoomEvent -= OnRoomRemoved;
         LineAnimator.PartyLineDrawn -= OnPartyLineDrawn;
-    }
-
-    private void OnRoomRemoved(RoomPrefab room)
-    {
-        removedRoom = room;
     }
 
     private void Awake()
@@ -461,7 +515,7 @@ public class TutorialManager : Singleton<TutorialManager>
     {
         Timer.Instance.SecToMove = Consts.TutorialSecToMove;
         startTime = Time.time;
-        AdvanceSlide();
+        StartCoroutine(AdvanceSlide());
     }
 
     void MoveCursor()
@@ -515,6 +569,11 @@ public class TutorialManager : Singleton<TutorialManager>
     // Advance slide conditions here, check every frame
     void Update()
     {
+        if (Timer.Instance.secLeft < 1)
+        {
+            Timer.Instance.PauseTimer();
+        }
+
         MoveCursor();
 
         if (AdvancingSlide)
@@ -535,10 +594,6 @@ public class TutorialManager : Singleton<TutorialManager>
         }
         if (slideIdx == (int)Slide.DivideToScore)
         {
-            if (Timer.Instance.secLeft <= 1)
-            {
-                Timer.Instance.PauseTimer();
-            }
             if (Map.Instance.Rooms.Count > 1)
             {
                 StartCoroutine(DelayNextSlide(2));
@@ -546,9 +601,8 @@ public class TutorialManager : Singleton<TutorialManager>
         }
         if (slideIdx == (int)Slide.ColorMeaning)
         {
-            if (!GameManager.Instance.PlayerTurn)
-                StartCoroutine(DelayNextSlide(3)); // delay is time for agent to move
-                //StartCoroutine(DelayNextSlide(20)); // delay is time for agent to move
+            if (!GameManager.Instance.PlayerTurn && StartDrawPartyLine) // opponent starts drawing party line
+                StartCoroutine(AdvanceSlide());
         }
         if (slideIdx == (int)Slide.OpponentTurn)
         {
@@ -563,7 +617,7 @@ public class TutorialManager : Singleton<TutorialManager>
             {
                 Slides[slideIdx].SetActive(false);
             }
-            if (playCount > 6 || IsOpponentDistrictExist())
+            if (playCount > 6 || (IsOpponentDistrictExist() && playCount >= 4))
             {
                 if (playCount > 6)
                 {
@@ -573,18 +627,18 @@ public class TutorialManager : Singleton<TutorialManager>
                 {
                     Debug.Log("advancing slide because oooionent party exists");
                 }
-                AdvanceSlide();
+                StartCoroutine(DelayNextSlide(2)); // time for ai to move
             }
         }
         if (slideIdx == (int)Slide.JoinRoom && JoinedRoomExists())
         {
-            StartCoroutine(EvaluateTurn("", true));
+            StartCoroutine(AdvanceSlide());
         }
         if (slideIdx == (int)Slide.RebuildRoom)
         {
-            if (DestroyedRoom.IsRoomCompleted())
+            if (joinedRoom1.IsRoomCompleted() || joinedRoom2.IsRoomCompleted())
             {
-                StartCoroutine(EvaluateTurn("", true));
+                StartCoroutine(AdvanceSlide());
             }
         }
     }

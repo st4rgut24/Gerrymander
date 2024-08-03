@@ -58,6 +58,11 @@ public class RoomPrefab: MonoBehaviour
 
     public Party GetParty()
     {
+        if (district == null)
+        {
+            return Party.None;
+        }
+
         return district.party;
     }
 
