@@ -308,9 +308,9 @@ public class TutorialManager : Singleton<TutorialManager>
     {
         RoomPrefab defaultRoom = room.AdjacentRooms[0];
 
-        foreach (RoomPrefab adjRoom in room.AdjacentRooms)
+        foreach (RoomPrefab adjRoom in Map.Instance.Rooms)
         {
-            if (adjRoom.GetParty() == party)
+            if (room.roomId != adjRoom.roomId && adjRoom.GetParty() == party && room.GetSharedEdges(adjRoom).Count > 0)
             {
                 defaultRoom = adjRoom;
                 break;
@@ -320,6 +320,23 @@ public class TutorialManager : Singleton<TutorialManager>
         Debug.Log("Couldnt find adjacent district with party " + party);
         return defaultRoom;
     }
+
+    //public RoomPrefab GetAdjacentDistrictByParty(RoomPrefab room, Party party)
+    //{
+    //    RoomPrefab defaultRoom = room.AdjacentRooms[0];
+
+    //    foreach (RoomPrefab adjRoom in room.AdjacentRooms)
+    //    {
+    //        if (adjRoom.GetParty() == party)
+    //        {
+    //            defaultRoom = adjRoom;
+    //            break;
+    //        }
+    //    }
+
+    //    Debug.Log("Couldnt find adjacent district with party " + party);
+    //    return defaultRoom;
+    //}
 
     public RoomPrefab GetOpponentDistrict()
     {
@@ -394,6 +411,7 @@ public class TutorialManager : Singleton<TutorialManager>
                 }
                 else
                 {
+
                     toDistrict = Map.Instance.Rooms[0]; // get any room
                 }
 
