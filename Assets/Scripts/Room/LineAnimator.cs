@@ -129,7 +129,6 @@ public class LineAnimator: Singleton<LineAnimator>
             ToggleAnimationState(false);
             IsAnimating = false;
             PartyLineDrawn?.Invoke();
-            //Map.Instance.RecalculatePartyLines();
         }
     }
 }

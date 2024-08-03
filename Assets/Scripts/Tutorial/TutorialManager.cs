@@ -207,22 +207,21 @@ public class TutorialManager : Singleton<TutorialManager>
         DynamicBackgroundPos = worldPos;
     }
 
-    public string GetEvaluationText(int delta, Party party)
+    public string GetEvaluationText(int delta, int oppDelta, Party party)
     {
         string playerParty = party == Party.Democrat ? "Democrats" : "Republicans";
         string oppositeParty = party == Party.Democrat ? "Republicans" : "Democrats";
 
         if (delta == 0)
         {
-            return "didn't change the voting demographic.";
-        }
-        else if (delta >= 1)
-        {
-            return "gained " + delta.ToString() + " vote for the " + playerParty;
+            if (oppDelta == 0)
+                return "didn't change the voting demographic.";
+            else
+                return "surrendered " + delta.ToString() + " vote to the " + oppositeParty;
         }
         else
         {
-            return "surrendered " + delta.ToString() + " vote to the " + oppositeParty;
+            return "gained " + delta.ToString() + " vote for the " + playerParty;
         }
     }
 
@@ -251,9 +250,9 @@ public class TutorialManager : Singleton<TutorialManager>
         int updatedDemScore = getScore(playerParty);
 
         if (isPlayersTurn)
-            slideText.text = "Your move " + GetEvaluationText(updatedDemScore - playerScoreTracker, playerParty);
+            slideText.text = "Your move " + GetEvaluationText(updatedDemScore - playerScoreTracker, updatedAIScore - aiScoreTracker, playerParty);
         else
-            slideText.text = "Your opponent's move " + GetEvaluationText(updatedAIScore - aiScoreTracker, aiParty);
+            slideText.text = "Your opponent's move " + GetEvaluationText(updatedAIScore - aiScoreTracker, updatedDemScore - playerScoreTracker, aiParty);
 
         slideText.text = prefix + slideText.text;
 
