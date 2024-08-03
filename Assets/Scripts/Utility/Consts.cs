@@ -39,6 +39,7 @@ public class Consts
     public const string Summary = "Summary";
 
     // time
+    public const float TutorialSecToMove = 20;
     public const int AgentActiondelay = 3;
     public const int timeToDrawLongestDivider = 5;
     public const float waitTimeForRoomAction = 1;

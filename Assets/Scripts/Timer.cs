@@ -8,7 +8,7 @@ public class Timer : Singleton<Timer>
     [SerializeField]
     private TextMeshProUGUI timerText;
 
-    public const float SecToMove = 10;
+    public float SecToMove = 10;
 
     private bool PauseTimerFlag = false;
 

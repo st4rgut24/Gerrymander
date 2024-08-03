@@ -69,8 +69,15 @@ public class TutorialController : Singleton<TutorialController>
             case (int)Slide.ColorMeaning:
                 PauseTouchEvent = true;
                 break;
-            case (int)Slide.JoinRoom:
+            case (int)Slide.KeepDividing:
                 PauseTouchEvent = false;
+                break;
+            case (int)Slide.JoinRoom:
+                PauseDragEvent = false;
+                PauseTouchEvent = true;
+                break;
+            case (int)Slide.RebuildRoom:
+                PauseDragEvent = true;
                 break;
             case (int)Slide.EndGameCondition:
                 PauseTouchEvent = true;
@@ -86,13 +93,14 @@ public class TutorialController : Singleton<TutorialController>
 
     private void SendTouchEvent(Vector3 touchPos)
     {
-        if (PauseTouchEvent)
-        {
-            return;
-        }
+        //if (PauseTouchEvent)
+        //{
+        //    return;
+        //}
         if (IsSingleTouch(touchPos))
         {
-            TouchEvent?.Invoke(touchPos);
+            if (!PauseTouchEvent)
+                TouchEvent?.Invoke(touchPos);
         }
         else if (!PauseDragEvent)
         {

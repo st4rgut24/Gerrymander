@@ -27,6 +27,10 @@ public class TutorialManager : Singleton<TutorialManager>
     int prevPlayerScore;
     int prevAgentScore;
 
+    int playCount = 0;
+    float keepDividingBkgndSec = 3; // num sec this background is up
+    float keepDividingCounter = 0;
+
     const string InstructionGoName = "Instruction";
 
     Party playerParty;
@@ -47,6 +51,7 @@ public class TutorialManager : Singleton<TutorialManager>
         DivideToScore,   // DAY 1
         ColorMeaning,
         OpponentTurn,
+        KeepDividing,
         JoinRoom,        // DAY 3
         RebuildRoom,     // DAY 4
         EndGameCondition
@@ -174,7 +179,7 @@ public class TutorialManager : Singleton<TutorialManager>
         RectTransform rectTransform = UI.GetComponent<RectTransform>();
         // set MIN and MAX Anchor values(positions) to the same position (ViewportPoint)
 
-        Debug.Log("set viewport point " + viewportPoint);
+        //Debug.Log("set viewport point " + viewportPoint);
 
         rectTransform.anchorMin = viewportPoint;
         rectTransform.anchorMax = viewportPoint;
@@ -217,7 +222,7 @@ public class TutorialManager : Singleton<TutorialManager>
             if (oppDelta == 0)
                 return "didn't change the voting demographic.";
             else
-                return "surrendered " + delta.ToString() + " vote to the " + oppositeParty;
+                return "surrendered " + oppDelta.ToString() + " vote to the " + oppositeParty;
         }
         else
         {
@@ -280,6 +285,35 @@ public class TutorialManager : Singleton<TutorialManager>
         return null;
     }
 
+    public RoomPrefab GetAdjacentDistrict(RoomPrefab room)
+    {
+        return room.AdjacentRooms[0];
+    }
+
+    public RoomPrefab GetOpponentDistrict()
+    {
+        foreach (RoomPrefab district in Map.Instance.Rooms)
+        {
+            if (district.GetParty() == aiParty)
+            {
+                return district;
+            }
+        }
+        return null;
+    }
+
+    public bool IsOpponentDistrictExist()
+    {
+        foreach (RoomPrefab district in Map.Instance.Rooms)
+        {
+            if (district.GetParty() == aiParty)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void SetupSlideEnvironment()
     {
         DynamicCursorPos = Vector2.zero;
@@ -310,19 +344,34 @@ public class TutorialManager : Singleton<TutorialManager>
                 break;
             case (int)Slide.OpponentTurn:
                 // evaluate the opponent's move
-                bool IsBottomCenterFarther = Vector2.Distance(topHalfWorldCenter, removedRoom.GetCenter()) < Vector2.Distance(bottomHalfWorldCenter, removedRoom.GetCenter());
+                bool IsBottomCenterFarther = Vector2.Distance(topHalfWorldCenter, playerPartyFirstRoom.GetCenter()) < Vector2.Distance(bottomHalfWorldCenter, playerPartyFirstRoom.GetCenter());
                 Vector2 fartherPos = IsBottomCenterFarther ? bottomHalfWorldCenter : topHalfWorldCenter;
 
                 SetBackgroundPosition(fartherPos);
                 SetBackgroundUIPosition();
                 break;
+            case (int)Slide.KeepDividing:
+                break;
             case (int)Slide.JoinRoom:
                 Debug.Log("Join room");
-                //DestroyedRoom = RoomWithPlayerParty(virus.gameObject);
-                //SetCursorPositionFromRoomWithVirus();
+                RoomPrefab toDistrict;
+                RoomPrefab OppDistrict = GetOpponentDistrict();
 
-                //SetBackgroundUIPosition();
-                //SetCursorUIPosition();
+                if (OppDistrict != null)
+                {
+                    toDistrict = OppDistrict;
+                }
+                else
+                {
+                    toDistrict = Map.Instance.Rooms[0]; // get any room
+                }
+
+                RoomPrefab fromDistrict = GetAdjacentDistrict(toDistrict);
+
+                // set to cursor
+                // set from cursor
+                SetCursorPositionFromRoom(fromDistrict);
+                cursorEndLoc = toDistrict.GetCenter();
                 break;
             case (int)Slide.RebuildRoom:
                 //SetBackgroundUIPosition();
@@ -384,6 +433,7 @@ public class TutorialManager : Singleton<TutorialManager>
 
     void OnPartyLineDrawn()
     {
+        playCount++;
         PartyLineDrawn = true;
     }
 
@@ -409,6 +459,7 @@ public class TutorialManager : Singleton<TutorialManager>
     // Start is called before the first frame update
     void Start()
     {
+        Timer.Instance.SecToMove = Consts.TutorialSecToMove;
         startTime = Time.time;
         AdvanceSlide();
     }
@@ -420,7 +471,7 @@ public class TutorialManager : Singleton<TutorialManager>
 
         if (movingToEnd)
         {
-            Debug.Log("cursor start location " + cursorStartLocation + " cursor end location " + cursorEndLoc);
+            //Debug.Log("cursor start location " + cursorStartLocation + " cursor end location " + cursorEndLoc);
             // Move towards the endLocation
             Vector2 lerpedPos = Vector3.Lerp(cursorStartLocation, cursorEndLoc, elapsedTime);
 
@@ -462,11 +513,13 @@ public class TutorialManager : Singleton<TutorialManager>
         if (slideIdx == (int)Slide.MonitorDaysLeft)
         {
             StartCoroutine(DelayNextSlide(3));
+            //StartCoroutine(DelayNextSlide(5));
         }
         if (slideIdx == (int)Slide.MonitorTimer)
         {
 
             StartCoroutine(DelayNextSlide(3));
+            //StartCoroutine(DelayNextSlide(5));
         }
         if (slideIdx == (int)Slide.DivideToScore)
         {
@@ -491,7 +544,26 @@ public class TutorialManager : Singleton<TutorialManager>
 
             StartCoroutine(EvaluateTurn("", false));
         }
-
+        if (slideIdx == (int)Slide.KeepDividing)
+        {
+            keepDividingCounter += Time.deltaTime;
+            if (keepDividingCounter > keepDividingBkgndSec)
+            {
+                Slides[slideIdx].SetActive(false);
+            }
+            if (playCount > 6 || IsOpponentDistrictExist())
+            {
+                if (playCount > 6)
+                {
+                    Debug.Log("advancing slide because more than 6 plays ahve happend");
+                }
+                else
+                {
+                    Debug.Log("advancing slide because oooionent party exists");
+                }
+                AdvanceSlide();
+            }
+        }
         if (slideIdx == (int)Slide.JoinRoom)
         {
             StartCoroutine(EvaluateTurn("", true));
