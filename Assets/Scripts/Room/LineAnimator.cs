@@ -12,8 +12,13 @@ public class LineAnimator: Singleton<LineAnimator>
     bool IsPrependHalfAnimated = false;
     bool IsAppendHalfAnimated = false;
 
+    public static Action PartyLineDrawn;
+    public static Action DrawPartyLine;
+
     public void AnimateEdges(List<Edge> edges, EdgeCollider2D edgeC)
     {
+        DrawPartyLine?.Invoke();
+
         animatingEdges = edges;
         IsAnimating = true;
             IsPrependHalfAnimated = false;
@@ -123,7 +128,8 @@ public class LineAnimator: Singleton<LineAnimator>
         {
             ToggleAnimationState(false);
             IsAnimating = false;
-            Map.Instance.RecalculatePartyLines();
+            PartyLineDrawn?.Invoke();
+            //Map.Instance.RecalculatePartyLines();
         }
     }
 }

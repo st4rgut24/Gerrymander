@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 /// <summary>
 /// The map defining the layout of the spaces
@@ -54,10 +55,17 @@ public class Map : Singleton<Map>
 
     float cellLength; // cell length in pixels (cell height == cell width)
 
+    public static Action<RoomPrefab> RemoveRoomEvent;
+
     private void OnEnable()
     {
         Controller.TouchEvent += OnSingleTouch;
         Controller.DragEvent += OnDrag;
+
+        TutorialController.TouchEvent += OnSingleTouch;
+        TutorialController.DragEvent += OnDrag;
+
+        LineAnimator.PartyLineDrawn += RecalculatePartyLines;
     }
 
     private void Awake()
@@ -180,7 +188,7 @@ public class Map : Singleton<Map>
         roomsToRecalculate.Clear();
         districtToDelete = null;
 
-        GameManager.Instance.FinishTurn();
+        StartCoroutine(GameManager.Instance.FinishTurn());
     }
 
     private Party CheckDistrictParty(List<RoomPrefab> areas)
@@ -461,6 +469,8 @@ public class Map : Singleton<Map>
 
         Rooms.Remove(room);
         room.RemoveEdgeCollider();
+        RemoveRoomEvent?.Invoke(room);
+
         GameObject.Destroy(room.gameObject);
     }
 
@@ -495,6 +505,12 @@ public class Map : Singleton<Map>
     {
         Controller.TouchEvent -= OnSingleTouch;
         Controller.DragEvent -= OnDrag;
+
+        TutorialController.TouchEvent -= OnSingleTouch;
+        TutorialController.DragEvent -= OnDrag;
+
+        LineAnimator.PartyLineDrawn -= RecalculatePartyLines;
+
     }
 }
 

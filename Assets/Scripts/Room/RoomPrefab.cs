@@ -46,6 +46,11 @@ public class RoomPrefab: MonoBehaviour
         return this.box.bounds.Contains(coord);
     }
 
+    public Vector2 GetCenter()
+    {
+        return box.bounds.center;
+    }
+
     public void SetDistrict(District district)
     {
         this.district = district;

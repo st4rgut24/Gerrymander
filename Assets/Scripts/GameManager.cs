@@ -13,8 +13,9 @@ public enum Difficulty
 
 public class GameManager : Singleton<GameManager>
 {
-    bool PlayerTurn;
+    public bool PlayerTurn;
     public bool GameOver = false;
+    //public const int TimeAgentTakesToMove = 3;
 
     Score score;
     Days days;
@@ -31,6 +32,9 @@ public class GameManager : Singleton<GameManager>
 
     public int democraticDistricts = 0;
     public int republicanDistricts = 0;
+
+    public bool IsTutorial = false;
+    public const int TutorialTimeAgentTakesToMove = 3;
 
     Agent agent;
 
@@ -72,7 +76,8 @@ public class GameManager : Singleton<GameManager>
 
     public void LoadTutorial()
     {
-        InitPlayerParty(.5f, Party.Democrat);
+        IsTutorial = true;
+        InitPlayerParty(.5f, Consts.TutorialParty);
         SceneManager.LoadScene(Consts.TutorialScene);
     }
 
@@ -118,7 +123,8 @@ public class GameManager : Singleton<GameManager>
             score = GameObject.Find(Consts.ScoreGo).GetComponent<Score>();
             days = GameObject.Find(Consts.DaysGo).GetComponent<Days>();
 
-            StartCoroutine(Timer.Instance.StartTimer());
+            //StartCoroutine(Timer.Instance.StartTimer()); // player goes first start the timer when the scene loads
+            Timer.Instance.ResetTimer();
         }
     }
 
@@ -157,19 +163,19 @@ public class GameManager : Singleton<GameManager>
     }
 
     // player has finished their turn
-    public void FinishTurn()
+    public IEnumerator FinishTurn()
     {
         PlayerTurn = !PlayerTurn;
 
+        //StartCoroutine(Timer.Instance.StartTimer());
+        //Timer.Instance.StartTimer();
+
         if (!PlayerTurn)
         {
-            Timer.Instance.SuspendTimer();
+            yield return new WaitForSeconds(Consts.AgentActiondelay);
+
             agent.DivideRoom();
             NextDay();
-        }
-        else // player's turn
-        {
-            StartCoroutine(Timer.Instance.StartTimer());
         }
     }
 

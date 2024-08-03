@@ -8,6 +8,8 @@ public class Consts
     public const float CurrentDist = 2f;
     public const float ImmunizeRadius = .75f;
 
+    public const Party TutorialParty = Party.Democrat;
+
     //scenes
     public const string LandingScene = "LandingPage";
     public const string PlayMenu = "PlayMenu";
@@ -36,6 +38,8 @@ public class Consts
     public const string Summary = "Summary";
 
     // time
+    public const int AgentActiondelay = 3;
+    public const int timeToDrawLongestDivider = 5;
     public const float waitTimeForRoomAction = 1;
 
     public const float expandDuration = .03f;

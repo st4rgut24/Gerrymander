@@ -10,12 +10,40 @@ public class Timer : Singleton<Timer>
 
     public const float SecToMove = 10;
 
-    private bool SuspendTimerFlag = false;
+    private bool PauseTimerFlag = false;
+
+    public float secLeft;
 
     // Start is called before the first frame update
     void Start()
     {
         timerText.text = FormatTime(SecToMove);
+    }
+
+    private void OnEnable()
+    {
+        LineAnimator.PartyLineDrawn += OnPartyLineDrawn;
+        LineAnimator.DrawPartyLine += OnDrawingPartyLine;
+    }
+
+
+    private void OnDisable()
+    {
+        LineAnimator.PartyLineDrawn -= OnPartyLineDrawn;
+        LineAnimator.DrawPartyLine -= OnDrawingPartyLine;
+
+    }
+
+    private void OnDrawingPartyLine()
+    {
+        // TODO: pause the timer until the line is drawn
+        PauseTimerFlag = true;
+    }
+
+    private void OnPartyLineDrawn()
+    {
+        // reset the timer
+        ResetTimer();
     }
 
     private string FormatTime(float seconds)
@@ -30,9 +58,10 @@ public class Timer : Singleton<Timer>
         }
     }
 
-    public void SuspendTimer()
+    public void ResetTimer()
     {
-        SuspendTimerFlag = false;
+        PauseTimerFlag = false;
+        secLeft = SecToMove;
     }
 
     // Update is called once per frame
@@ -41,23 +70,71 @@ public class Timer : Singleton<Timer>
         
     }
 
-
-
-    public IEnumerator StartTimer()
+    public void PauseTimer()
     {
-        SuspendTimerFlag = false;
-        
-        float secLeft = SecToMove;
-
-        while (secLeft > 0 && !SuspendTimerFlag)
-        {
-            timerText.text = FormatTime(secLeft);
-            yield return new WaitForSeconds(1f);
-
-            secLeft -= 1f; // maybe no
-        }
-
-        if (!SuspendTimerFlag) // timer has not been suspended, so trigger an action
-            GameManager.Instance.FinishTurn();
+        PauseTimerFlag = true;
     }
+
+    public void UnpauseTimer()
+    {
+        PauseTimerFlag = false;
+    }
+
+    private void FixedUpdate()
+    {
+        if (!PauseTimerFlag)
+        {
+            secLeft -= Time.deltaTime;
+            timerText.text = FormatTime(secLeft);
+
+            if (secLeft <= 0) // time's up!
+            {
+                StartCoroutine(GameManager.Instance.FinishTurn());
+                ResetTimer();
+            }
+        }
+    }
+
+    //public void StartTimer()
+    //{
+
+    //    while (secLeft > 0)
+    //    {
+    //        timerText.text = FormatTime(secLeft);
+    //        yield return new WaitForSeconds(1f);
+
+    //        if (!PauseTimerFlag)
+    //            secLeft -= 1f; // maybe no
+
+    //        //if (ResetTimerFlag)
+    //        //{
+    //        //    break;
+    //        //}
+    //    }
+
+    //    ResetTimer();
+    //    StartCoroutine(GameManager.Instance.FinishTurn());
+    //}
+
+    //public IEnumerator StartTimer()
+    //{        
+    //    secLeft = SecToMove;
+
+    //    while (secLeft > 0)
+    //    {
+    //        timerText.text = FormatTime(secLeft);
+    //        yield return new WaitForSeconds(1f);
+
+    //        if (!PauseTimerFlag)
+    //            secLeft -= 1f; // maybe no
+
+    //        if (ResetTimerFlag)
+    //        {
+    //            break;
+    //        }
+    //    }
+
+    //    ResetTimer();
+    //    StartCoroutine(GameManager.Instance.FinishTurn());
+    //}
 }
