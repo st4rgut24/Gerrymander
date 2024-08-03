@@ -77,7 +77,7 @@ public class GameManager : Singleton<GameManager>
     public void LoadTutorial()
     {
         IsTutorial = true;
-        InitPlayerParty(.5f, Consts.TutorialParty);
+        InitPlayerParty(.6f, Consts.PlayerTutorialParty);
         SceneManager.LoadScene(Consts.TutorialScene);
     }
 

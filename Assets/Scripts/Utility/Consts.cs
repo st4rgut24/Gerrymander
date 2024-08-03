@@ -8,7 +8,8 @@ public class Consts
     public const float CurrentDist = 2f;
     public const float ImmunizeRadius = .75f;
 
-    public const Party TutorialParty = Party.Democrat;
+    public const Party PlayerTutorialParty = Party.Democrat;
+    public const Party AiTutorialParty = Party.Republican;
 
     //scenes
     public const string LandingScene = "LandingPage";

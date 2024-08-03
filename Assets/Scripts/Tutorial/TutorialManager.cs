@@ -29,6 +29,9 @@ public class TutorialManager : Singleton<TutorialManager>
 
     const string InstructionGoName = "Instruction";
 
+    Party playerParty;
+    Party aiParty;
+
     //1. Number of days left til the election
     //2. Timer icon
     //3. How to score by dividing rooms
@@ -194,44 +197,6 @@ public class TutorialManager : Singleton<TutorialManager>
         return Map.Instance.FindRoomWorldCoords(virusGo.transform.position);
     }
 
-    private List<PersonPrefab> GetPlayerPartyChips()
-    {
-        List<PersonPrefab> PlayerPartyList = new List<PersonPrefab>();
-
-        PersonPlotter.Instance.PersonsList.ForEach((Person) =>
-        {
-            PersonPrefab personChip = Person.GetComponent<PersonPrefab>();
-            if (personChip.party == Consts.TutorialParty)
-            {
-                PlayerPartyList.Add(personChip);
-            }
-        });
-
-        return PlayerPartyList;
-    }
-
-    //public RoomPrefab GetRoomWithFewerVotes(RoomPrefab room1, RoomPrefab room2)
-    //{
-    //    List<PersonPrefab> playerChips = GetPlayerPartyChips();
-
-    //    int room1Chips = 0;
-    //    int room2Chips = 0;
-
-    //    playerChips.ForEach((chip) =>
-    //    {
-    //        if (RoomWithPlayerParty(chip.gameObject) == room1)
-    //        {
-    //            room1Chips++;
-    //        }
-    //        else
-    //        {
-    //            room2Chips++;
-    //        }
-    //    });
-
-    //    return room1Chips < room2Chips ? room1 : room2;
-    //}
-
     public void SetBackgroundPositionFromRoom(RoomPrefab room)
     {
         DynamicBackgroundPos = room.GetCenter();
@@ -242,25 +207,39 @@ public class TutorialManager : Singleton<TutorialManager>
         DynamicBackgroundPos = worldPos;
     }
 
-    public string GeScoreText(int delta)
+    public string GetEvaluationText(int delta, Party party)
     {
+        string playerParty = party == Party.Democrat ? "Democrats" : "Republicans";
+        string oppositeParty = party == Party.Democrat ? "Republicans" : "Democrats";
+
         if (delta == 0)
         {
-            return "didn't get any votes";
+            return "didn't change the voting demographic.";
         }
-        else if (delta > 1)
+        else if (delta >= 1)
         {
-            return "gained " + delta.ToString() + " votes";
+            return "gained " + delta.ToString() + " vote for the " + playerParty;
         }
         else
         {
-            return "lost " + delta.ToString() + " votes";
+            return "surrendered " + delta.ToString() + " vote to the " + oppositeParty;
+        }
+    }
+
+    private int getScore(Party party)
+    {
+        if (party == Party.Republican)
+            return GameManager.Instance.republicanDistricts;
+        else
+        {
+            return GameManager.Instance.democraticDistricts;
         }
     }
 
     // set the text based on the evaluation of the score
     public IEnumerator EvaluateTurn(string prefix, bool isPlayersTurn)
     {
+        AdvancingSlide = true; // prevents evalute turn from getting called many times
         TextMeshProUGUI slideText = ActiveSlide.GetComponentInChildren<TextMeshProUGUI>();
 
         while (!PartyLineDrawn) // wait for the divider to be drawn
@@ -268,15 +247,13 @@ public class TutorialManager : Singleton<TutorialManager>
             yield return null;
         }
 
-        int updatedAIScore = GameManager.Instance.republicanDistricts;
-        int updatedDemScore = GameManager.Instance.democraticDistricts;
+        int updatedAIScore = getScore(aiParty);
+        int updatedDemScore = getScore(playerParty);
 
         if (isPlayersTurn)
-            slideText.text = slideText.text + ". Your move " + GeScoreText(updatedDemScore - playerScoreTracker)
-                + " and resulted in your opponent " + GeScoreText(updatedAIScore - aiScoreTracker);
+            slideText.text = "Your move " + GetEvaluationText(updatedDemScore - playerScoreTracker, playerParty);
         else
-            slideText.text = slideText.text + ". Your opponent's move " + GeScoreText(updatedAIScore - aiScoreTracker)
-                + " and resulted in you " + GeScoreText(updatedDemScore - playerScoreTracker);
+            slideText.text = "Your opponent's move " + GetEvaluationText(updatedAIScore - aiScoreTracker, aiParty);
 
         slideText.text = prefix + slideText.text;
 
@@ -295,7 +272,7 @@ public class TutorialManager : Singleton<TutorialManager>
     {
         foreach (RoomPrefab room in rooms)
         {
-            if (room.GetParty() == Consts.TutorialParty)
+            if (room.GetParty() == playerParty)
             {
                 return room;
             }
@@ -341,16 +318,16 @@ public class TutorialManager : Singleton<TutorialManager>
                 SetBackgroundUIPosition();
                 break;
             case (int)Slide.JoinRoom:
+                Debug.Log("Join room");
+                //DestroyedRoom = RoomWithPlayerParty(virus.gameObject);
+                //SetCursorPositionFromRoomWithVirus();
 
-                DestroyedRoom = RoomWithPlayerParty(virus.gameObject);
-                SetCursorPositionFromRoomWithVirus();
-
-                SetBackgroundUIPosition();
-                SetCursorUIPosition();
+                //SetBackgroundUIPosition();
+                //SetCursorUIPosition();
                 break;
             case (int)Slide.RebuildRoom:
-                SetBackgroundUIPosition();
-                SetCursorUIPosition();
+                //SetBackgroundUIPosition();
+                //SetCursorUIPosition();
                 break;
             case (int)Slide.EndGameCondition:
                 if (IsTopRoomFlag)
@@ -421,6 +398,14 @@ public class TutorialManager : Singleton<TutorialManager>
     {
         removedRoom = room;
     }
+
+    private void Awake()
+    {
+        // tODO CHANGE THis to be configurable via the tutorial menu
+        playerParty = Consts.PlayerTutorialParty;
+        aiParty = Consts.AiTutorialParty;
+    }
+
 
     // Start is called before the first frame update
     void Start()
