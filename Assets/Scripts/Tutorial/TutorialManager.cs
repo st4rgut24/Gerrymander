@@ -500,6 +500,18 @@ public class TutorialManager : Singleton<TutorialManager>
         }
     }
 
+    public bool JoinedRoomExists()
+    {
+        foreach (RoomPrefab room in Map.Instance.Rooms)
+        {
+            if (room.AdjacentConnectedRooms.Count > 0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Advance slide conditions here, check every frame
     void Update()
     {
@@ -564,7 +576,7 @@ public class TutorialManager : Singleton<TutorialManager>
                 AdvanceSlide();
             }
         }
-        if (slideIdx == (int)Slide.JoinRoom)
+        if (slideIdx == (int)Slide.JoinRoom && JoinedRoomExists())
         {
             StartCoroutine(EvaluateTurn("", true));
         }
