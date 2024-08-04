@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// The map defining the layout of the spaces
@@ -263,6 +264,14 @@ public class Map : Singleton<Map>
         }
     }
 
+    private bool IsDivisionValid(Box box)
+    {
+        Vector2 PersonSize = PersonPlotter.Instance.PersonSize;
+        Debug.Log("Person size " + PersonSize);
+        Debug.Log("box size " + box.bounds);
+        return box.bounds.size.x / 2 > PersonSize.x || box.bounds.size.y / 2 > PersonSize.y;
+    }
+
     private void OnDestroy()
     {
         EdgeMaker.ClearEdgeDicts();
@@ -400,12 +409,15 @@ public class Map : Singleton<Map>
     /// <param name="plotCoord">coord where user wants to split into new rooms</param>
     public void DivideRoom(RoomPrefab room)
     {
-        if (room.district != null)
-            districtToDelete = room.district.gameObject;
+        if (IsDivisionValid(room.box))
+        {
+            if (room.district != null)
+                districtToDelete = room.district.gameObject;
 
-        Box box = room.box;
-        RemoveRoom(room);
-        CreateDividedRooms(box, false);
+            Box box = room.box;
+            RemoveRoom(room);
+            CreateDividedRooms(box, false);
+        }
     }
 
     public List<RoomPrefab> PretendDivideRoom(RoomPrefab room)

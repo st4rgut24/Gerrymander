@@ -31,13 +31,15 @@ public class PersonPlotter : Singleton<PersonPlotter>
 
 	private float buffer = 150; // pixels
 
-	//Dictionary<Party, Color> PartyColors = new Dictionary<Party, Color>()
-	//{
-	//	{ Party.Democrat, Color.blue },
-	//	{ Party.Republican, Color.red }
-	//};
+    public Vector2 PersonSize;
 
-	Dictionary<Party, Sprite> PartyColors;
+    //Dictionary<Party, Color> PartyColors = new Dictionary<Party, Color>()
+    //{
+    //	{ Party.Democrat, Color.blue },
+    //	{ Party.Republican, Color.red }
+    //};
+
+    Dictionary<Party, Sprite> PartyColors;
 
     private void OnEnable()
     {
@@ -93,7 +95,9 @@ public class PersonPlotter : Singleton<PersonPlotter>
 		Vector2 minWorldPoint = Camera.main.ScreenToWorldPoint(Vector2.zero + bufferVector);
 		Vector2 maxWorldPoint = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height) - bufferVector);
 
-		InitPopulation(minWorldPoint, maxWorldPoint);
+        PersonSize = PersonPrefabInst.transform.localScale;
+
+        InitPopulation(minWorldPoint, maxWorldPoint);
 	}
 
 	/// <summary>
