@@ -42,6 +42,6 @@ public class VerticalScrollSelector : MonoBehaviour
         }
 
         // Select the item at the given index
-        items[index].GetComponent<Image>().color = Color.green; // Change to your selected color or apply other selection effect
+        items[index].GetComponent<Image>().color = Color.yellow; // Change to your selected color or apply other selection effect
     }
 }

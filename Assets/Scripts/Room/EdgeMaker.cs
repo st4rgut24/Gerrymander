@@ -21,6 +21,12 @@ public class EdgeMaker
         EdgeDict[start].Add(end, edge);
     }
 
+    public static void ClearEdgeDicts()
+    {
+        EdgeDict.Clear();
+        EdgeCDict.Clear();
+    }
+
     public static void AddEdgeCollider(EdgeCollider2D collider, List<Edge> edges)
     {
         if (!EdgeCDict.ContainsKey(collider))

@@ -263,6 +263,11 @@ public class Map : Singleton<Map>
         }
     }
 
+    private void OnDestroy()
+    {
+        EdgeMaker.ClearEdgeDicts();
+    }
+
     private void OnDrag(Vector3 dragStart, Vector3 dragEnd)
     {
         RoomPrefab room1 = FindRoom(dragStart);

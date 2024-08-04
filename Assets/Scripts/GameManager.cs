@@ -68,6 +68,11 @@ public class GameManager : Singleton<GameManager>
         InitVoterComposition();
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
     public ElectionDetails GetDetailsFromPartyYear()
     {
         if (ElectionDetailsManager.ElectionMap == null)
