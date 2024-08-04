@@ -70,7 +70,14 @@ public class GameManager : Singleton<GameManager>
 
     public ElectionDetails GetDetailsFromPartyYear()
     {
-        return ElectionDetailsManager.ElectionMap[ElectionYear];
+        if (ElectionDetailsManager.ElectionMap == null)
+        {
+            return null;
+        }
+        if (ElectionDetailsManager.ElectionMap.ContainsKey(ElectionYear))
+            return ElectionDetailsManager.ElectionMap[ElectionYear];
+        else
+            return null;
     }
 
     public void LoadPlayMenu()
