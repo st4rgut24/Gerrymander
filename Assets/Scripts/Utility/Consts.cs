@@ -17,8 +17,12 @@ public class Consts
     public const string ElectionDetails = "ElectionDetails";
     public const string Game = "Game";
     public const string TutorialScene = "Tutorial";
+    public const string ResultsScene = "Results";
 
     // names
+    public const string DemProfileUI = "DemProfile";
+    public const string RepProfileUI = "RepProfile";
+
     public const string PeopleGo = "People";
     public const string EdgesGo = "Edges";
     public const string ScoreGo = "Score";

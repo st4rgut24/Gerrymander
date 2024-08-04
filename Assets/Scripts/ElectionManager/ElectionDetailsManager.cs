@@ -44,7 +44,7 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 
     Party PlayerParty = Party.None;
 
-    public Dictionary<int, ElectionDetails> ElectionMap;
+    public static Dictionary<int, ElectionDetails> ElectionMap;
 
     public List<GameObject> PartyObjects;
 
@@ -58,9 +58,18 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         ElectionMap = new Dictionary<int, ElectionDetails>()
         {
             {
-                2020,
+                2024,
                 new ElectionDetails(
                     "Having survived an assassination attempt, former president Trump rematches Biden in a tense election.",
+                    2020,
+                    new PartyDetails("kamala", "Kamala Harris", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
+                    new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f)
+                )
+            },
+            {
+                2020,
+                new ElectionDetails(
+                    "President Trump plays Biden in a tense election.",
                     2020,
                     new PartyDetails("biden", "Joe Biden", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f)
@@ -116,7 +125,7 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
                 new ElectionDetails(
                     "Bill Clinton wins re-election against Bob Dole, as the economy continues to improve and the political landscape shifts.",
                     1996,
-                    new PartyDetails("clinton", "Bill Clinton", Party.Democrat, new List<string>() {"Economic Prosperity", "Welfare Reform"}, .49f),
+                    new PartyDetails("billclinton", "Bill Clinton", Party.Democrat, new List<string>() {"Economic Prosperity", "Welfare Reform"}, .49f),
                     new PartyDetails("dole", "Bob Dole", Party.Republican, new List<string>() {"Tax Cuts", "Balanced Budget"}, .41f)
                 )
             },
@@ -125,8 +134,8 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
                 new ElectionDetails(
                     "Bill Clinton defeats incumbent George H. W. Bush, capitalizing on economic dissatisfaction and his appeal as a 'new Democrat'.",
                     1992,
-                    new PartyDetails("clinton", "Bill Clinton", Party.Democrat, new List<string>() {"Economic Growth", "Healthcare Reform"}, .43f),
-                    new PartyDetails("bush", "George H. W. Bush", Party.Republican, new List<string>() {"Foreign Policy Experience", "Tax Increases"}, .37f)
+                    new PartyDetails("billclinton", "Bill Clinton", Party.Democrat, new List<string>() {"Economic Growth", "Healthcare Reform"}, .43f),
+                    new PartyDetails("hwbush", "George H. W. Bush", Party.Republican, new List<string>() {"Foreign Policy Experience", "Tax Increases"}, .37f)
                 )
             },
             {
@@ -135,7 +144,7 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
                     "George H. W. Bush wins against Michael Dukakis, emphasizing his experience and promising to continue Reagan's policies.",
                     1988,
                     new PartyDetails("dukakis", "Michael Dukakis", Party.Democrat, new List<string>() {"Healthcare Reform", "Education Investment"}, .46f),
-                    new PartyDetails("bush", "George H. W. Bush", Party.Republican, new List<string>() {"Continue Reagan's Policies", "Strengthen Defense"}, .53f)
+                    new PartyDetails("hwbush", "George H. W. Bush", Party.Republican, new List<string>() {"Continue Reagan's Policies", "Strengthen Defense"}, .53f)
                 )
             }
         };  
@@ -246,6 +255,7 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         if (change.isOn)
         {
             PlayerParty = Party.Republican;
+            GameManager.Instance.PlayerParty = PlayerParty;
         }
         else
         {
@@ -268,6 +278,7 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         if (change.isOn)
         {
             PlayerParty = Party.Democrat;
+            GameManager.Instance.PlayerParty = PlayerParty;
         }
         else
         {

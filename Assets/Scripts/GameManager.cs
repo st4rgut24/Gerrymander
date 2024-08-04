@@ -15,13 +15,12 @@ public class GameManager : Singleton<GameManager>
 {
     public bool PlayerTurn;
     public bool GameOver = false;
-    //public const int TimeAgentTakesToMove = 3;
 
     Score score;
     Days days;
 
     public int ElectionYear;
-    Party PlayerParty;
+    public Party PlayerParty;
     public float DemocratPct = .5f;
 
     public int DaysTilElection = 20;
@@ -67,6 +66,11 @@ public class GameManager : Singleton<GameManager>
 
         InitPartyAffiliations(PlayerParty, Difficulty.Hard);
         InitVoterComposition();
+    }
+
+    public ElectionDetails GetDetailsFromPartyYear()
+    {
+        return ElectionDetailsManager.ElectionMap[ElectionYear];
     }
 
     public void LoadPlayMenu()
@@ -185,10 +189,17 @@ public class GameManager : Singleton<GameManager>
     {
         DaysTilElection--;
         days.SetDays(GameManager.Instance.DaysTilElection);
+
         if (DaysTilElection == 0)
         {
-            GameOver = true;
+            EndGame();
         }
+    }
+
+    public void EndGame()
+    {
+        GameOver = true;
+        SceneManager.LoadScene(Consts.ResultsScene);
     }
 
     public void UpdateScore ()
