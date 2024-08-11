@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public enum Difficulty
 {
@@ -13,6 +14,12 @@ public enum Difficulty
 
 public class GameManager : Singleton<GameManager>
 {
+    public PartyDetails demPartyDetails;
+    public PartyDetails repPartyDetils;
+
+    public GameObject demProfileGo;
+    public GameObject repProfileGo;
+
     public bool PlayerTurn;
     public bool GameOver = false;
 
@@ -143,6 +150,15 @@ public class GameManager : Singleton<GameManager>
 
             //StartCoroutine(Timer.Instance.StartTimer()); // player goes first start the timer when the scene loads
             Timer.Instance.ResetTimer();
+
+            if (scene.name.Equals(Consts.Game))
+            {
+                demProfileGo = GameObject.Find("DemProfile");
+                repProfileGo = GameObject.Find("RepProfile");
+
+                demProfileGo.SetActive(false);
+                repProfileGo.SetActive(false);
+            }
         }
     }
 
@@ -185,8 +201,9 @@ public class GameManager : Singleton<GameManager>
     {
         PlayerTurn = !PlayerTurn;
 
-        //StartCoroutine(Timer.Instance.StartTimer());
-        //Timer.Instance.StartTimer();
+        Timer.Instance.PauseTimer();
+        yield return StartCoroutine(ShowProfile(PlayerTurn));
+        Timer.Instance.UnpauseTimer();
 
         if (!PlayerTurn)
         {
@@ -195,6 +212,37 @@ public class GameManager : Singleton<GameManager>
             agent.DivideRoom();
             NextDay();
         }
+    }
+
+    private IEnumerator ShowProfile(bool playerTurn)
+    {
+        PartyDetails partyDetails;
+        GameObject profileGo;
+
+        if (playerTurn)
+        {
+            partyDetails = PlayerParty == Party.Republican ? repPartyDetils : demPartyDetails;
+            profileGo = PlayerParty == Party.Republican ? repProfileGo : demProfileGo;
+        }
+        else
+        {
+            partyDetails = PlayerParty == Party.Republican ? demPartyDetails : repPartyDetils;
+            profileGo = PlayerParty == Party.Republican ? demProfileGo : repProfileGo;
+        }
+
+        profileGo.SetActive(true);
+
+        Image picGo = profileGo.transform.Find("PlayerPic").GetComponent<Image>();
+        TextMeshProUGUI nameText = profileGo.transform.Find("NameBanner").Find("Name").GetComponent<TextMeshProUGUI>();
+
+        picGo.sprite = partyDetails.partySprite;
+        if (!playerTurn)
+            nameText.text = partyDetails.candidate.Split(" ")[0] + "'s\n Turn";
+        else
+            nameText.text = "Your\n Turn";
+        yield return new WaitForSeconds(1); // time to display the next turn ui
+
+        profileGo.SetActive(false);
     }
 
     public void NextDay()

@@ -174,6 +174,8 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         InitPartyUI(details, DemocratContainer, DemocraticChip, details.GetDemDetails(), details.GetDemSlogan());
         InitPartyUI(details, RepublicanContainer, RepublicanChip, details.GetRepubDetails(), details.GetRepSlogan());
 
+        GameManager.Instance.demPartyDetails = details.GetDemDetails();
+        GameManager.Instance.repPartyDetils = details.GetRepubDetails();
     }
 
     public void InitGame()
@@ -319,6 +321,8 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 
         Image partyPic = PartyContainer.Find(Consts.Picture).GetComponent<Image>();
         Sprite sprite = Resources.Load<Sprite>(partyDetails.picFile);
+
+        partyDetails.partySprite = sprite;
 
         partyPic.sprite = sprite;
     }

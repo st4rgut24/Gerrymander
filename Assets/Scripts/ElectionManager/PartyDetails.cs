@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class PartyDetails
 {
-    string candidate;
+    public string candidate;
     Party party;
     public List<string> slogans;
     public int popVoteCount;
     public int popVotePct;
     public string picFile;
     public float PartyPct;
+
+    public Sprite partySprite;
 
     public PartyDetails(string picFile, string candidate, Party party, List<string> slogans, float pctPopVote)
 	{
@@ -20,9 +22,11 @@ public class PartyDetails
 
         this.popVotePct = (int) (pctPopVote * 100);
 
+        this.candidate = candidate;
+
         popVoteCount = (int)(ElectionDetailsManager.populationSize * pctPopVote);
         PartyPct = ((float)popVotePct / 100f);
-
+        
         // grid initialize
     }
 }
