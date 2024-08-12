@@ -203,6 +203,7 @@ public class GameManager : Singleton<GameManager>
     public IEnumerator FinishTurn()
     {
         PlayerTurn = !PlayerTurn;
+        Timer.Instance.ResetTimer();
 
         Timer.Instance.PauseTimer();
         yield return StartCoroutine(ShowProfile(PlayerTurn));

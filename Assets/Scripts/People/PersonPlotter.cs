@@ -152,6 +152,27 @@ public class PersonPlotter : Singleton<PersonPlotter>
 		}
 	}
 
+	public Party GetAffiliation(List<PersonPrefab> persons)
+	{
+        int demCount = 0;
+        int repCount = 0;
+
+        persons.ForEach((p) =>
+        {
+            if (p.party == Party.Republican)
+                repCount++;
+            if (p.party == Party.Democrat)
+                demCount++;
+        });
+
+		if (demCount > repCount)
+			return Party.Democrat;
+		else if (repCount > demCount)
+			return Party.Republican;
+		else
+			return Party.None;
+    }
+
     private void OnDisable()
     {
         Controller.DragEvent -= OnDrag;

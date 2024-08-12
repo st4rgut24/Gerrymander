@@ -176,6 +176,21 @@ public class RoomPrefab: MonoBehaviour
         return AdjacentRooms.Contains(room) && AdjacentConnectedRooms.Contains(room);
     }
 
+    //public List<RoomPrefab> GetAdjacentConnectedRooms()
+    //{
+    //    List<RoomPrefab> AdjConRooms = new List<RoomPrefab>();
+
+    //    Map.Instance.Rooms.ForEach((Room) =>
+    //    {
+    //        if (Room != this && IsAdjacentTo(Room))
+    //        {
+    //            AdjConRooms.Add(Room);
+    //        }
+    //    });
+
+    //    return AdjConRooms;
+    //}
+
     public bool IsAdjacentTo(RoomPrefab room)
     {
         return GetSharedEdges(room).Count != 0;
