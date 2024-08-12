@@ -390,7 +390,7 @@ public class Map : Singleton<Map>
     /// <summary>
     /// Completes a room that has a missing wall(s)
     /// </summary>
-    private void FillRoom(RoomPrefab room)
+    public void FillRoom(RoomPrefab room)
     {
         room.CreatePerimeter(true);
 

@@ -176,6 +176,11 @@ public class RoomPrefab: MonoBehaviour
         return AdjacentRooms.Contains(room) && AdjacentConnectedRooms.Contains(room);
     }
 
+    public bool IsAdjacentTo(RoomPrefab room)
+    {
+        return GetSharedEdges(room).Count != 0;
+    }
+
     public bool IsAdjacentWalledRoom(RoomPrefab room)
     {
         return AdjacentRooms.Contains(room) && !AdjacentConnectedRooms.Contains(room);
@@ -198,6 +203,36 @@ public class RoomPrefab: MonoBehaviour
             AddAdjacentRoom(room);
         }
         AdjacentConnectedRooms.Add(room);
+    }
+
+    public List<PersonPrefab> GetPersonsInBounds()
+    {
+        List<PersonPrefab> ConfinedPersons = new List<PersonPrefab>();
+
+        PersonPlotter.Instance.PersonsList.ForEach((Person) =>
+        {
+            if (ContainsWorld(Person.transform.position) != null)
+            {
+                ConfinedPersons.Add(Person.GetComponent<PersonPrefab>());
+            }
+        });
+
+        return ConfinedPersons;
+    }
+
+    public Cell ContainsWorld(Vector2 worldCoord)
+    {
+        List<Cell> cells = GetCells();
+
+        for (int i = 0; i < cells.Count; i++)
+        {
+            if (cells[i].ContainsWorld(worldCoord))
+            {
+                return cells[i];
+            }
+        }
+
+        return null;
     }
 
     public Cell Contains(Vector2 coord)

@@ -8,6 +8,8 @@ public class Controller : MonoBehaviour
     public static Action<Vector3> TouchEvent;
     public static Action<Vector3> TouchPressEvent;
 
+    public static bool PauseTouch = false;
+
     float dragThreshold = 15f;
 
     Vector3 touchStart;
@@ -15,6 +17,9 @@ public class Controller : MonoBehaviour
 
     void Update()
     {
+        if (PauseTouch)
+            return;
+
         #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
         if (Input.GetMouseButtonDown(0))
         {

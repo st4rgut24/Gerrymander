@@ -16,6 +16,7 @@ public class Cell
     public int col;
 
     Bounds bounds;
+    Bounds worldBounds;
 
     List<Edge> EdgeList;
 
@@ -34,6 +35,7 @@ public class Cell
         Vector2 screenSize = new Vector2(pixelLength, pixelLength);
 
         bounds = new Bounds(center, screenSize);
+        worldBounds = new Bounds(worldCenter, new Vector2(sideLength, sideLength));
 
         this.row = row;
         this.col = col;
@@ -81,6 +83,11 @@ public class Cell
     public bool Contains(Vector2 point)
     {
         return bounds.Contains(point);
+    }
+
+    public bool ContainsWorld(Vector2 worldPoint)
+    {
+        return worldBounds.Contains(worldPoint);
     }
 }
 

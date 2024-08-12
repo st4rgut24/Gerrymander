@@ -44,6 +44,9 @@ public class GameManager : Singleton<GameManager>
 
     Agent agent;
 
+    public bool[] agentActionsTest = new bool[] { true, true, true, false, false, false }; // true means divide, false means join
+    int agentMoveIdx = 0;
+
     private void OnEnable()
     {
 
@@ -207,10 +210,21 @@ public class GameManager : Singleton<GameManager>
 
         if (!PlayerTurn)
         {
+            Controller.PauseTouch = true;
+
             yield return new WaitForSeconds(Consts.AgentActiondelay);
 
-            agent.DivideRoom();
+            if (agentActionsTest[agentMoveIdx]) // test
+                agent.DivideRoom();
+            else
+                agent.JoinRoom(); // test
+
             NextDay();
+            agentMoveIdx++;
+        }
+        else
+        {
+            Controller.PauseTouch = false;
         }
     }
 
