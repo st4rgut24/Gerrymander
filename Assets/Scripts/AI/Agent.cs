@@ -7,8 +7,17 @@ using static Agent;
 
 public class Agent
 {
+	public enum Move
+	{
+		Divide,
+		Join,
+		Fill
+	}
+
 	public Difficulty diff;
 	public float probChooseBestMove;
+
+	public Move[] AIMoves = new Move[] { Move.Divide, Move.Join, Move.Fill };
 
 	Party affiliation;
     Party enemyAffiliation;
@@ -60,6 +69,19 @@ public class Agent
 			this.fillRoom2 = fillRoom2;
 			this.reward = reward;
 		}
+	}
+
+	public void MakeRandomMove()
+	{
+		int randMove = UnityEngine.Random.Range(0, AIMoves.Length);
+		Move move = AIMoves[randMove];
+
+		if (move == Move.Divide)
+			DivideRoom();
+		else if (move == Move.Join)
+			JoinRoom();
+		else if (move == Move.Fill)
+			Debug.LogError("Fill is not implemented yet");
 	}
 
     private List<(RoomPrefab room1, RoomPrefab room2)> GenerateUniqueCompletedRoomPairs(List<RoomPrefab> items)

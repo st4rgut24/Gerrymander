@@ -214,10 +214,7 @@ public class GameManager : Singleton<GameManager>
 
             yield return new WaitForSeconds(Consts.AgentActiondelay);
 
-            if (agentActionsTest[agentMoveIdx]) // test
-                agent.DivideRoom();
-            else
-                agent.JoinRoom(); // test
+            agent.MakeRandomMove();
 
             NextDay();
             agentMoveIdx++;
