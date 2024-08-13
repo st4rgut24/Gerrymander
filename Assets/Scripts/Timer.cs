@@ -62,6 +62,7 @@ public class Timer : Singleton<Timer>
     {
         PauseTimerFlag = false;
         secLeft = SecToMove;
+        timerText.text = FormatTime(secLeft);
     }
 
     // Update is called once per frame

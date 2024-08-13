@@ -162,6 +162,8 @@ public class GameManager : Singleton<GameManager>
                 demProfileGo.SetActive(false);
                 repProfileGo.SetActive(false);
             }
+
+            StartCoroutine(PauseForProfile());
         }
     }
 
@@ -199,15 +201,24 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    private IEnumerator PauseForProfile()
+    {
+        Timer.Instance.PauseTimer();
+        yield return StartCoroutine(ShowProfile(PlayerTurn));
+        Timer.Instance.UnpauseTimer();
+    }
+
     // player has finished their turn
     public IEnumerator FinishTurn()
     {
         PlayerTurn = !PlayerTurn;
         Timer.Instance.ResetTimer();
 
-        Timer.Instance.PauseTimer();
-        yield return StartCoroutine(ShowProfile(PlayerTurn));
-        Timer.Instance.UnpauseTimer();
+        yield return StartCoroutine(PauseForProfile());
+
+        //Timer.Instance.PauseTimer();
+        //yield return StartCoroutine(ShowProfile(PlayerTurn));
+        //Timer.Instance.UnpauseTimer();
 
         if (!PlayerTurn)
         {
