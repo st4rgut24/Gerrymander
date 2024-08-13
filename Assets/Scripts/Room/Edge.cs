@@ -74,7 +74,8 @@ public class Edge
 
     public bool IsVisible()
     {
-        return lineRenderer.enabled;
+        return visibility;
+        //return lineRenderer.enabled;
     }
 
     public void ToggleLine(bool visible)

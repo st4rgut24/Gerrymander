@@ -76,38 +76,39 @@ public class Agent
 		int randMove = UnityEngine.Random.Range(0, AIMoves.Length);
 		Move move = AIMoves[randMove];
 
-		if (move == Move.Fill)
-		{
-			bool FillIsPossible = FillRoom();
+		JoinRoom();
+		//if (move == Move.Fill)
+		//{
+		//	bool FillIsPossible = FillRoom();
 
-			if (!FillIsPossible)
-			{
-				move = Move.Divide;
-				Debug.LogWarning("Fill is NOT possible");
-			}
-			else
-			{
-				Debug.Log("Fill is possible");
-			}
-		}
-		if (move == Move.Divide)
-		{
-            bool canDivide = DivideRoom();
+		//	if (!FillIsPossible)
+		//	{
+		//		move = Move.Divide;
+		//		Debug.LogWarning("Fill is NOT possible");
+		//	}
+		//	else
+		//	{
+		//		Debug.Log("Fill is possible");
+		//	}
+		//}
+		//if (move == Move.Divide)
+		//{
+  //          bool canDivide = DivideRoom();
 
-			if (!canDivide)
-			{
-				move = Move.Join;
-				Debug.LogWarning("Divide is not possible");
-			}
-			else
-			{
-				Debug.Log("Join is possible");
-			}
-        }
-        if (move == Move.Join)
-		{
-            JoinRoom();
-        }
+		//	if (!canDivide)
+		//	{
+		//		move = Move.Join;
+		//		Debug.LogWarning("Divide is not possible");
+		//	}
+		//	else
+		//	{
+		//		Debug.Log("Join is possible");
+		//	}
+  //      }
+  //      if (move == Move.Join)
+		//{
+  //          JoinRoom();
+  //      }
     }
 
 	private List<(RoomPrefab room1, RoomPrefab room2)> GenerateUniqueCompletedRoomPairs(List<RoomPrefab> items)
