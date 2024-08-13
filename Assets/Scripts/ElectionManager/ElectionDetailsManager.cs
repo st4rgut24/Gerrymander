@@ -312,18 +312,18 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         return wallCollider;
     }
 
-    private IEnumerator StartGame()
-    {
-        float start = Time.time;
-        float maxDuration = 3;
+    //private IEnumerator StartGame()
+    //{
+    //    float start = Time.time;
+    //    float maxDuration = 8;
 
-        while (Time.time - start < maxDuration)
-        {
-            yield return null;
-        }
+    //    while (Time.time - start < maxDuration)
+    //    {
+    //        yield return null;
+    //    }
 
-        InitGame();
-    }
+    //    InitGame();
+    //}
 
     public static Rect RectTransformToScreenSpace(RectTransform transform)
     {
@@ -339,7 +339,7 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         {
             partyGo.GetComponent<Rigidbody2D>().isKinematic = false;
         });
-        StartCoroutine(StartGame());
+        //StartCoroutine(StartGame());
     }
 
     void ToggleRepublicanValueChanged(Toggle change)
@@ -434,9 +434,24 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         }
     }
 
+    bool IsFunnelOver()
+    {
+        foreach (GameObject PartyChip in PartyObjects)
+        {
+            RectTransform rect = PartyChip.GetComponent<RectTransform>();
+            if (rect.anchoredPosition.y >= -Screen.height)
+            {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
+        if (IsFunnelOver())
+            InitGame();
     }
 }

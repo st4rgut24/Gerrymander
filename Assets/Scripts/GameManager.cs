@@ -30,7 +30,7 @@ public class GameManager : Singleton<GameManager>
     public Party PlayerParty;
     public float DemocratPct = .5f;
 
-    public int DaysTilElection = 20;
+    public int DaysTilElection = 14;
     public float RepublicanPct;
     public int population = 50;
 
