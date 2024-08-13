@@ -43,7 +43,7 @@ public class PersonPlotter : Singleton<PersonPlotter>
 
     private void OnEnable()
     {
-        Controller.DragEvent += OnDrag;
+        //Controller.DragEvent += OnDrag;
     }
 
     private void Awake()
@@ -175,7 +175,7 @@ public class PersonPlotter : Singleton<PersonPlotter>
 
     private void OnDisable()
     {
-        Controller.DragEvent -= OnDrag;
+        //Controller.DragEvent -= OnDrag;
     }
 }
 
