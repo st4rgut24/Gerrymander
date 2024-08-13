@@ -76,19 +76,28 @@ public class Agent
 		int randMove = UnityEngine.Random.Range(0, AIMoves.Length);
 		Move move = AIMoves[randMove];
 
-		//if (move == Move.Fill)
-		//{
-			bool FillIsPossible = FillRoom();
+		//TEST
+		if (!FillRoom())
+		{
+			if (!DivideRoom())
+			{
+				JoinRoom();
+			}
+		}
 
-			if (!FillIsPossible)
-			{
-				move = Move.Divide;
-			Debug.Log("Fill is NOT possible");
-			}
-			else
-			{
-			Debug.Log("Fill is possible");
-			}
+        //if (move == Move.Fill)
+        //{
+        //	bool FillIsPossible = FillRoom();
+
+        //	if (!FillIsPossible)
+        //	{
+        //		move = Move.Divide;
+        //	Debug.Log("Fill is NOT possible");
+        //	}
+        //	else
+        //	{
+        //	Debug.Log("Fill is possible");
+        //	}
         //}
         //else if (move == Move.Divide)
         //	DivideRoom();
@@ -118,22 +127,35 @@ public class Agent
 
 		for (int i=0;i<fillableRooms.Count;i++)
 		{
-			RoomPrefab Room = fillableRooms[i];
+			RoomPrefab FillableRoom = fillableRooms[i];
 
-			List<PersonPrefab> persons = Room.GetPersonsInBounds();
+			List<PersonPrefab> persons = FillableRoom.GetPersonsInBounds();
 
 			//List<RoomPrefafb> adjRooms = Room.AdjacentConnectedRooms; // only connected rooms will be affected by filling a room
 
-            Party party = Room.district.party;
+            Party party = FillableRoom.district.party;
             int beforeScore = GetPartyScore(party);
 
             //int afterScore = 0;
-            Party combinedPartyAffiliation = PersonPlotter.Instance.GetAffiliation(persons);
-			int afterScore = GetPartyScore(combinedPartyAffiliation); // a bit simplified because doesnt take into account changes in affiliation of the other connected rooms
+            Party filledRoomPartyAffiliation = PersonPlotter.Instance.GetAffiliation(persons);
 
+			List<PersonPrefab> JoinedPersons = new List<PersonPrefab>(); // persons in the joined room(s)
+
+			FillableRoom.AdjacentConnectedRooms.ForEach((ConRoom) =>
+			{
+				JoinedPersons.AddRange(ConRoom.GetPersonsInBounds());
+			});
+            Party joinedRoomsPartyAffiliation = PersonPlotter.Instance.GetAffiliation(JoinedPersons);
+
+
+			int filledRoomScore = GetPartyScore(filledRoomPartyAffiliation);
+			int joinedRoomsScore = GetPartyScore(joinedRoomsPartyAffiliation);
+
+            int afterScore = filledRoomScore + joinedRoomsScore; // a bit simplified because doesnt take into account changes in affiliation of the other connected rooms
+			Debug.Log("After score " + afterScore + " before score " + beforeScore);
 			if (afterScore > beforeScore)
 			{
-				Map.Instance.FillRoom(Room);
+				Map.Instance.FillAndClearRoom(FillableRoom);
 				return true;
 			}
 			else
@@ -141,7 +163,8 @@ public class Agent
 				Debug.Log("Fill is NOT Possible because not to our advantage");
 			}
         };
-        Debug.Log("Fill is NOT Possible because fillable rooms dont exist");
+		if (fillableRooms.Count == 0)
+			Debug.Log("Fill is NOT Possible because fillable rooms dont exist");
         return false;
 	}
 
@@ -183,7 +206,7 @@ public class Agent
         Map.Instance.JoinRoom(ChosenFillRoom1, ChosenFillRoom2);
     }
 
-    public void DivideRoom()
+    public bool DivideRoom()
 	{
 		Debug.Log("AI decides to divide rooms");
         List<DivideRewardInfo> divideRewardInfos = new List<DivideRewardInfo>();
@@ -199,12 +222,17 @@ public class Agent
 
 		// lowest to highest
         List<DivideRewardInfo> SortedRewardInfos = divideRewardInfos.OrderBy(obj => obj.reward).ToList();
-		int rewardIdx = (int)(SortedRewardInfos.Count * probChooseBestMove);
+		if (SortedRewardInfos.Count == 0)
+			return false;
+
+        int rewardIdx = (int)(SortedRewardInfos.Count * probChooseBestMove);
 
 		RoomPrefab ChosenDivideRoom = SortedRewardInfos[rewardIdx].room;
 
 		Debug.Log("AI Best room to divide out of " + SortedRewardInfos.Count + " has a reward of " + SortedRewardInfos[rewardIdx].reward);
 		Map.Instance.DivideRoom(ChosenDivideRoom);
+
+		return true;
     }
 
 

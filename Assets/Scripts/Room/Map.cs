@@ -253,15 +253,20 @@ public class Map : Singleton<Map>
         }
         else
         {
-            FillRoom(room);
-
-            room.AdjacentConnectedRooms.ForEach((adjRoom) =>
-            {
-                adjRoom.RemoveConnectedRoom(room);
-            });
-
-            room.ClearConnectedRoom();
+            FillAndClearRoom(room);
         }
+    }
+
+    public void FillAndClearRoom(RoomPrefab room)
+    {
+        FillRoom(room);
+
+        room.AdjacentConnectedRooms.ForEach((adjRoom) =>
+        {
+            adjRoom.RemoveConnectedRoom(room);
+        });
+
+        room.ClearConnectedRoom();
     }
 
     private bool IsDivisionValid(Box box)
@@ -390,7 +395,7 @@ public class Map : Singleton<Map>
     /// <summary>
     /// Completes a room that has a missing wall(s)
     /// </summary>
-    public void FillRoom(RoomPrefab room)
+    private void FillRoom(RoomPrefab room)
     {
         room.CreatePerimeter(true);
 
