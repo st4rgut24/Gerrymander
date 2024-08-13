@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ElectionDetails
 {
+    public string ActualResultsText;
+    public Party ActualWinningParty;
+
     public string summary;
     public int year;
 
@@ -11,13 +14,16 @@ public class ElectionDetails
     PartyDetails repDetails;
 
 
-    public ElectionDetails(string summary, int year, PartyDetails demDetails, PartyDetails repDetails)
+    public ElectionDetails(string summary, int year, PartyDetails demDetails, PartyDetails repDetails, Party ActualWinningParty, string ActualResultsText)
     {
         this.summary = summary;
         this.year = year;
 
         this.demDetails = demDetails;
         this.repDetails = repDetails;
+
+        this.ActualResultsText = ActualResultsText;
+        this.ActualWinningParty = ActualWinningParty;
     }
 
     public float GetRepPartyPct()

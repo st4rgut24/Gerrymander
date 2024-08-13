@@ -123,6 +123,7 @@ public class Agent
 
 	public bool FillRoom()
 	{
+		Debug.Log("AI decides to fill room");
 		List<RoomPrefab> fillableRooms = GetUncompletedRooms();
 
 		for (int i=0;i<fillableRooms.Count;i++)
@@ -202,7 +203,7 @@ public class Agent
         RoomPrefab ChosenFillRoom1 = SortedRewardInfos[rewardIdx].fillRoom1;
 		RoomPrefab ChosenFillRoom2 = SortedRewardInfos[rewardIdx].fillRoom2;
 
-        Debug.Log("AI Best rooms to fill out of " + SortedRewardInfos.Count + " has a reward of " + SortedRewardInfos[rewardIdx].reward);
+        //Debug.Log("AI Best rooms to fill out of " + SortedRewardInfos.Count + " has a reward of " + SortedRewardInfos[rewardIdx].reward);
         Map.Instance.JoinRoom(ChosenFillRoom1, ChosenFillRoom2);
     }
 
@@ -229,7 +230,7 @@ public class Agent
 
 		RoomPrefab ChosenDivideRoom = SortedRewardInfos[rewardIdx].room;
 
-		Debug.Log("AI Best room to divide out of " + SortedRewardInfos.Count + " has a reward of " + SortedRewardInfos[rewardIdx].reward);
+		//Debug.Log("AI Best room to divide out of " + SortedRewardInfos.Count + " has a reward of " + SortedRewardInfos[rewardIdx].reward);
 		Map.Instance.DivideRoom(ChosenDivideRoom);
 
 		return true;
@@ -256,12 +257,12 @@ public class Agent
 
 		List<PersonPrefab>persons = room1.GetPersonsInBounds();
 		persons.AddRange(room2.GetPersonsInBounds());
-		Debug.Log("AI number of persons in bounds " + persons.Count);
+		//Debug.Log("AI number of persons in bounds " + persons.Count);
 		Party combinedPartyAffiliation = PersonPlotter.Instance.GetAffiliation(persons);
 
 		int endScore = GetPartyScore(combinedPartyAffiliation);
 		int rewardDiff = endScore - beginScore;
-		Debug.Log("ai join reward diff is endscore " + endScore + " minus beginscore " + beginScore + " affiliation of joined room is " + combinedPartyAffiliation);
+		//Debug.Log("ai join reward diff is endscore " + endScore + " minus beginscore " + beginScore + " affiliation of joined room is " + combinedPartyAffiliation);
 
 		return rewardDiff;
 	}

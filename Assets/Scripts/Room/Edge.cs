@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Edge
 {
@@ -14,9 +15,12 @@ public class Edge
     public int id;
     public bool HasCollider = false;
 
+    private bool visibility = false;
     public LineRenderer lineRenderer;
 
-	public Edge(Vector2 start, Vector2 end, Transform EdgeDaddy, int id)
+    public const float disabledOpacity = 0.1f;
+
+    public Edge(Vector2 start, Vector2 end, Transform EdgeDaddy, int id)
 	{
         this.id = id;
         //Debug.Log("Create edge with id " + id.ToString());
@@ -28,8 +32,9 @@ public class Edge
         worldEnd = Camera.main.ScreenToWorldPoint(end);
 
         lineRenderer = CreateLineUI(this.start, this.end, EdgeDaddy);
-        ToggleLine(false); // default to hidden edge
-	}
+        lineRenderer.enabled = false;
+        //ToggleLine(false); // default to hidden edge
+    }
 
     public LineRenderer CreateLineUI(Vector3 start, Vector3 end, Transform EdgeParent)
     {
@@ -74,7 +79,21 @@ public class Edge
 
     public void ToggleLine(bool visible)
     {
-        lineRenderer.enabled = visible;
+        visibility = visible;
+
+        // make the renderer visible initially
+        if (!lineRenderer.enabled && visible)
+            lineRenderer.enabled = true;
+
+        Color lineRendererStartColor = lineRenderer.startColor;
+        Color lineRendererEndColor = lineRenderer.endColor;
+
+
+        lineRendererStartColor.a = visible ? 1.0f : disabledOpacity;
+        lineRenderer.startColor = lineRendererStartColor;
+
+        lineRendererEndColor.a = visible ? 1.0f : disabledOpacity;
+        lineRenderer.endColor = lineRendererEndColor;
     }
 
     public float GetClosestDistance(Vector2 point)

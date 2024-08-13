@@ -223,9 +223,7 @@ public class Map : Singleton<Map>
             }
         };
 
-        Debug.Log("Republican count " + repubCount + " Democrat Count " + democratCount);
-
-
+        //Debug.Log("Republican count " + repubCount + " Democrat Count " + democratCount);
 
         if (repubCount != democratCount)
         {
@@ -272,8 +270,8 @@ public class Map : Singleton<Map>
     private bool IsDivisionValid(Box box)
     {
         Vector2 PersonSize = PersonPlotter.Instance.PersonSize;
-        Debug.Log("Person size " + PersonSize);
-        Debug.Log("box size " + box.bounds);
+        //Debug.Log("Person size " + PersonSize);
+        //Debug.Log("box size " + box.bounds);
         return box.bounds.size.x / 2 > PersonSize.x || box.bounds.size.y / 2 > PersonSize.y;
     }
 
