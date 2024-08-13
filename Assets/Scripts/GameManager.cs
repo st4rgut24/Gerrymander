@@ -30,7 +30,7 @@ public class GameManager : Singleton<GameManager>
     public Party PlayerParty;
     public float DemocratPct = .5f;
 
-    public int DaysTilElection = 14;
+    public int DaysTilElection = 1;
     public float RepublicanPct;
     public int population = 50;
 
@@ -177,10 +177,13 @@ public class GameManager : Singleton<GameManager>
 
     public void RemovePartyVoter(Party party)
     {
-        if (party == Party.Republican)
-            republicanDistricts--;
-        if (party == Party.Democrat)
-            democraticDistricts--;
+        if (!GameOver)
+        {
+            if (party == Party.Republican)
+                republicanDistricts--;
+            if (party == Party.Democrat)
+                democraticDistricts--;
+        }
     }
 
     public void InitVoterComposition()
@@ -212,6 +215,12 @@ public class GameManager : Singleton<GameManager>
     // player has finished their turn
     public IEnumerator FinishTurn()
     {
+        if (DaysTilElection == 0)
+        {
+            EndGame();
+            yield break;
+        }
+
         PlayerTurn = !PlayerTurn;
         Timer.Instance.ResetTimer();
 
@@ -269,18 +278,14 @@ public class GameManager : Singleton<GameManager>
             nameText.text = "Your\n Turn";
         yield return new WaitForSeconds(1); // time to display the next turn ui
 
-        profileGo.SetActive(false);
+        if (profileGo != null)
+            profileGo.SetActive(false);
     }
 
     public void NextDay()
     {
         DaysTilElection--;
         days.SetDays(GameManager.Instance.DaysTilElection);
-
-        if (DaysTilElection == 0)
-        {
-            EndGame();
-        }
     }
 
     public void EndGame()
