@@ -71,45 +71,49 @@ public class Agent
 		}
 	}
 
+	public void MakeMove(Move move)
+	{
+        if (move == Move.Fill)
+        {
+            bool FillIsPossible = FillRoom();
+
+            if (!FillIsPossible)
+            {
+                move = Move.Divide;
+                Debug.LogWarning("Fill is NOT possible");
+            }
+            else
+            {
+                Debug.Log("Fill is possible");
+            }
+        }
+        if (move == Move.Divide)
+        {
+            bool canDivide = DivideRoom();
+
+            if (!canDivide)
+            {
+                move = Move.Join;
+                Debug.LogWarning("Divide is not possible");
+            }
+            else
+            {
+                Debug.Log("Join is possible");
+            }
+        }
+        if (move == Move.Join)
+        {
+            JoinRoom();
+        }
+    }
+
 	public void MakeRandomMove()
 	{
 		int randMove = UnityEngine.Random.Range(0, AIMoves.Length);
 		Move move = AIMoves[randMove];
 
-		JoinRoom();
-		//if (move == Move.Fill)
-		//{
-		//	bool FillIsPossible = FillRoom();
-
-		//	if (!FillIsPossible)
-		//	{
-		//		move = Move.Divide;
-		//		Debug.LogWarning("Fill is NOT possible");
-		//	}
-		//	else
-		//	{
-		//		Debug.Log("Fill is possible");
-		//	}
-		//}
-		//if (move == Move.Divide)
-		//{
-  //          bool canDivide = DivideRoom();
-
-		//	if (!canDivide)
-		//	{
-		//		move = Move.Join;
-		//		Debug.LogWarning("Divide is not possible");
-		//	}
-		//	else
-		//	{
-		//		Debug.Log("Join is possible");
-		//	}
-  //      }
-  //      if (move == Move.Join)
-		//{
-  //          JoinRoom();
-  //      }
-    }
+		MakeMove(move);
+	}
 
 	private List<(RoomPrefab room1, RoomPrefab room2)> GenerateUniqueCompletedRoomPairs(List<RoomPrefab> items)
     {

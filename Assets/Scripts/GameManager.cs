@@ -202,7 +202,10 @@ public class GameManager : Singleton<GameManager>
     private IEnumerator PauseForProfile()
     {
         Timer.Instance.PauseTimer();
-        yield return StartCoroutine(ShowProfile(PlayerTurn));
+        if (SceneManager.GetActiveScene().name == Consts.Game)
+        {
+            yield return StartCoroutine(ShowProfile(PlayerTurn));
+        }
         Timer.Instance.UnpauseTimer();
     }
 
@@ -224,7 +227,10 @@ public class GameManager : Singleton<GameManager>
 
             yield return new WaitForSeconds(Consts.AgentActiondelay);
 
-            agent.MakeRandomMove(); // TODO uncomment
+            if (IsTutorial)
+                agent.MakeMove(Agent.Move.Divide);
+            else
+                agent.MakeRandomMove();
 
             NextDay();
             agentMoveIdx++;
