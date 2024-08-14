@@ -47,9 +47,9 @@ public class GameManager : Singleton<GameManager>
     public bool IsTutorial = false;
     public const int TutorialTimeAgentTakesToMove = 3;
 
-    public Color DemColor = new Color(22 / 255f, 109 / 255f, 243 / 255f);
+    public Color DemColor = new Color(0f / 255f, 151f / 255f, 255f / 255f);
 
-    public Color RepColor = new Color(255 / 255f, 40 / 255f, 50 / 255f);
+    public Color RepColor = new Color(255f / 255f, 87f / 255f, 60f / 255f);
 
     public Color AvgColor;
 
@@ -109,8 +109,7 @@ public class GameManager : Singleton<GameManager>
 
     public IEnumerator PopulatePlayMenu(List<FirebaseManager.Election> elections)
     {
-        //for (int i = startElectionYear; i <= endElectionYear; i += 4)
-        for (int i = endElectionYear; i <= endElectionYear; i += 4) // TODO: REMOVE AFTER TESTING
+        for (int i = startElectionYear; i <= endElectionYear; i += 4)
         {
             int electionYear = i;
             FirebaseManager.Election election;
@@ -144,19 +143,19 @@ public class GameManager : Singleton<GameManager>
             RectTransform demBotFillRect = demBotFill.GetComponent<RectTransform>();
             demBotFillRect.sizeDelta = new Vector2(demWidth, demBotFillRect.sizeDelta.y);
 
-            // don't apply the gradient unless the opposing rectangle color is going to be visible
-            if (repWidth > 0)
-            {
-                Material demMat = new Material(Shader.Find("Unlit/Texture"));
-                demMat.mainTexture = GradientTextureGenerator.GenerateGradientTexture(demTopFillRect.sizeDelta, DemColor, AvgColor, .7f, false);
+            //// don't apply the gradient unless the opposing rectangle color is going to be visible
+            //if (repWidth > 0)
+            //{
+            //    Material demMat = new Material(Shader.Find("Unlit/Texture"));
+            //    demMat.mainTexture = GradientTextureGenerator.GenerateGradientTexture(demTopFillRect.sizeDelta, DemColor, AvgColor, .7f, false);
 
-                demTopFill.GetComponent<Image>().material = demMat;
-                demBotFill.GetComponent<Image>().material = demMat;
-            }
-            else {
-                demTopFill.GetComponent<Image>().color = DemColor;
-                demBotFill.GetComponent<Image>().color = DemColor;
-            }
+            //    demTopFill.GetComponent<Image>().material = demMat;
+            //    demBotFill.GetComponent<Image>().material = demMat;
+            //}
+            //else {
+            demTopFill.GetComponent<Image>().color = DemColor;
+            demBotFill.GetComponent<Image>().color = DemColor;
+            //}
 
             Transform repTopFill = ElectionEntry.transform.Find("RepFillTop");
             Transform repBotFill = ElectionEntry.transform.Find("RepFillBottom");
@@ -167,18 +166,18 @@ public class GameManager : Singleton<GameManager>
             RectTransform repBotFillRect = repBotFill.GetComponent<RectTransform>();
             repBotFillRect.sizeDelta = new Vector2(repWidth, repBotFillRect.sizeDelta.y);
 
-            if (demWidth > 0)
-            {
-                Material repMat = new Material(Shader.Find("Unlit/Texture"));
-                repMat.mainTexture = GradientTextureGenerator.GenerateGradientTexture(repTopFillRect.sizeDelta, RepColor, AvgColor, .7f, true);
-                repTopFill.GetComponent<Image>().material = repMat;
-                repBotFill.GetComponent<Image>().material = repMat;
-            }
-            else
-            {
-                repTopFill.GetComponent<Image>().color = RepColor;
-                repBotFill.GetComponent<Image>().color = RepColor;
-            }
+            //if (demWidth > 0)
+            //{
+            //    Material repMat = new Material(Shader.Find("Unlit/Texture"));
+            //    repMat.mainTexture = GradientTextureGenerator.GenerateGradientTexture(repTopFillRect.sizeDelta, RepColor, AvgColor, .7f, true);
+            //    repTopFill.GetComponent<Image>().material = repMat;
+            //    repBotFill.GetComponent<Image>().material = repMat;
+            //}
+            //else
+            //{
+            repTopFill.GetComponent<Image>().color = RepColor;
+            repBotFill.GetComponent<Image>().color = RepColor;
+            //}
 
             Transform DemProfile = ElectionEntry.transform.Find("DemProfile");
             Transform RepProfile = ElectionEntry.transform.Find("RepProfile");
