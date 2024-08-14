@@ -57,7 +57,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
     }
 
     /// <summary>
-    /// get user data from the logged in user
+    /// get user data from the logged in user or set the user as default user
     /// </summary>
     /// <param name="userId"></param>
     public void SetCurrentUserFromId(string userId)
@@ -98,6 +98,91 @@ public class FirebaseManager : Singleton<FirebaseManager>
             }
         });
     }
+
+    private void UpdateWinnerVoteCount(Election election, Party winningParty)
+    {
+        if (winningParty == Party.Democrat)
+            election.demVotes++;
+        if (winningParty == Party.Republican)
+            election.repVotes++;
+    }
+
+    /// <summary>
+    /// get user data from the logged in user
+    /// </summary>
+    /// <param name="userId"></param>
+    public void SetElectionVictor(Party winningParty, int electionYear)
+    {
+        if (winningParty == Party.None)
+            return;
+
+        mDatabase.Child("elections").Child(electionYear.ToString()).GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to read data: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Exists)
+                {
+                    Election existingElection = ConvertSnapshotToElection(snapshot);
+                    UpdateWinnerVoteCount(existingElection, winningParty);
+
+                    UpdateElection(existingElection);
+                }
+                else
+                {
+                    Election defaultElection = new Election(electionYear, 0, 0);
+                    UpdateWinnerVoteCount(defaultElection, winningParty);
+
+                    // initialize the Election in the database
+                    UpdateElection(defaultElection);
+                }
+            }
+        });
+    }
+
+    // updates should synchronize with player pref changes
+    public void UpdateElection(Election election)
+    {
+        try
+        {
+            FirebaseUser currentUser = FirebaseAuth.DefaultInstance.CurrentUser;
+
+            if (currentUser != null) // if become popular implement user.isemailverified
+            {
+                mDatabase.Child("elections").Child(election.electionYear.ToString()).SetRawJsonValueAsync(JsonUtility.ToJson(election))
+                    .ContinueWith(task =>
+                    {
+                        if (task.IsFaulted)
+                        {
+                            // Handle the error
+                            Debug.LogError("Error updating election: " + task.Exception.Message);
+                            // You might want to display an error message to the user
+                        }
+                        else if (task.IsCompletedSuccessfully)
+                        {
+                            // Handle success
+                            Debug.Log("Election updated successfully!");
+                        }
+                    });
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Unable to update user, may be offline");
+        }
+    }
+
+    //public void SetElectionResult(DataSnapshot snapshot)
+    //{
+    //    Election election = ConvertSnapshotToElection(snapshot);
+
+
+    //}
 
     public void SetLoggedInUser(DataSnapshot snapshot)
     {
@@ -148,18 +233,27 @@ public class FirebaseManager : Singleton<FirebaseManager>
         });
     }
 
+    private Election ConvertSnapshotToElection(DataSnapshot snapshot)
+    {
+        int electionY = int.Parse(snapshot.Child("electionYear").GetValue(true)?.ToString());
+        int demVotes = int.Parse(snapshot.Child("demVotes")?.GetValue(true)?.ToString());
+        int repVotes = int.Parse(snapshot.Child("repVotes")?.GetValue(true)?.ToString());
+
+        return new Election(electionY, demVotes, repVotes);
+    }
+
     private User ConvertSnapshotToUser(DataSnapshot snapshot)
     {
-        //string username = snapshot.Child("username").GetValue(true).ToString();
+        string username = snapshot.Child("username").GetValue(true).ToString();
         //string profilePic = snapshot.Child("profilePic")?.GetValue(true)?.ToString();
         //int score = int.Parse(snapshot.Child("score")?.GetValue(true)?.ToString());
         //int highScore = int.Parse(snapshot.Child("highScore")?.GetValue(true)?.ToString());
         //bool boughtCheckpoint = GetBoolOrDefault(snapshot.Child("boughtCheckpoint")?.GetValue(true));
-        //bool boughtAds = GetBoolOrDefault(snapshot.Child("boughtAds")?.GetValue(true));
+        bool boughtAds = GetBoolOrDefault(snapshot.Child("boughtAds")?.GetValue(true));
         //bool boughtBundle = GetBoolOrDefault(snapshot.Child("boughtBundle")?.GetValue(true));
         //bool boughtCustom = GetBoolOrDefault(snapshot.Child("boughtCustom")?.GetValue(true));
 
-        return new User("eddie");
+        return new User(username, boughtAds);
     }
 
     private bool GetBoolOrDefault(object o)
@@ -208,7 +302,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
 
     public User CreateCopyOfUser(User user)
     {
-        return new User("eddie");
+        return new User(user.username, user.hasAds);
     }
 
     // User class to store user data
@@ -216,10 +310,27 @@ public class FirebaseManager : Singleton<FirebaseManager>
     public class User
     {
         public string username;
+        public bool hasAds;
 
-        public User(string username)
+        public User(string username, bool hasAds)
         {
             this.username = username;
+            this.hasAds = hasAds;
+        }
+    }
+
+    [System.Serializable]
+    public class Election
+    {
+        public int electionYear;
+        public int demVotes;
+        public int repVotes;
+
+        public Election(int electionYear, int demVotes, int repVotes)
+        {
+            this.electionYear = electionYear;
+            this.demVotes = demVotes;
+            this.repVotes = repVotes;
         }
     }
 }

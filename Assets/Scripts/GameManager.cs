@@ -71,7 +71,7 @@ public class GameManager : Singleton<GameManager>
 
         PlayerTurn = true;
 
-        defaultUser = new FirebaseManager.User("eddie");
+        defaultUser = new FirebaseManager.User("", false);
     }
 
     public IEnumerator SetUser(FirebaseManager.User user)
