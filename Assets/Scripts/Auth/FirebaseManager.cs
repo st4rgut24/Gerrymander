@@ -99,6 +99,39 @@ public class FirebaseManager : Singleton<FirebaseManager>
         });
     }
 
+    public void UpdatePlayMenu()
+    {
+        List<Election> elections = new List<Election>();
+
+        // Get a reference to the "users" node
+        var electionsRef = mDatabase.Child("elections");
+
+        // Attach a listener to the "users" node
+        electionsRef.GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Error fetching elections: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                // Get the snapshot of the data
+                DataSnapshot snapshot = task.Result;
+
+                // Iterate through each user node
+                foreach (DataSnapshot childSnapshot in snapshot.Children)
+                {
+                    // Create a User object from the data
+                    Election election = ConvertSnapshotToElection(childSnapshot);
+                    elections.Add(election);
+
+                }
+            }
+
+            UnityMainThreadDispatcher.Instance().Enqueue(GameManager.Instance.PopulatePlayMenu(elections));
+        });
+    }
+
     private void UpdateWinnerVoteCount(Election election, Party winningParty)
     {
         if (winningParty == Party.Democrat)

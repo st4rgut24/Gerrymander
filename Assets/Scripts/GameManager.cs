@@ -89,6 +89,47 @@ public class GameManager : Singleton<GameManager>
         InitVoterComposition();
     }
 
+    public IEnumerator PopulatePlayMenu(List<FirebaseManager.Election> elections)
+    {
+        foreach(FirebaseManager.Election election in elections)
+        {
+            GameObject ElectionEntry = GameObject.Find(election.electionYear.ToString());
+
+            Transform demTopFill = ElectionEntry.transform.Find("DemFillTop");
+            Transform demBotFill = ElectionEntry.transform.Find("DemFillBottom");
+
+            Transform repTopFill = ElectionEntry.transform.Find("RepFillTop");
+            Transform repBotFill = ElectionEntry.transform.Find("RepFillBottom");
+
+            float widthVal = ElectionEntry.transform.GetComponent<RectTransform>().sizeDelta.x;
+
+            if (election.demVotes + election.repVotes == 0)
+            {
+                continue;
+            }
+
+            float shareDemVotes = (float) election.demVotes / (float) (election.demVotes + election.repVotes);
+            float demWidth = widthVal * shareDemVotes;
+            float repWidth = widthVal - demWidth;
+
+
+            RectTransform demTopFillRect = demTopFill.GetComponent<RectTransform>();
+            demTopFillRect.sizeDelta = new Vector2(demWidth, demTopFillRect.sizeDelta.y);
+
+            RectTransform demBotFillRect = demBotFill.GetComponent<RectTransform>();
+            demBotFillRect.sizeDelta = new Vector2(demWidth, demBotFillRect.sizeDelta.y);
+
+
+            RectTransform repTopFillRect = repTopFill.GetComponent<RectTransform>();
+            repTopFillRect.sizeDelta = new Vector2(repWidth, repTopFillRect.sizeDelta.y);
+
+            RectTransform repBotFillRect = repBotFill.GetComponent<RectTransform>();
+            repBotFillRect.sizeDelta = new Vector2(repWidth, repBotFillRect.sizeDelta.y);
+        }
+
+        yield return null;
+    }
+
     public void QuitGame()
     {
         Application.Quit();
@@ -175,6 +216,10 @@ public class GameManager : Singleton<GameManager>
             }
 
             StartCoroutine(PauseForProfile());
+        }
+        if (scene.name.Equals(Consts.PlayMenu))
+        {
+            FirebaseManager.Instance.UpdatePlayMenu();
         }
     }
 
