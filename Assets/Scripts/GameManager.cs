@@ -23,6 +23,9 @@ public class GameManager : Singleton<GameManager>
     public bool PlayerTurn;
     public bool GameOver = false;
 
+    FirebaseManager.User user;
+    public FirebaseManager.User defaultUser;
+
     Score score;
     Days days;
 
@@ -67,6 +70,14 @@ public class GameManager : Singleton<GameManager>
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         PlayerTurn = true;
+
+        defaultUser = new FirebaseManager.User("eddie");
+    }
+
+    public IEnumerator SetUser(FirebaseManager.User user)
+    {
+        yield return null;
+        this.user = user;
     }
 
     public void InitPlayerParty(float DemPartyPct, Party PlayerParty)

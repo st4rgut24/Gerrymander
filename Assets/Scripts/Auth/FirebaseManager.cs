@@ -1,0 +1,225 @@
+using UnityEngine;
+using Firebase.Auth;
+using Firebase;
+using Firebase.Database;
+using static FirebaseManager;
+using System;
+using System.Collections;
+using PimDeWitte.UnityMainThreadDispatcher;
+using System.Collections.Generic;
+
+public class FirebaseManager : Singleton<FirebaseManager>
+{
+    // Reference to the Firebase database
+    private DatabaseReference mDatabase;
+
+    private void Awake()
+    {
+        {
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this.gameObject);
+                return;
+            }
+
+            _instance = this;
+
+            DontDestroyOnLoad(this.gameObject);
+        }
+
+    }
+
+    void Start()
+    {
+        // Initialize Firebase
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Firebase initialization failed: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                // Get a reference to the database
+                mDatabase = FirebaseDatabase.DefaultInstance.RootReference;
+
+                if (!IsUserLoggedIn()) // if user isn't logged in, login anonymously
+                                       // Sign in anonymously
+                {
+                    SignInAnonymously();                    
+                }
+                else
+                {
+                    SetCurrentUserFromId(FirebaseAuth.DefaultInstance.CurrentUser.UserId);
+                }
+            }
+        });
+    }
+
+    /// <summary>
+    /// get user data from the logged in user
+    /// </summary>
+    /// <param name="userId"></param>
+    public void SetCurrentUserFromId(string userId)
+    {
+        mDatabase.Child("users").Child(userId).GetValueAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to read data: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Exists)
+                {
+                    SetLoggedInUser(snapshot);
+                }
+                else
+                {
+                    // first time user, initialize a user entry in the user db
+                    mDatabase.Child("users").Child(userId).SetRawJsonValueAsync(JsonUtility.ToJson(GameManager.Instance.defaultUser))
+                            .ContinueWith(task =>
+                            {
+                                if (task.IsFaulted)
+                                {
+                                    // Handle the error
+                                    Debug.LogError("Error saving default user: " + task.Exception.Message);
+                                    // You might want to display an error message to the user
+                                }
+                                else if (task.IsCompletedSuccessfully)
+                                {
+                                    // Handle success
+                                    Debug.Log("Default user saved successfully!");
+                                }
+                            });
+                }
+            }
+        });
+    }
+
+    public void SetLoggedInUser(DataSnapshot snapshot)
+    {
+        User loggedinUser = ConvertSnapshotToUser(snapshot);
+
+        UnityMainThreadDispatcher.Instance().Enqueue(GameManager.Instance.SetUser(loggedinUser));
+    }
+
+    public bool IsUserLoggedIn()
+    {
+        // Get the current user
+        FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
+
+        if (user != null)
+        {
+            // User is logged in
+
+            Debug.Log("User is logged in: " + user.DisplayName);
+
+            // Do something for logged-in users (e.g., show a welcome message)
+            return true;
+        }
+        else
+        {
+            // User is not logged in
+            Debug.Log("User is not logged in.");
+            // Do something for non-logged-in users (e.g., show a login screen)
+            return false;
+        }
+    }
+
+    // Sign in anonymously
+    private void SignInAnonymously()
+    {      
+        FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync().ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Anonymous sign-in failed: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                // Get the user's UID
+                string userId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+                SetCurrentUserFromId(userId);
+                Debug.Log("Anonymous user signed in with UID: " + userId);
+            }
+        });
+    }
+
+    private User ConvertSnapshotToUser(DataSnapshot snapshot)
+    {
+        //string username = snapshot.Child("username").GetValue(true).ToString();
+        //string profilePic = snapshot.Child("profilePic")?.GetValue(true)?.ToString();
+        //int score = int.Parse(snapshot.Child("score")?.GetValue(true)?.ToString());
+        //int highScore = int.Parse(snapshot.Child("highScore")?.GetValue(true)?.ToString());
+        //bool boughtCheckpoint = GetBoolOrDefault(snapshot.Child("boughtCheckpoint")?.GetValue(true));
+        //bool boughtAds = GetBoolOrDefault(snapshot.Child("boughtAds")?.GetValue(true));
+        //bool boughtBundle = GetBoolOrDefault(snapshot.Child("boughtBundle")?.GetValue(true));
+        //bool boughtCustom = GetBoolOrDefault(snapshot.Child("boughtCustom")?.GetValue(true));
+
+        return new User("eddie");
+    }
+
+    private bool GetBoolOrDefault(object o)
+    {
+        if (o is bool)
+        {
+            return (bool)o;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    // updates should synchronize with player pref changes
+    public void UpdateUser(User user)
+    {
+        try
+        {
+            FirebaseUser currentUser = FirebaseAuth.DefaultInstance.CurrentUser;
+
+            if (currentUser != null) // if become popular implement user.isemailverified
+            {
+                mDatabase.Child("users").Child(currentUser.UserId).SetRawJsonValueAsync(JsonUtility.ToJson(user))
+                    .ContinueWith(task =>
+                    {
+                        if (task.IsFaulted)
+                        {
+                            // Handle the error
+                            Debug.LogError("Error updating user: " + task.Exception.Message);
+                            // You might want to display an error message to the user
+                        }
+                        else if (task.IsCompletedSuccessfully)
+                        {
+                            // Handle success
+                            Debug.Log("User updated successfully!");
+                        }
+                    });
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Unable to update user, may be offline");
+        }
+    }
+
+    public User CreateCopyOfUser(User user)
+    {
+        return new User("eddie");
+    }
+
+    // User class to store user data
+    [System.Serializable]
+    public class User
+    {
+        public string username;
+
+        public User(string username)
+        {
+            this.username = username;
+        }
+    }
+}
