@@ -31,7 +31,7 @@ public class GameManager : Singleton<GameManager>
     Score score;
     Days days;
 
-    public int ElectionYear;
+    public int ElectionYear = 2024;
     public Party PlayerParty;
     public float DemocratPct = .5f;
 
@@ -85,6 +85,11 @@ public class GameManager : Singleton<GameManager>
         defaultUser = new FirebaseManager.User("", false);
 
         AvgColor = new Color((DemColor.r + RepColor.r) / 2, (DemColor.g + RepColor.g) / 2, (DemColor.b + RepColor.b) / 2);
+    }
+
+    public int GetIndexFromElectionYear()
+    {
+        return (ElectionYear - startElectionYear) / 4;
     }
 
     public IEnumerator SetUser(FirebaseManager.User user)

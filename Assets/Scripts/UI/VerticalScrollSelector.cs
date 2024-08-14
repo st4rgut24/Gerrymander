@@ -18,21 +18,28 @@ public class VerticalScrollSelector : MonoBehaviour
         itemHeight = items[0].rect.height; // Assuming all items have the same height
 
         // Initialize scroll position to select the top item
-        SetSelection(0);
+        int idx = GameManager.Instance.GetIndexFromElectionYear();
+        scrollRect.verticalNormalizedPosition = indexToNormalizedPosition(idx);
+        Debug.Log("setting normalized position to " + indexToNormalizedPosition(idx));
+        //SetSelection(idx);
     }
 
     void Update()
     {
         // Calculate the index of the currently selected item based on scroll position
         float normalizedPosition = 1 - scrollRect.verticalNormalizedPosition;
-        Debug.Log("Normalized position " + normalizedPosition);
-        int selectedIndex = Mathf.Clamp(Mathf.FloorToInt(normalizedPosition * (itemCount - 1)), 0, itemCount - 1);
+        int selectedIndex = Mathf.Clamp((int)Mathf.Round(normalizedPosition * itemCount), 0, itemCount - 1);
 
         // Set the selected item based on the scroll position
         SetSelection(selectedIndex);
     }
 
-    void SetSelection(int index)
+    float indexToNormalizedPosition(int index)
+    {
+        return (float)(index + 1) / (float)items.Length;
+    }
+
+    public void SetSelection(int index)
     {
         selectedIdx = index;
         // Deselect all items
