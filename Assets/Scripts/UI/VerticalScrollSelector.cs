@@ -42,6 +42,7 @@ public class VerticalScrollSelector : MonoBehaviour
         }
 
         // Select the item at the given index
-        items[index].GetComponent<Image>().color = Color.yellow; // Change to your selected color or apply other selection effect
+        Color yellowWithAlpha = new Color(243/255f, 239/255f, 171/255f);
+        items[index].GetComponent<Image>().color = yellowWithAlpha; // Change to your selected color or apply other selection effect
     }
 }
