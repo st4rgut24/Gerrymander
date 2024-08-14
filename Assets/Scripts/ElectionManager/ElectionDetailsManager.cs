@@ -61,7 +61,7 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
                 2024,
                 new ElectionDetails(
                     "Having survived an assassination attempt, former president Trump rematches Biden in a tense election.",
-                    2020,
+                    2024,
                     new PartyDetails("kamala", "Kamala Harris", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f),
                     Party.None,

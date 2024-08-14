@@ -14,6 +14,8 @@ public enum Difficulty
 
 public class GameManager : Singleton<GameManager>
 {
+    public GameObject CrownPrefab;
+
     public PartyDetails demPartyDetails;
     public PartyDetails repPartyDetils;
 
@@ -45,10 +47,19 @@ public class GameManager : Singleton<GameManager>
     public bool IsTutorial = false;
     public const int TutorialTimeAgentTakesToMove = 3;
 
+    public Color DemColor = new Color(22 / 255f, 109 / 255f, 243 / 255f);
+
+    public Color RepColor = new Color(255 / 255f, 40 / 255f, 50 / 255f);
+
+    public Color AvgColor;
+
     Agent agent;
 
     public bool[] agentActionsTest = new bool[] { true, true, true, false, false, false }; // true means divide, false means join
     int agentMoveIdx = 0;
+
+    public int startElectionYear = 1960;
+    public int endElectionYear = 2024;
 
     private void OnEnable()
     {
@@ -72,6 +83,8 @@ public class GameManager : Singleton<GameManager>
         PlayerTurn = true;
 
         defaultUser = new FirebaseManager.User("", false);
+
+        AvgColor = new Color((DemColor.r + RepColor.r) / 2, (DemColor.g + RepColor.g) / 2, (DemColor.b + RepColor.b) / 2);
     }
 
     public IEnumerator SetUser(FirebaseManager.User user)
@@ -89,29 +102,41 @@ public class GameManager : Singleton<GameManager>
         InitVoterComposition();
     }
 
+    FirebaseManager.Election FindElection(List<FirebaseManager.Election> elections, int year)
+    {
+        return elections.Find((e) => e.electionYear == year);
+    }
+
     public IEnumerator PopulatePlayMenu(List<FirebaseManager.Election> elections)
     {
-        foreach(FirebaseManager.Election election in elections)
+        //for (int i = startElectionYear; i <= endElectionYear; i += 4)
+        for (int i = endElectionYear; i <= endElectionYear; i += 4) // TODO: REMOVE AFTER TESTING
         {
+            int electionYear = i;
+            FirebaseManager.Election election;
+
+            election = FindElection(elections, i) ?? new FirebaseManager.Election(i, 0, 0);
+
             GameObject ElectionEntry = GameObject.Find(election.electionYear.ToString());
 
             Transform demTopFill = ElectionEntry.transform.Find("DemFillTop");
             Transform demBotFill = ElectionEntry.transform.Find("DemFillBottom");
 
-            Transform repTopFill = ElectionEntry.transform.Find("RepFillTop");
-            Transform repBotFill = ElectionEntry.transform.Find("RepFillBottom");
-
             float widthVal = ElectionEntry.transform.GetComponent<RectTransform>().sizeDelta.x;
+
+            float shareDemVotes;
 
             if (election.demVotes + election.repVotes == 0)
             {
-                continue;
+                shareDemVotes = .5f; // no votes yet, so election is tied (no outcome)
+            }
+            else
+            {
+                shareDemVotes = (float)election.demVotes / (float)(election.demVotes + election.repVotes);
             }
 
-            float shareDemVotes = (float) election.demVotes / (float) (election.demVotes + election.repVotes);
             float demWidth = widthVal * shareDemVotes;
             float repWidth = widthVal - demWidth;
-
 
             RectTransform demTopFillRect = demTopFill.GetComponent<RectTransform>();
             demTopFillRect.sizeDelta = new Vector2(demWidth, demTopFillRect.sizeDelta.y);
@@ -119,12 +144,50 @@ public class GameManager : Singleton<GameManager>
             RectTransform demBotFillRect = demBotFill.GetComponent<RectTransform>();
             demBotFillRect.sizeDelta = new Vector2(demWidth, demBotFillRect.sizeDelta.y);
 
+            // don't apply the gradient unless the opposing rectangle color is going to be visible
+            if (repWidth > 0)
+            {
+                Material demMat = new Material(Shader.Find("Unlit/Texture"));
+                demMat.mainTexture = GradientTextureGenerator.GenerateGradientTexture(demTopFillRect.sizeDelta, DemColor, AvgColor, .7f, false);
+
+                demTopFill.GetComponent<Image>().material = demMat;
+                demBotFill.GetComponent<Image>().material = demMat;
+            }
+            else {
+                demTopFill.GetComponent<Image>().color = DemColor;
+                demBotFill.GetComponent<Image>().color = DemColor;
+            }
+
+            Transform repTopFill = ElectionEntry.transform.Find("RepFillTop");
+            Transform repBotFill = ElectionEntry.transform.Find("RepFillBottom");
 
             RectTransform repTopFillRect = repTopFill.GetComponent<RectTransform>();
             repTopFillRect.sizeDelta = new Vector2(repWidth, repTopFillRect.sizeDelta.y);
 
             RectTransform repBotFillRect = repBotFill.GetComponent<RectTransform>();
             repBotFillRect.sizeDelta = new Vector2(repWidth, repBotFillRect.sizeDelta.y);
+
+            if (demWidth > 0)
+            {
+                Material repMat = new Material(Shader.Find("Unlit/Texture"));
+                repMat.mainTexture = GradientTextureGenerator.GenerateGradientTexture(repTopFillRect.sizeDelta, RepColor, AvgColor, .7f, true);
+                repTopFill.GetComponent<Image>().material = repMat;
+                repBotFill.GetComponent<Image>().material = repMat;
+            }
+            else
+            {
+                repTopFill.GetComponent<Image>().color = RepColor;
+                repBotFill.GetComponent<Image>().color = RepColor;
+            }
+
+            Transform DemProfile = ElectionEntry.transform.Find("DemProfile");
+            Transform RepProfile = ElectionEntry.transform.Find("RepProfile");
+
+            if (election.demVotes > election.repVotes)
+                Instantiate(CrownPrefab, DemProfile);
+            else if (election.repVotes > election.demVotes)
+                Instantiate(CrownPrefab, RepProfile);
+
         }
 
         yield return null;
