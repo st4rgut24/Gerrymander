@@ -197,8 +197,8 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
                 new ElectionDetails(
                     "Jimmy Carter capitalizes on widespread dissatisfaction with the political establishment and economic issues, positioning himself as an outsider who can restore integrity to the presidency.",
                     1976,
-                    new PartyDetails("carter", "Jimmy Carter", Party.Democrat, new List<string>() {"Restore Integrity", "Economic Reform"}, .50f),
-                    new PartyDetails("ford", "Gerald Ford", Party.Republican, new List<string>() {"Continuation of Nixon Policies", "Economic Stability"}, .48f),
+                    new PartyDetails("carter", "Jimmy Carter", Party.Democrat, new List<string>() {"Restore Integrity", "Economic Reform"}, .51f),
+                    new PartyDetails("ford", "Gerald Ford", Party.Republican, new List<string>() {"Continuation of Nixon Policies", "Economic Stability"}, .49f),
                     Party.Democrat,
                     "Jimmy Carter's win was largely due to his appeal as a fresh alternative to the Nixon administration and his promises to restore honesty and address economic issues. His outsider status and focus on reform enabled him to secure a narrow 2.1% margin in the popular vote and 297 electoral votes."
                 )
@@ -208,8 +208,8 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
                 new ElectionDetails(
                     "Richard Nixon leverages the nation's relative stability and his successes in foreign policy to appeal to voters, while George McGovern's campaign struggles with internal party divisions and a lack of broad appeal.",
                     1972,
-                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Vietnam War Diplomacy", "Economic Prosperity"}, .60f),
-                    new PartyDetails("mcgovern", "George McGovern", Party.Democrat, new List<string>() {"End the Vietnam War", "Social Reform"}, .35f),
+                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Vietnam War Diplomacy", "Economic Prosperity"}, .62f),
+                    new PartyDetails("mcgovern", "George McGovern", Party.Democrat, new List<string>() {"End the Vietnam War", "Social Reform"}, .38f),
                     Party.Republican,
                     "Richard Nixon's overwhelming victory was driven by his successful foreign policy and the perception of stability during his presidency. McGovern's campaign failed to gain traction due to internal divisions and limited appeal, leading to Nixon's massive 23.2% margin in the popular vote and 520 electoral votes."
                 )
@@ -219,8 +219,8 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
                 new ElectionDetails(
                     "Richard Nixon capitalizes on the public's desire for law and order and a strong stance on the Vietnam War, while Hubert Humphrey's campaign struggles to address deepening social unrest and a divided Democratic Party.",
                     1968,
-                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Law and Order", "Vietnam War Policy"}, .43f),
-                    new PartyDetails("humphrey", "Hubert Humphrey", Party.Democrat, new List<string>() {"Great Society Continuation", "Vietnam War End"}, .42f),
+                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Law and Order", "Vietnam War Policy"}, .5f),
+                    new PartyDetails("humphrey", "Hubert Humphrey", Party.Democrat, new List<string>() {"Great Society Continuation", "Vietnam War End"}, .5f),
                     Party.Republican,
                     "Richard Nixon's victory was fueled by his strong positioning on law and order and Vietnam War policies, which resonated with voters amidst widespread social unrest. Humphrey's campaign struggled to address these concerns effectively, resulting in Nixon's narrow 0.7% margin in the popular vote and 301 electoral votes."
                 )
