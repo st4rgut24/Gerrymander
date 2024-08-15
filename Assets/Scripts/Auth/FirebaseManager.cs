@@ -159,29 +159,32 @@ public class FirebaseManager : Singleton<FirebaseManager>
             {
                 DataSnapshot snapshot = task.Result;
 
+                Election election;
                 if (snapshot.Exists)
                 {
-                    Election existingElection = ConvertSnapshotToElection(snapshot);
-
-                    if (winningParty != Party.None)
-                        UpdateWinnerVoteCount(existingElection, winningParty);
-                    if (swag != Swag.None && winningParty == Party.Democrat)
-                        existingElection.demSwag = (int)swag;
-                    if (swag != Swag.None && winningParty == Party.Republican)
-                        existingElection.repSwag = (int)swag;
-
-                    UpdateElection(existingElection);
+                    election = ConvertSnapshotToElection(snapshot);
                 }
                 else
                 {
-                    Election defaultElection = new Election(electionYear, 0, 0, (int)Swag.None, (int)Swag.None);
-                    UpdateWinnerVoteCount(defaultElection, winningParty);
-
-                    // initialize the Election in the database
-                    UpdateElection(defaultElection);
+                    // tODO: REMOVE MANUALLY ENTER ALL ELECTION YEARS ENTRIES PREVENT ANY GLOBAL MODIFICATION RESET
+                    election = new Election(electionYear, 0, 0, (int)Swag.None, (int)Swag.None);
                 }
+
+                UpdateWinnerVoteCount(election, winningParty);
+                UpdateSwag(election, winningParty, swag);
+
+                // initialize the Election in the database
+                UpdateElection(election);
             }
         });
+    }
+
+    void UpdateSwag(Election existingElection, Party winningParty, Swag swag)
+    {
+        if (swag != Swag.None && winningParty == Party.Democrat)
+            existingElection.demSwag = (int)swag;
+        if (swag != Swag.None && winningParty == Party.Republican)
+            existingElection.repSwag = (int)swag;
     }
 
     // updates should synchronize with player pref changes
