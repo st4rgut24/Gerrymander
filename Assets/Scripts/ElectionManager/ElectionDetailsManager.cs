@@ -7,6 +7,9 @@ using UnityEngine.UI;
 public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 {
     [SerializeField]
+    private TextMeshProUGUI SummaryText;
+
+    [SerializeField]
     private Toggle DemocratCheckbox;
 
     [SerializeField]
@@ -60,190 +63,191 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
             {
                 2024,
                 new ElectionDetails(
-                    "Having survived an assassination attempt, former president Trump rematches Biden in a tense election.",
+                    "Former President Donald Trump, having survived an assassination attempt, challenges President Joe Biden in an election characterized by heightened political tensions and concerns over security.",
                     2024,
                     new PartyDetails("kamala", "Kamala Harris", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f),
                     Party.None,
-                    "TBD"
+                    "The election results are still pending."
                 )
             },
             {
                 2020,
                 new ElectionDetails(
-                    "President Trump plays Biden in a tense election.",
+                    "The election is shaped by the global pandemic, economic downturn, and debates over handling COVID-19, with President Trump facing strong scrutiny over his response and Joe Biden presenting an alternative vision for recovery.",
                     2020,
                     new PartyDetails("biden", "Joe Biden", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f),
                     Party.Democrat,
-                    "Joe Biden won the presidency with a margin of 4.5% in the popular vote and secured 306 electoral votes, compared to Donald Trump's 232 electoral votes."
+                    "Joe Biden won the presidency largely due to his strong response to the COVID-19 pandemic and a compelling vision for economic recovery. Biden's ability to connect with voters' frustrations over the handling of the crisis and his promise of a more unified approach helped him secure a decisive victory with a 4.5% margin in the popular vote and 306 electoral votes."
                 )
             },
             {
                 2016,
                 new ElectionDetails(
-                    "In a shocking outcome, Donald Trump wins against Hillary Clinton, marking a dramatic shift in American politics.",
+                    "Donald Trump capitalizes on widespread discontent with the political establishment and promises significant change, while Hillary Clinton's campaign struggles to address concerns over trust and corruption.",
                     2016,
                     new PartyDetails("clinton", "Hillary Clinton", Party.Democrat, new List<string>() {"Clinton Foundation Experience", "Expand Healthcare"}, .48f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"Make America Great Again", "Immigration Reform"}, .46f),
                     Party.Republican,
-                    "Donald Trump won the presidency by securing 306 electoral votes to Hillary Clinton's 227, despite losing the popular vote by 2.1%."
+                    "Donald Trump's victory is attributed to his ability to tap into voter dissatisfaction with the political elite and his compelling promises for change. His strong appeal in key battleground states and effective use of populist rhetoric helped him secure 306 electoral votes despite losing the popular vote by 2.1%."
                 )
             },
             {
                 2012,
                 new ElectionDetails(
-                    "Barack Obama secures a second term against Mitt Romney amid a struggling economy and ongoing foreign conflicts.",
+                    "Barack Obama's re-election bid is influenced by a recovering economy and ongoing foreign policy challenges, including the aftermath of the Arab Spring and the conflict in Libya.",
                     2012,
                     new PartyDetails("obama", "Barack Obama", Party.Democrat, new List<string>() {"Affordable Care Act", "Economic Recovery"}, .51f),
                     new PartyDetails("romney", "Mitt Romney", Party.Republican, new List<string>() {"Economic Reform", "Reduce Government Spending"}, .47f),
                     Party.Democrat,
-                    "Barack Obama won re-election with a 3.9% margin in the popular vote and captured 332 electoral votes, defeating Mitt Romney, who received 206 electoral votes."
+                    "Barack Obama’s re-election was bolstered by the recovering economy and successful implementation of the Affordable Care Act. His campaign effectively highlighted the progress made under his presidency and his foreign policy achievements, allowing him to secure 332 electoral votes and a 3.9% margin in the popular vote."
                 )
             },
             {
                 2008,
                 new ElectionDetails(
-                    "Barack Obama makes history as the first African American president, defeating John McCain in a historic election.",
+                    "Barack Obama runs on a platform of change and hope during a period of economic crisis and dissatisfaction with the Iraq War, while John McCain's campaign struggles to gain traction against these prevailing issues.",
                     2008,
                     new PartyDetails("obama", "Barack Obama", Party.Democrat, new List<string>() {"Change", "End the Iraq War"}, .53f),
                     new PartyDetails("mccain", "John McCain", Party.Republican, new List<string>() {"Stay the Course in Iraq", "Tax Cuts"}, .46f),
                     Party.Democrat,
-                    "Barack Obama won the presidency with a substantial 7.3% margin in the popular vote and received 365 electoral votes, compared to John McCain's 173 electoral votes."
+                    "Barack Obama's message of change and hope resonated strongly with voters facing economic uncertainty and dissatisfaction with the Iraq War. His strong campaign and effective use of grassroots support led him to a substantial 7.3% margin in the popular vote and 365 electoral votes."
                 )
             },
             {
                 2004,
                 new ElectionDetails(
-                    "Incumbent President George W. Bush defeats John Kerry in a close race dominated by foreign policy and national security issues.",
+                    "The 2004 election focuses on the ongoing War on Terror and national security, with President George W. Bush's handling of the Iraq War being a central issue against John Kerry's criticism of the administration's policies.",
                     2004,
                     new PartyDetails("kerry", "John Kerry", Party.Democrat, new List<string>() {"End the Iraq War", "Healthcare Reform"}, .48f),
                     new PartyDetails("bush", "George W. Bush", Party.Republican, new List<string>() {"War on Terror", "Tax Cuts"}, .51f),
                     Party.Republican,
-                    "George W. Bush secured his re-election with a 2.5% margin in the popular vote and 286 electoral votes, defeating John Kerry, who received 251 electoral votes."
+                    "George W. Bush's victory was secured by his strong stance on national security and the War on Terror, which resonated with many voters concerned about safety and stability. His campaign effectively used these issues to maintain a 2.5% margin in the popular vote and secure 286 electoral votes."
                 )
             },
             {
                 2000,
                 new ElectionDetails(
-                    "George W. Bush wins a contentious election against Al Gore, which is decided by a narrow margin in Florida.",
+                    "The election is marked by controversy and a narrow focus on Florida's vote count, with issues of ballot design and voting procedures coming under intense scrutiny amidst a closely contested race.",
                     2000,
                     new PartyDetails("gore", "Al Gore", Party.Democrat, new List<string>() {"Environmental Protection", "Social Security Reform"}, .48f),
                     new PartyDetails("bush", "George W. Bush", Party.Republican, new List<string>() {"Tax Cuts", "Education Reform"}, .48f),
                     Party.Republican,
-                    "George W. Bush won the presidency by narrowly securing 271 electoral votes to Al Gore's 266, despite losing the popular vote by 0.5%."
+                    "George W. Bush won the presidency through a contentious and highly scrutinized recount in Florida, ultimately securing 271 electoral votes. Despite losing the popular vote by 0.5%, his narrow victory in Florida and effective campaign strategy proved decisive."
                 )
             },
             {
                 1996,
                 new ElectionDetails(
-                    "Bill Clinton wins re-election against Bob Dole, as the economy continues to improve and the political landscape shifts.",
+                    "Bill Clinton's re-election campaign benefits from a growing economy and strong job numbers, while Bob Dole struggles to present a compelling alternative vision for the country.",
                     1996,
                     new PartyDetails("billclinton", "Bill Clinton", Party.Democrat, new List<string>() {"Economic Prosperity", "Welfare Reform"}, .49f),
                     new PartyDetails("dole", "Bob Dole", Party.Republican, new List<string>() {"Tax Cuts", "Balanced Budget"}, .41f),
                     Party.Democrat,
-                    "Bill Clinton won re-election with an 8.5% margin in the popular vote and a commanding 379 electoral votes, compared to Bob Dole's 159 electoral votes."
+                    "Bill Clinton's success was fueled by the strong economic performance and job growth during his first term. His campaign effectively leveraged these economic gains, while Bob Dole's campaign failed to counter the incumbent's positive economic message, resulting in a commanding 8.5% margin in the popular vote and 379 electoral votes."
                 )
             },
             {
                 1992,
                 new ElectionDetails(
-                    "Bill Clinton defeats incumbent George H. W. Bush, capitalizing on economic dissatisfaction and his appeal as a 'new Democrat'.",
+                    "Bill Clinton seizes on economic dissatisfaction and the perception of a new political direction, effectively challenging incumbent George H. W. Bush and Ross Perot's third-party bid.",
                     1992,
                     new PartyDetails("billclinton", "Bill Clinton", Party.Democrat, new List<string>() {"Economic Growth", "Healthcare Reform"}, .43f),
                     new PartyDetails("hwbush", "George H. W. Bush", Party.Republican, new List<string>() {"Foreign Policy Experience", "Tax Increases"}, .37f),
                     Party.Democrat,
-                    "Bill Clinton won the presidency with a 5.6% margin in the popular vote and 370 electoral votes, defeating incumbent George H.W. Bush, who received 168 electoral votes."
+                    "Bill Clinton's victory was driven by widespread frustration with the economic recession and his promise of a new direction. His ability to connect with voters on economic issues, combined with Ross Perot's third-party challenge, led to a decisive 5.6% margin in the popular vote and 370 electoral votes."
                 )
             },
             {
                 1988,
                 new ElectionDetails(
-                    "George H. W. Bush wins against Michael Dukakis, emphasizing his experience and promising to continue Reagan's policies.",
+                    "George H. W. Bush's campaign focuses on his experience and the continuation of Ronald Reagan's policies, contrasting sharply with Michael Dukakis's proposals for domestic reforms.",
                     1988,
                     new PartyDetails("dukakis", "Michael Dukakis", Party.Democrat, new List<string>() {"Healthcare Reform", "Education Investment"}, .46f),
                     new PartyDetails("hwbush", "George H. W. Bush", Party.Republican, new List<string>() {"Continue Reagan's Policies", "Strengthen Defense"}, .53f),
                     Party.Republican,
-                    "George H.W. Bush won the presidency with a 7.7% margin in the popular vote and a decisive 426 electoral votes, compared to Michael Dukakis's 111 electoral votes."
+                    "George H. W. Bush won by capitalizing on the positive economic climate and the popularity of Ronald Reagan's policies. His focus on national security and economic stability contrasted effectively with Michael Dukakis's proposals, securing him a 7.7% margin in the popular vote and 426 electoral votes."
                 )
             },
             {
                 1984,
                 new ElectionDetails(
-                    "Ronald Reagan achieves a landslide victory over Walter Mondale, with the country enjoying economic prosperity and a strong foreign policy stance.",
+                    "Ronald Reagan's campaign is bolstered by strong economic growth and a robust foreign policy, including a successful stance against the Soviet Union, contrasting with Walter Mondale's calls for change.",
                     1984,
                     new PartyDetails("reagan", "Ronald Reagan", Party.Republican, new List<string>() {"Economic Growth", "Strong Defense"}, .59f),
                     new PartyDetails("mondale", "Walter Mondale", Party.Democrat, new List<string>() {"Social Security Reform", "Tax Increases"}, .41f),
                     Party.Republican,
-                    "Ronald Reagan won re-election with an 18.2% margin in the popular vote and a commanding 525 electoral votes, compared to Walter Mondale's 13 electoral votes."
+                    "Ronald Reagan achieved a landslide victory thanks to his effective economic policies and strong foreign policy stance. His campaign successfully leveraged the country's prosperity and his leadership, leading to an 18.2% margin in the popular vote and 525 electoral votes."
                 )
             },
             {
                 1980,
                 new ElectionDetails(
-                    "Ronald Reagan defeats incumbent Jimmy Carter amid economic troubles and the Iran hostage crisis, promising a new direction for the country.",
+                    "Ronald Reagan's campaign capitalizes on widespread discontent with the economic situation and the Iran hostage crisis, promising a fresh start and a new direction for the country.",
                     1980,
                     new PartyDetails("reagan", "Ronald Reagan", Party.Republican, new List<string>() {"Economic Revival", "Strong Defense"}, .55f),
                     new PartyDetails("carter", "Jimmy Carter", Party.Democrat, new List<string>() {"Energy Policy", "Inflation Control"}, .45f),
                     Party.Republican,
-                    "Ronald Reagan won the presidency with a 10.8% margin in the popular vote and 489 electoral votes, defeating Jimmy Carter, who received 49 electoral votes."
+                    "Ronald Reagan's victory was fueled by his promise of economic revival and a strong stance on national security, which resonated with voters frustrated by economic difficulties and the Iran hostage crisis. His campaign's focus on these issues helped him secure a 10.8% margin in the popular vote and 489 electoral votes."
                 )
             },
             {
                 1976,
                 new ElectionDetails(
-                    "Jimmy Carter wins a narrow victory over Gerald Ford, focusing on his outsider status and a promise to restore honesty to the White House.",
+                    "Jimmy Carter capitalizes on widespread dissatisfaction with the political establishment and economic issues, positioning himself as an outsider who can restore integrity to the presidency.",
                     1976,
-                    new PartyDetails("carter", "Jimmy Carter", Party.Democrat, new List<string>() {"Honesty in Government", "Energy Policy"}, .51f),
-                    new PartyDetails("ford", "Gerald Ford", Party.Republican, new List<string>() {"Economic Stability", "Vietnam War Experience"}, .49f),
+                    new PartyDetails("carter", "Jimmy Carter", Party.Democrat, new List<string>() {"Restore Integrity", "Economic Reform"}, .50f),
+                    new PartyDetails("ford", "Gerald Ford", Party.Republican, new List<string>() {"Continuation of Nixon Policies", "Economic Stability"}, .48f),
                     Party.Democrat,
-                    "Jimmy Carter won the presidency with a 2.1% margin in the popular vote and 297 electoral votes, compared to Gerald Ford's 240 electoral votes."
+                    "Jimmy Carter's win was largely due to his appeal as a fresh alternative to the Nixon administration and his promises to restore honesty and address economic issues. His outsider status and focus on reform enabled him to secure a narrow 2.1% margin in the popular vote and 297 electoral votes."
                 )
             },
             {
                 1972,
                 new ElectionDetails(
-                    "Richard Nixon secures a landslide victory over George McGovern, with the campaign heavily influenced by the ongoing Vietnam War and Nixon's strong foreign policy stance.",
+                    "Richard Nixon leverages the nation's relative stability and his successes in foreign policy to appeal to voters, while George McGovern's campaign struggles with internal party divisions and a lack of broad appeal.",
                     1972,
-                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Vietnam War", "Detente with China"}, .62f),
-                    new PartyDetails("mcgovern", "George McGovern", Party.Democrat, new List<string>() {"End the Vietnam War", "Social Reforms"}, .38f),
+                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Vietnam War Diplomacy", "Economic Prosperity"}, .60f),
+                    new PartyDetails("mcgovern", "George McGovern", Party.Democrat, new List<string>() {"End the Vietnam War", "Social Reform"}, .35f),
                     Party.Republican,
-                    "Richard Nixon won re-election with a 23.2% margin in the popular vote and 520 electoral votes, compared to George McGovern's 17 electoral votes."
+                    "Richard Nixon's overwhelming victory was driven by his successful foreign policy and the perception of stability during his presidency. McGovern's campaign failed to gain traction due to internal divisions and limited appeal, leading to Nixon's massive 23.2% margin in the popular vote and 520 electoral votes."
                 )
             },
             {
                 1968,
                 new ElectionDetails(
-                    "Richard Nixon wins the presidency in a close race against Hubert Humphrey, capitalizing on a strong anti-establishment sentiment and concerns over the Vietnam War.",
+                    "Richard Nixon capitalizes on the public's desire for law and order and a strong stance on the Vietnam War, while Hubert Humphrey's campaign struggles to address deepening social unrest and a divided Democratic Party.",
                     1968,
-                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Law and Order", "Vietnam War"}, .5f),
-                    new PartyDetails("humphrey", "Hubert Humphrey", Party.Democrat, new List<string>() {"Great Society Programs", "End of Vietnam War"}, .5f),
+                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Law and Order", "Vietnam War Policy"}, .43f),
+                    new PartyDetails("humphrey", "Hubert Humphrey", Party.Democrat, new List<string>() {"Great Society Continuation", "Vietnam War End"}, .42f),
                     Party.Republican,
-                    "Richard Nixon won the presidency with a 0.7% margin in the popular vote and 301 electoral votes, compared to Hubert Humphrey's 191 electoral votes."
+                    "Richard Nixon's victory was fueled by his strong positioning on law and order and Vietnam War policies, which resonated with voters amidst widespread social unrest. Humphrey's campaign struggled to address these concerns effectively, resulting in Nixon's narrow 0.7% margin in the popular vote and 301 electoral votes."
                 )
             },
             {
                 1964,
                 new ElectionDetails(
-                    "Lyndon B. Johnson wins a decisive victory over Barry Goldwater, riding a wave of support for his Great Society programs and civil rights legislation.",
+                    "Lyndon B. Johnson runs on the success of his Great Society programs and the civil rights achievements, while Barry Goldwater's more conservative platform struggles to gain widespread support.",
                     1964,
                     new PartyDetails("johnson", "Lyndon B. Johnson", Party.Democrat, new List<string>() {"Great Society", "Civil Rights"}, .62f),
                     new PartyDetails("goldwater", "Barry Goldwater", Party.Republican, new List<string>() {"Conservative Principles", "Limited Government"}, .38f),
                     Party.Democrat,
-                    "Lyndon B. Johnson won re-election with a 22.6% margin in the popular vote and 486 electoral votes, compared to Barry Goldwater's 52 electoral votes."
+                    "Lyndon B. Johnson's landslide victory was driven by his successful Great Society initiatives and strong support for civil rights. Goldwater's conservative platform did not resonate as widely with voters, resulting in Johnson's substantial 22.6% margin in the popular vote and 486 electoral votes."
                 )
             },
             {
                 1960,
                 new ElectionDetails(
-                    "John F. Kennedy narrowly defeats Richard Nixon, with the election focusing on Cold War issues, domestic reforms, and the televised debates.",
+                    "John F. Kennedy's campaign focuses on Cold War issues and domestic reform, capitalizing on the new era of televised debates, while Richard Nixon's campaign struggles to address these emerging concerns effectively.",
                     1960,
-                    new PartyDetails("kennedy", "John F. Kennedy", Party.Democrat, new List<string>() {"New Frontier", "Civil Rights"}, .5f),
-                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Experience in Government", "Foreign Policy"}, .5f),
+                    new PartyDetails("kennedy", "John F. Kennedy", Party.Democrat, new List<string>() {"New Frontier", "Civil Rights"}, .50f),
+                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Experience in Government", "Foreign Policy"}, .50f),
                     Party.Democrat,
-                    "John F. Kennedy won the presidency with a narrow 0.2% margin in the popular vote and 303 electoral votes, compared to Richard Nixon's 219 electoral votes."
+                    "John F. Kennedy's narrow victory was significantly influenced by his effective use of televised debates and his promise of a 'New Frontier' of progress. Despite Nixon's strong campaign, Kennedy's ability to address Cold War and domestic issues resonated more with voters, leading to a 0.2% margin in the popular vote and 303 electoral votes."
                 )
             }
+
 
         };  
 
@@ -395,6 +399,7 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 
         //TextMeshProUGUI ElectionSummaryText = GameObject.Find(Consts.Summary).GetComponent<TextMeshProUGUI>();
         //ElectionSummaryText.text = summary;
+        SummaryText.text = summary;
     }
 
     public void InitPartyUI(ElectionDetails details, Transform PartyContainer, GameObject partyPrefab, PartyDetails partyDetails, List<string> slogans)
