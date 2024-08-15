@@ -447,15 +447,19 @@ public class GameManager : Singleton<GameManager>
             else if (election.repVotes > election.demVotes)
                 Instantiate(CrownPrefab, RepProfile);
 
+            // TODO: REMOVE AFTER TESTS
+            election.demSwag = (int)Swag.Bandana;
+            election.repSwag = (int)Swag.Bandana;
+
             if (election.demSwag != (int) Swag.None)
             {
-                GameObject DemSwagPrefab = CandidateSwagPrefabDict[GetCandidateFromPartyYear(i, Party.Democrat)];
+                GameObject DemSwagPrefab = CandidateSwagPrefabDict[GetCandidateKeyFromPartyYear(i, Party.Democrat)];
                 ShowSwag(DemSwagPrefab, DemProfile, (Swag)election.demSwag);
             }
 
             if (election.repSwag != (int)Swag.None)
             {
-                GameObject RepSwagPrefab = CandidateSwagPrefabDict[GetCandidateFromPartyYear(i, Party.Republican)];
+                GameObject RepSwagPrefab = CandidateSwagPrefabDict[GetCandidateKeyFromPartyYear(i, Party.Republican)];
                 ShowSwag(RepSwagPrefab, RepProfile, (Swag)election.repSwag);
             }
         }
@@ -466,33 +470,34 @@ public class GameManager : Singleton<GameManager>
     public void ShowSwag(GameObject prefabGo, Transform ProfileTransform, Swag swag)
     {
         GameObject SwagParent = Instantiate(prefabGo, ProfileTransform);
-        SwagParent.SetActive(false);
 
-        Transform SwagGo = null;
+        Transform SwagTransform = null;
 
         if (swag == Swag.Bandana)
         {
-            SwagGo = SwagParent.transform.Find("BandanaContainer");
+            SwagTransform = SwagParent.transform.Find("BandanaContainer");
         }
         else if (swag == Swag.BlueLazer)
         {
-            SwagGo = SwagParent.transform.Find("BlueLazers");
+            SwagTransform = SwagParent.transform.Find("BlueLazers");
         }
         else if (swag == Swag.Glasses)
         {
-            SwagGo = SwagParent.transform.Find("GlassesContainer");
+            SwagTransform = SwagParent.transform.Find("GlassesContainer");
         }
         else if (swag == Swag.Moustache)
         {
-            SwagGo = SwagParent.transform.Find("MoustacheContainer");
+            SwagTransform = SwagParent.transform.Find("MoustacheContainer");
         }
         else if (swag == Swag.RedLazer)
         {
-            SwagGo = SwagParent.transform.Find("DeathLazerz");
+            SwagTransform = SwagParent.transform.Find("DeathLazerz");
         }
 
-        if (SwagGo != null)
-            SwagGo.gameObject.SetActive(true);
+        foreach (Transform child in SwagParent.transform)
+        {
+            child.gameObject.SetActive(child == SwagTransform);
+        }
     }
      
     public void QuitGame()
@@ -500,11 +505,11 @@ public class GameManager : Singleton<GameManager>
         Application.Quit();
     }
 
-    public string GetCandidateFromPartyYear(int electionYear, Party party)
+    public string GetCandidateKeyFromPartyYear(int electionYear, Party party)
     {
-        ElectionDetails details = ElectionMap[ElectionYear];
+        ElectionDetails details = ElectionMap[electionYear];
 
-        return party == Party.Democrat ? details.GetDemDetails().candidate : details.GetRepubDetails().candidate;
+        return party == Party.Democrat ? details.GetDemDetails().picFile : details.GetRepubDetails().picFile;
     }
 
     public ElectionDetails GetDetailsFromPartyYear()
