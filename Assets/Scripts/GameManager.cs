@@ -17,6 +17,12 @@ public class GameManager : Singleton<GameManager>
 {
     public GameObject CrownPrefab;
 
+    public GameObject BlueLazerPrefab;
+    public GameObject RedLazerPrefab;
+    public GameObject MoustachePrefab;
+    public GameObject GlassesPrefab;
+    public GameObject BandanaPrefab;
+
     public PartyDetails demPartyDetails;
     public PartyDetails repPartyDetils;
 
@@ -28,6 +34,8 @@ public class GameManager : Singleton<GameManager>
 
     FirebaseManager.User user;
     public FirebaseManager.User defaultUser;
+
+    public Dictionary<Swag, GameObject> SwagPrefabDict;
 
     Score score;
     Days days;
@@ -83,6 +91,15 @@ public class GameManager : Singleton<GameManager>
         defaultUser = new FirebaseManager.User("", false);
 
         AvgColor = new Color((DemColor.r + RepColor.r) / 2, (DemColor.g + RepColor.g) / 2, (DemColor.b + RepColor.b) / 2);
+
+        SwagPrefabDict = new Dictionary<Swag, GameObject>()
+        {
+            { Swag.BlueLazer, BlueLazerPrefab },
+            { Swag.RedLazer, RedLazerPrefab },
+            { Swag.Glasses, GlassesPrefab },
+            { Swag.Moustache, MoustachePrefab },
+            { Swag.Bandana, BandanaPrefab }
+        };
     }
 
     public int GetIndexFromElectionYear()
@@ -117,7 +134,7 @@ public class GameManager : Singleton<GameManager>
             int electionYear = i;
             FirebaseManager.Election election;
 
-            election = FindElection(elections, i) ?? new FirebaseManager.Election(i, 0, 0, (int)Swag.None);
+            election = FindElection(elections, i) ?? new FirebaseManager.Election(i, 0, 0, (int)Swag.None, (int)Swag.None);
 
             GameObject ElectionEntry = GameObject.Find(election.electionYear.ToString());
 
@@ -145,17 +162,6 @@ public class GameManager : Singleton<GameManager>
 
             RectTransform demBotFillRect = demBotFill.GetComponent<RectTransform>();
             demBotFillRect.sizeDelta = new Vector2(demWidth, demBotFillRect.sizeDelta.y);
-
-            //// don't apply the gradient unless the opposing rectangle color is going to be visible
-            //if (repWidth > 0)
-            //{
-            //    Material demMat = new Material(Shader.Find("Unlit/Texture"));
-            //    demMat.mainTexture = GradientTextureGenerator.GenerateGradientTexture(demTopFillRect.sizeDelta, DemColor, AvgColor, .7f, false);
-
-            //    demTopFill.GetComponent<Image>().material = demMat;
-            //    demBotFill.GetComponent<Image>().material = demMat;
-            //}
-            //else {
             demTopFill.GetComponent<Image>().color = DemColor;
             demBotFill.GetComponent<Image>().color = DemColor;
             //}
@@ -169,15 +175,6 @@ public class GameManager : Singleton<GameManager>
             RectTransform repBotFillRect = repBotFill.GetComponent<RectTransform>();
             repBotFillRect.sizeDelta = new Vector2(repWidth, repBotFillRect.sizeDelta.y);
 
-            //if (demWidth > 0)
-            //{
-            //    Material repMat = new Material(Shader.Find("Unlit/Texture"));
-            //    repMat.mainTexture = GradientTextureGenerator.GenerateGradientTexture(repTopFillRect.sizeDelta, RepColor, AvgColor, .7f, true);
-            //    repTopFill.GetComponent<Image>().material = repMat;
-            //    repBotFill.GetComponent<Image>().material = repMat;
-            //}
-            //else
-            //{
             repTopFill.GetComponent<Image>().color = RepColor;
             repBotFill.GetComponent<Image>().color = RepColor;
             //}
@@ -190,6 +187,15 @@ public class GameManager : Singleton<GameManager>
             else if (election.repVotes > election.demVotes)
                 Instantiate(CrownPrefab, RepProfile);
 
+            if (election.demSwag != (int) Swag.None)
+            {
+                Instantiate(SwagPrefabDict[(Swag)election.demSwag], DemProfile);
+            }
+
+            if (election.repSwag != (int)Swag.None)
+            {
+                Instantiate(SwagPrefabDict[(Swag)election.repSwag], RepProfile);
+            }
         }
 
         yield return null;

@@ -165,14 +165,16 @@ public class FirebaseManager : Singleton<FirebaseManager>
 
                     if (winningParty != Party.None)
                         UpdateWinnerVoteCount(existingElection, winningParty);
-                    if (swag != Swag.None)
-                        existingElection.equippedSwag = (int)swag;
+                    if (swag != Swag.None && winningParty == Party.Democrat)
+                        existingElection.demSwag = (int)swag;
+                    if (swag != Swag.None && winningParty == Party.Republican)
+                        existingElection.repSwag = (int)swag;
 
                     UpdateElection(existingElection);
                 }
                 else
                 {
-                    Election defaultElection = new Election(electionYear, 0, 0, (int)Swag.None);
+                    Election defaultElection = new Election(electionYear, 0, 0, (int)Swag.None, (int)Swag.None);
                     UpdateWinnerVoteCount(defaultElection, winningParty);
 
                     // initialize the Election in the database
@@ -275,8 +277,9 @@ public class FirebaseManager : Singleton<FirebaseManager>
         int electionY = int.Parse(snapshot.Child("electionYear").GetValue(true)?.ToString());
         int demVotes = int.Parse(snapshot.Child("demVotes")?.GetValue(true)?.ToString());
         int repVotes = int.Parse(snapshot.Child("repVotes")?.GetValue(true)?.ToString());
-        int equippedSwag = int.Parse(snapshot.Child("equippedSwag")?.GetValue(true)?.ToString());
-        return new Election(electionY, demVotes, repVotes, equippedSwag);
+        int demSwag = int.Parse(snapshot.Child("demSwag")?.GetValue(true)?.ToString());
+        int repSwag = int.Parse(snapshot.Child("repSwag")?.GetValue(true)?.ToString());
+        return new Election(electionY, demVotes, repVotes, demSwag, repSwag);
     }
 
     private User ConvertSnapshotToUser(DataSnapshot snapshot)
@@ -362,14 +365,16 @@ public class FirebaseManager : Singleton<FirebaseManager>
         public int electionYear;
         public int demVotes;
         public int repVotes;
-        public int equippedSwag;
+        public int demSwag;
+        public int repSwag;
 
-        public Election(int electionYear, int demVotes, int repVotes, int equippedSwag)
+        public Election(int electionYear, int demVotes, int repVotes, int demSwag, int repSwag)
         {
             this.electionYear = electionYear;
             this.demVotes = demVotes;
             this.repVotes = repVotes;
-            this.equippedSwag = equippedSwag;
+            this.demSwag = demSwag;
+            this.repSwag = repSwag;
         }
     }
 }
