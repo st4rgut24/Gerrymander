@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using DanielLochner.Assets.SimpleScrollSnap;
 
 public enum Difficulty
 {
@@ -61,10 +62,7 @@ public class GameManager : Singleton<GameManager>
     public int startElectionYear = 1960;
     public int endElectionYear = 2024;
 
-    private void OnEnable()
-    {
-
-    }
+    public static System.Action SpinEvent;
 
     private void Awake()
     {
@@ -119,7 +117,7 @@ public class GameManager : Singleton<GameManager>
             int electionYear = i;
             FirebaseManager.Election election;
 
-            election = FindElection(elections, i) ?? new FirebaseManager.Election(i, 0, 0);
+            election = FindElection(elections, i) ?? new FirebaseManager.Election(i, 0, 0, (int)Swag.None);
 
             GameObject ElectionEntry = GameObject.Find(election.electionYear.ToString());
 
@@ -427,10 +425,6 @@ public class GameManager : Singleton<GameManager>
 	{
 			
 	}
-
-    private void OnDisable()
-    {
-    }
 
     void OnDestroy()
     {

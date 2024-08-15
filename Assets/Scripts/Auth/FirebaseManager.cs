@@ -144,9 +144,9 @@ public class FirebaseManager : Singleton<FirebaseManager>
     /// get user data from the logged in user
     /// </summary>
     /// <param name="userId"></param>
-    public void SetElectionVictor(Party winningParty, int electionYear)
+    public void SetElectionVictor(Party winningParty, int electionYear, Swag swag)
     {
-        if (winningParty == Party.None)
+        if (winningParty == Party.None && swag == Swag.None)
             return;
 
         mDatabase.Child("elections").Child(electionYear.ToString()).GetValueAsync().ContinueWith(task =>
@@ -162,13 +162,17 @@ public class FirebaseManager : Singleton<FirebaseManager>
                 if (snapshot.Exists)
                 {
                     Election existingElection = ConvertSnapshotToElection(snapshot);
-                    UpdateWinnerVoteCount(existingElection, winningParty);
+
+                    if (winningParty != Party.None)
+                        UpdateWinnerVoteCount(existingElection, winningParty);
+                    if (swag != Swag.None)
+                        existingElection.equippedSwag = (int)swag;
 
                     UpdateElection(existingElection);
                 }
                 else
                 {
-                    Election defaultElection = new Election(electionYear, 0, 0);
+                    Election defaultElection = new Election(electionYear, 0, 0, (int)Swag.None);
                     UpdateWinnerVoteCount(defaultElection, winningParty);
 
                     // initialize the Election in the database
@@ -271,8 +275,8 @@ public class FirebaseManager : Singleton<FirebaseManager>
         int electionY = int.Parse(snapshot.Child("electionYear").GetValue(true)?.ToString());
         int demVotes = int.Parse(snapshot.Child("demVotes")?.GetValue(true)?.ToString());
         int repVotes = int.Parse(snapshot.Child("repVotes")?.GetValue(true)?.ToString());
-
-        return new Election(electionY, demVotes, repVotes);
+        int equippedSwag = int.Parse(snapshot.Child("equippedSwag")?.GetValue(true)?.ToString());
+        return new Election(electionY, demVotes, repVotes, equippedSwag);
     }
 
     private User ConvertSnapshotToUser(DataSnapshot snapshot)
@@ -358,12 +362,14 @@ public class FirebaseManager : Singleton<FirebaseManager>
         public int electionYear;
         public int demVotes;
         public int repVotes;
+        public int equippedSwag;
 
-        public Election(int electionYear, int demVotes, int repVotes)
+        public Election(int electionYear, int demVotes, int repVotes, int equippedSwag)
         {
             this.electionYear = electionYear;
             this.demVotes = demVotes;
             this.repVotes = repVotes;
+            this.equippedSwag = equippedSwag;
         }
     }
 }
