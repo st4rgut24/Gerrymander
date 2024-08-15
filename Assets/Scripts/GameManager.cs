@@ -23,6 +23,33 @@ public class GameManager : Singleton<GameManager>
     public GameObject GlassesPrefab;
     public GameObject BandanaPrefab;
 
+    public GameObject BidenSwagPrefab;
+    public GameObject BillClintonSwagPrefab;
+    public GameObject BushSwagPrefab;
+    public GameObject CarterSwagPrefab;
+    public GameObject DoleSwagPrefab;
+    public GameObject DukakiSwagPrefab;
+    public GameObject FordSwagPrefab;
+    public GameObject GoldwaterSwagPrefab;
+    public GameObject GoreSwagPrefab;
+    public GameObject HillarySwagPrefab;
+    public GameObject HumphreySwagPrefab;
+    public GameObject HWBushSwagPrefab;
+    public GameObject JohnsonSwagPrefab;
+    public GameObject KamalaSwagPrefab;
+    public GameObject KennedySwagPrefab;
+    public GameObject KerrySwagPrefab;
+    public GameObject McCainSwagPrefab;
+    public GameObject McGovernSwagPrefab;
+    public GameObject MondaleSwagPrefab;
+    public GameObject NixonSwagPrefab;
+    public GameObject ObamaSwagPrefab;
+    public GameObject ReaganSwagPrefab;
+    public GameObject RomneySwagPrefab;
+    public GameObject TrumpSwagPrefab;
+
+    // TODO: Add swag prefabs for the rest of the candidates
+
     public PartyDetails demPartyDetails;
     public PartyDetails repPartyDetils;
 
@@ -37,6 +64,7 @@ public class GameManager : Singleton<GameManager>
 
     public Dictionary<Swag, GameObject> SwagPrefabDict;
     public Dictionary<int, ElectionDetails> ElectionMap;
+    public Dictionary<string, GameObject> CandidateSwagPrefabDict;
 
     Score score;
     Days days;
@@ -101,9 +129,44 @@ public class GameManager : Singleton<GameManager>
             { Swag.Moustache, MoustachePrefab },
             { Swag.Bandana, BandanaPrefab }
         };
+
+        InitElectionMap();
+        InitCandidateSwagPrefabDict();
     }
 
-    public void initElectionMap()
+    public void InitCandidateSwagPrefabDict()
+    {
+        CandidateSwagPrefabDict = new Dictionary<string, GameObject>()
+        {
+            { "kamala", KamalaSwagPrefab },
+            { "trump", TrumpSwagPrefab },
+            { "biden", BidenSwagPrefab },
+            { "clinton", HillarySwagPrefab },
+            { "obama", ObamaSwagPrefab },
+            { "romney", RomneySwagPrefab },
+            { "mccain", McCainSwagPrefab },
+            { "kerry", KerrySwagPrefab },
+            { "bush", BushSwagPrefab },
+            { "gore", GoreSwagPrefab },
+            { "billclinton", BillClintonSwagPrefab },
+            { "dole", DoleSwagPrefab },
+            { "hwbush", HWBushSwagPrefab },
+            { "dukakis", DukakiSwagPrefab },
+            { "reagan", ReaganSwagPrefab },
+            { "mondale", MondaleSwagPrefab },
+            { "carter", CarterSwagPrefab },
+            { "ford", FordSwagPrefab },
+            { "nixon", NixonSwagPrefab },
+            { "mcgovern", McGovernSwagPrefab },
+            { "humphrey", HumphreySwagPrefab },
+            { "johnson", JohnsonSwagPrefab },
+            { "goldwater", GoldwaterSwagPrefab },
+            { "kennedy", KennedySwagPrefab },
+
+        };
+    }
+
+    public void InitElectionMap()
     {
         ElectionMap = new Dictionary<int, ElectionDetails>()
         {
@@ -386,21 +449,62 @@ public class GameManager : Singleton<GameManager>
 
             if (election.demSwag != (int) Swag.None)
             {
-                Instantiate(SwagPrefabDict[(Swag)election.demSwag], DemProfile);
+                GameObject DemSwagPrefab = CandidateSwagPrefabDict[GetCandidateFromPartyYear(i, Party.Democrat)];
+                ShowSwag(DemSwagPrefab, DemProfile, (Swag)election.demSwag);
             }
 
             if (election.repSwag != (int)Swag.None)
             {
-                Instantiate(SwagPrefabDict[(Swag)election.repSwag], RepProfile);
+                GameObject RepSwagPrefab = CandidateSwagPrefabDict[GetCandidateFromPartyYear(i, Party.Republican)];
+                ShowSwag(RepSwagPrefab, RepProfile, (Swag)election.repSwag);
             }
         }
 
         yield return null;
     }
 
+    public void ShowSwag(GameObject prefabGo, Transform ProfileTransform, Swag swag)
+    {
+        GameObject SwagParent = Instantiate(prefabGo, ProfileTransform);
+        SwagParent.SetActive(false);
+
+        Transform SwagGo = null;
+
+        if (swag == Swag.Bandana)
+        {
+            SwagGo = SwagParent.transform.Find("BandanaContainer");
+        }
+        else if (swag == Swag.BlueLazer)
+        {
+            SwagGo = SwagParent.transform.Find("BlueLazers");
+        }
+        else if (swag == Swag.Glasses)
+        {
+            SwagGo = SwagParent.transform.Find("GlassesContainer");
+        }
+        else if (swag == Swag.Moustache)
+        {
+            SwagGo = SwagParent.transform.Find("MoustacheContainer");
+        }
+        else if (swag == Swag.RedLazer)
+        {
+            SwagGo = SwagParent.transform.Find("DeathLazerz");
+        }
+
+        if (SwagGo != null)
+            SwagGo.gameObject.SetActive(true);
+    }
+     
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public string GetCandidateFromPartyYear(int electionYear, Party party)
+    {
+        ElectionDetails details = ElectionMap[ElectionYear];
+
+        return party == Party.Democrat ? details.GetDemDetails().candidate : details.GetRepubDetails().candidate;
     }
 
     public ElectionDetails GetDetailsFromPartyYear()
