@@ -178,8 +178,7 @@ public class GameManager : Singleton<GameManager>
             {
                 2024,
                 new ElectionDetails(
-                    "Former President Donald Trump, having survived an assassination attempt, challenges President Joe Biden in an election characterized by heightened political tensions and concerns over security.",
-                    2024,
+                    "Trump challenges Biden amid rising political tensions after narrowly surviving an assasination attempt.",                    2024,
                     new PartyDetails("kamala", "Kamala Harris", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f),
                     Party.None,
@@ -189,52 +188,44 @@ public class GameManager : Singleton<GameManager>
             {
                 2020,
                 new ElectionDetails(
-                    "The election is shaped by the global pandemic, economic downturn, and debates over handling COVID-19, with President Trump facing strong scrutiny over his response and Joe Biden presenting an alternative vision for recovery.",
-                    2020,
+                    "The pandemic and economic downturn dominate the election debate, with Trump under scrutiny and Biden offering a recovery plan.",                    2020,
                     new PartyDetails("biden", "Joe Biden", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f),
                     Party.Democrat,
-                    "Joe Biden won the presidency largely due to his strong response to the COVID-19 pandemic and a compelling vision for economic recovery. Biden's ability to connect with voters' frustrations over the handling of the crisis and his promise of a more unified approach helped him secure a decisive victory with a 4.5% margin in the popular vote and 306 electoral votes."
-                )
+                            "Biden won with a 4.5% margin in the popular vote, driven by his pandemic response and recovery vision."
+                    )
             },
             {
                 2016,
                 new ElectionDetails(
-                    "Donald Trump capitalizes on widespread discontent with the political establishment and promises significant change, while Hillary Clinton's campaign struggles to address concerns over trust and corruption.",
-                    2016,
+            "Trump taps into voter discontent with the establishment, while Clinton faces challenges over trust and corruption issues.",                    2016,
                     new PartyDetails("clinton", "Hillary Clinton", Party.Democrat, new List<string>() {"Clinton Foundation Experience", "Expand Healthcare"}, .48f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"Make America Great Again", "Immigration Reform"}, .46f),
                     Party.Republican,
-                    "Donald Trump's victory is attributed to his ability to tap into voter dissatisfaction with the political elite and his compelling promises for change. His strong appeal in key battleground states and effective use of populist rhetoric helped him secure 306 electoral votes despite losing the popular vote by 2.1%."
-                )
+        "Trump’s victory was driven by his change promises and appeal in battleground states, winning with a 2.1% popular vote margin."                )
             },
             {
                 2012,
                 new ElectionDetails(
-                    "Barack Obama's re-election bid is influenced by a recovering economy and ongoing foreign policy challenges, including the aftermath of the Arab Spring and the conflict in Libya.",
-                    2012,
+            "Obama seeks re-election amid economic recovery and foreign policy challenges from the Arab Spring and Libyan conflict.",                    2012,
                     new PartyDetails("obama", "Barack Obama", Party.Democrat, new List<string>() {"Affordable Care Act", "Economic Recovery"}, .51f),
                     new PartyDetails("romney", "Mitt Romney", Party.Republican, new List<string>() {"Economic Reform", "Reduce Government Spending"}, .47f),
                     Party.Democrat,
-                    "Barack Obama’s re-election was bolstered by the recovering economy and successful implementation of the Affordable Care Act. His campaign effectively highlighted the progress made under his presidency and his foreign policy achievements, allowing him to secure 332 electoral votes and a 3.9% margin in the popular vote."
-                )
+                        "Obama secured a 3.9% margin in the popular vote, bolstered by economic recovery and foreign policy achievements.")
             },
             {
                 2008,
                 new ElectionDetails(
-                    "Barack Obama runs on a platform of change and hope during a period of economic crisis and dissatisfaction with the Iraq War, while John McCain's campaign struggles to gain traction against these prevailing issues.",
-                    2008,
+            "Obama’s campaign emphasizes change and hope amidst economic crisis and dissatisfaction with the Iraq War.",                    2008,
                     new PartyDetails("obama", "Barack Obama", Party.Democrat, new List<string>() {"Change", "End the Iraq War"}, .53f),
                     new PartyDetails("mccain", "John McCain", Party.Republican, new List<string>() {"Stay the Course in Iraq", "Tax Cuts"}, .46f),
                     Party.Democrat,
-                    "Barack Obama's message of change and hope resonated strongly with voters facing economic uncertainty and dissatisfaction with the Iraq War. His strong campaign and effective use of grassroots support led him to a substantial 7.3% margin in the popular vote and 365 electoral votes."
-                )
+        "Obama won with a 7.3% margin in the popular vote, driven by his message of change and hope during a time of crisis."                )
             },
             {
                 2004,
                 new ElectionDetails(
-                    "The 2004 election focuses on the ongoing War on Terror and national security, with President George W. Bush's handling of the Iraq War being a central issue against John Kerry's criticism of the administration's policies.",
-                    2004,
+            "The focus of the 2004 election is on the War on Terror and national security, with Bush defending his policies and Kerry criticizing them.",                    2004,
                     new PartyDetails("kerry", "John Kerry", Party.Democrat, new List<string>() {"End the Iraq War", "Healthcare Reform"}, .48f),
                     new PartyDetails("bush", "George W. Bush", Party.Republican, new List<string>() {"War on Terror", "Tax Cuts"}, .51f),
                     Party.Republican,
@@ -244,123 +235,101 @@ public class GameManager : Singleton<GameManager>
             {
                 2000,
                 new ElectionDetails(
-                    "The election is marked by controversy and a narrow focus on Florida's vote count, with issues of ballot design and voting procedures coming under intense scrutiny amidst a closely contested race.",
-                    2000,
+            "The election is dominated by a close and controversial recount in Florida, raising questions about ballot design and voting procedures.",                    2000,
                     new PartyDetails("gore", "Al Gore", Party.Democrat, new List<string>() {"Environmental Protection", "Social Security Reform"}, .48f),
                     new PartyDetails("bush", "George W. Bush", Party.Republican, new List<string>() {"Tax Cuts", "Education Reform"}, .48f),
                     Party.Republican,
-                    "George W. Bush won the presidency through a contentious and highly scrutinized recount in Florida, ultimately securing 271 electoral votes. Despite losing the popular vote by 0.5%, his narrow victory in Florida and effective campaign strategy proved decisive."
-                )
+                "Bush won with a narrow 0.5% popular vote margin, driven by a contentious Florida recount and vote count scrutiny.")
             },
             {
                 1996,
                 new ElectionDetails(
-                    "Bill Clinton's re-election campaign benefits from a growing economy and strong job numbers, while Bob Dole struggles to present a compelling alternative vision for the country.",
-                    1996,
+            "Clinton's re-election campaign benefits from a strong economy, while Dole struggles to offer a compelling alternative.",                    1996,
                     new PartyDetails("billclinton", "Bill Clinton", Party.Democrat, new List<string>() {"Economic Prosperity", "Welfare Reform"}, .49f),
                     new PartyDetails("dole", "Bob Dole", Party.Republican, new List<string>() {"Tax Cuts", "Balanced Budget"}, .41f),
                     Party.Democrat,
-                    "Bill Clinton's success was fueled by the strong economic performance and job growth during his first term. His campaign effectively leveraged these economic gains, while Bob Dole's campaign failed to counter the incumbent's positive economic message, resulting in a commanding 8.5% margin in the popular vote and 379 electoral votes."
-                )
+        "Clinton’s re-election was marked by an 8.5% margin in the popular vote, driven by economic prosperity and job growth."                )
             },
             {
                 1992,
                 new ElectionDetails(
-                    "Bill Clinton seizes on economic dissatisfaction and the perception of a new political direction, effectively challenging incumbent George H. W. Bush and Ross Perot's third-party bid.",
-                    1992,
+            "Clinton challenges Bush on economic issues and political direction, with Perot's third-party bid adding complexity.",                    1992,
                     new PartyDetails("billclinton", "Bill Clinton", Party.Democrat, new List<string>() {"Economic Growth", "Healthcare Reform"}, .43f),
                     new PartyDetails("hwbush", "George H. W. Bush", Party.Republican, new List<string>() {"Foreign Policy Experience", "Tax Increases"}, .37f),
                     Party.Democrat,
-                    "Bill Clinton's victory was driven by widespread frustration with the economic recession and his promise of a new direction. His ability to connect with voters on economic issues, combined with Ross Perot's third-party challenge, led to a decisive 5.6% margin in the popular vote and 370 electoral votes."
-                )
+        "Clinton’s win, with a 5.6% margin in the popular vote, was fueled by economic dissatisfaction and a strong challenge from Perot."                )
             },
             {
                 1988,
                 new ElectionDetails(
-                    "George H. W. Bush's campaign focuses on his experience and the continuation of Ronald Reagan's policies, contrasting sharply with Michael Dukakis's proposals for domestic reforms.",
-                    1988,
+            "Bush campaigns on Reagan's legacy and national security, contrasting with Dukakis’s domestic reform proposals.",                    1988,
                     new PartyDetails("dukakis", "Michael Dukakis", Party.Democrat, new List<string>() {"Healthcare Reform", "Education Investment"}, .46f),
                     new PartyDetails("hwbush", "George H. W. Bush", Party.Republican, new List<string>() {"Continue Reagan's Policies", "Strengthen Defense"}, .53f),
                     Party.Republican,
-                    "George H. W. Bush won by capitalizing on the positive economic climate and the popularity of Ronald Reagan's policies. His focus on national security and economic stability contrasted effectively with Michael Dukakis's proposals, securing him a 7.7% margin in the popular vote and 426 electoral votes."
-                )
+        "Bush secured a 7.7% margin in the popular vote, leveraging Reagan’s popularity and economic stability."                )
             },
             {
                 1984,
                 new ElectionDetails(
-                    "Ronald Reagan's campaign is bolstered by strong economic growth and a robust foreign policy, including a successful stance against the Soviet Union, contrasting with Walter Mondale's calls for change.",
-                    1984,
+            "Reagan's campaign benefits from strong economic growth and foreign policy successes, contrasting with Mondale's calls for reform.",                    1984,
                     new PartyDetails("reagan", "Ronald Reagan", Party.Republican, new List<string>() {"Economic Growth", "Strong Defense"}, .59f),
                     new PartyDetails("mondale", "Walter Mondale", Party.Democrat, new List<string>() {"Social Security Reform", "Tax Increases"}, .41f),
                     Party.Republican,
-                    "Ronald Reagan achieved a landslide victory thanks to his effective economic policies and strong foreign policy stance. His campaign successfully leveraged the country's prosperity and his leadership, leading to an 18.2% margin in the popular vote and 525 electoral votes."
-                )
+        "Reagan’s landslide victory, with an 18.2% margin in the popular vote, was driven by economic prosperity and strong foreign policy."                )
             },
             {
                 1980,
                 new ElectionDetails(
-                    "Ronald Reagan's campaign capitalizes on widespread discontent with the economic situation and the Iran hostage crisis, promising a fresh start and a new direction for the country.",
-                    1980,
+            "Reagan's campaign focuses on economic discontent and the Iran hostage crisis, offering a new direction for the country.",                    1980,
                     new PartyDetails("reagan", "Ronald Reagan", Party.Republican, new List<string>() {"Economic Revival", "Strong Defense"}, .55f),
                     new PartyDetails("carter", "Jimmy Carter", Party.Democrat, new List<string>() {"Energy Policy", "Inflation Control"}, .45f),
                     Party.Republican,
-                    "Ronald Reagan's victory was fueled by his promise of economic revival and a strong stance on national security, which resonated with voters frustrated by economic difficulties and the Iran hostage crisis. His campaign's focus on these issues helped him secure a 10.8% margin in the popular vote and 489 electoral votes."
-                )
+        "Reagan won with a 10.8% margin in the popular vote, driven by his economic revival promises and strong national security stance."                )
             },
             {
                 1976,
                 new ElectionDetails(
-                    "Jimmy Carter capitalizes on widespread dissatisfaction with the political establishment and economic issues, positioning himself as an outsider who can restore integrity to the presidency.",
-                    1976,
+            "Carter runs as an outsider amid dissatisfaction with the establishment and economic challenges.",                    1976,
                     new PartyDetails("carter", "Jimmy Carter", Party.Democrat, new List<string>() {"Restore Integrity", "Economic Reform"}, .51f),
                     new PartyDetails("ford", "Gerald Ford", Party.Republican, new List<string>() {"Continuation of Nixon Policies", "Economic Stability"}, .49f),
                     Party.Democrat,
-                    "Jimmy Carter's win was largely due to his appeal as a fresh alternative to the Nixon administration and his promises to restore honesty and address economic issues. His outsider status and focus on reform enabled him to secure a narrow 2.1% margin in the popular vote and 297 electoral votes."
-                )
+        "Carter won with a 2.1% margin in the popular vote, appealing as a fresh alternative to Nixon’s administration."                )
             },
             {
                 1972,
                 new ElectionDetails(
-                    "Richard Nixon leverages the nation's relative stability and his successes in foreign policy to appeal to voters, while George McGovern's campaign struggles with internal party divisions and a lack of broad appeal.",
-                    1972,
+            "Nixon leverages stability and foreign policy successes, while McGovern's campaign faces internal divisions and limited appeal.",                    1972,
                     new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Vietnam War Diplomacy", "Economic Prosperity"}, .62f),
                     new PartyDetails("mcgovern", "George McGovern", Party.Democrat, new List<string>() {"End the Vietnam War", "Social Reform"}, .38f),
                     Party.Republican,
-                    "Richard Nixon's overwhelming victory was driven by his successful foreign policy and the perception of stability during his presidency. McGovern's campaign failed to gain traction due to internal divisions and limited appeal, leading to Nixon's massive 23.2% margin in the popular vote and 520 electoral votes."
-                )
+        "Nixon’s landslide victory included a 23.0% margin in the popular vote, bolstered by his foreign policy successes and strong economic performance."                )
             },
             {
                 1968,
                 new ElectionDetails(
-                    "Richard Nixon capitalizes on the public's desire for law and order and a strong stance on the Vietnam War, while Hubert Humphrey's campaign struggles to address deepening social unrest and a divided Democratic Party.",
-                    1968,
+            "Nixon's campaign focuses on law and order and Vietnam policy, while Humphrey struggles with social unrest and a divided party.",                    1968,
                     new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Law and Order", "Vietnam War Policy"}, .5f),
                     new PartyDetails("humphrey", "Hubert Humphrey", Party.Democrat, new List<string>() {"Great Society Continuation", "Vietnam War End"}, .5f),
                     Party.Republican,
-                    "Richard Nixon's victory was fueled by his strong positioning on law and order and Vietnam War policies, which resonated with voters amidst widespread social unrest. Humphrey's campaign struggled to address these concerns effectively, resulting in Nixon's narrow 0.7% margin in the popular vote and 301 electoral votes."
-                )
+        "Nixon won with a 0.7% margin in the popular vote, driven by his strong stance on law and order and Vietnam policies."                )
             },
             {
                 1964,
                 new ElectionDetails(
-                    "Lyndon B. Johnson runs on the success of his Great Society programs and the civil rights achievements, while Barry Goldwater's more conservative platform struggles to gain widespread support.",
-                    1964,
+            "Johnson highlights his Great Society successes and civil rights achievements, while Goldwater's conservative platform struggles.",                    1964,
                     new PartyDetails("johnson", "Lyndon B. Johnson", Party.Democrat, new List<string>() {"Great Society", "Civil Rights"}, .62f),
                     new PartyDetails("goldwater", "Barry Goldwater", Party.Republican, new List<string>() {"Conservative Principles", "Limited Government"}, .38f),
                     Party.Democrat,
-                    "Lyndon B. Johnson's landslide victory was driven by his successful Great Society initiatives and strong support for civil rights. Goldwater's conservative platform did not resonate as widely with voters, resulting in Johnson's substantial 22.6% margin in the popular vote and 486 electoral votes."
-                )
+        "Johnson won with a 22.6% margin in the popular vote, driven by his Great Society programs and civil rights achievements."                )
             },
             {
                 1960,
                 new ElectionDetails(
-                    "John F. Kennedy's campaign focuses on Cold War issues and domestic reform, capitalizing on the new era of televised debates, while Richard Nixon's campaign struggles to address these emerging concerns effectively.",
-                    1960,
+            "Kennedy emphasizes Cold War issues and domestic reform, while Nixon struggles with emerging campaign dynamics.",                    1960,
                     new PartyDetails("kennedy", "John F. Kennedy", Party.Democrat, new List<string>() {"New Frontier", "Civil Rights"}, .50f),
                     new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Experience in Government", "Foreign Policy"}, .50f),
                     Party.Democrat,
-                    "John F. Kennedy's narrow victory was significantly influenced by his effective use of televised debates and his promise of a 'New Frontier' of progress. Despite Nixon's strong campaign, Kennedy's ability to address Cold War and domestic issues resonated more with voters, leading to a 0.2% margin in the popular vote and 303 electoral votes."
-                )
+        "Kennedy won with a 0.2% margin in the popular vote, aided by effective use of televised debates and his New Frontier promise."                )
             }
 
 
@@ -581,8 +550,8 @@ public class GameManager : Singleton<GameManager>
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         //// TODO: REMOVEA FTER TESTING
-        if (scene.name != Consts.ResultsScene)
-            SceneManager.LoadScene(Consts.ResultsScene);
+        //if (scene.name != Consts.ResultsScene)
+        //    SceneManager.LoadScene(Consts.ResultsScene);
 
         if (scene.name.Equals(Consts.Game) || scene.name.Equals(Consts.TutorialScene))
         {
