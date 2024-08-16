@@ -166,6 +166,11 @@ public class GameManager : Singleton<GameManager>
         };
     }
 
+    public GameObject GetSwagPrefabFromElectionDetails(PartyDetails details)
+    {
+        return GameManager.Instance.CandidateSwagPrefabDict[details.picFile];
+    }
+
     public void InitElectionMap()
     {
         ElectionMap = new Dictionary<int, ElectionDetails>()
@@ -447,9 +452,9 @@ public class GameManager : Singleton<GameManager>
             else if (election.repVotes > election.demVotes)
                 Instantiate(CrownPrefab, RepProfile);
 
-            // TODO: REMOVE AFTER TESTS
-            election.demSwag = (int)Swag.Bandana;
-            election.repSwag = (int)Swag.Bandana;
+            //// TODO: REMOVE AFTER TESTS
+            //election.demSwag = (int)Swag.Bandana;
+            //election.repSwag = (int)Swag.Bandana;
 
             if (election.demSwag != (int) Swag.None)
             {
@@ -575,6 +580,10 @@ public class GameManager : Singleton<GameManager>
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        //// TODO: REMOVEA FTER TESTING
+        if (scene.name != Consts.ResultsScene)
+            SceneManager.LoadScene(Consts.ResultsScene);
+
         if (scene.name.Equals(Consts.Game) || scene.name.Equals(Consts.TutorialScene))
         {
             score = GameObject.Find(Consts.ScoreGo).GetComponent<Score>();
