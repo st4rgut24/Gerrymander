@@ -117,7 +117,7 @@ public class GameManager : Singleton<GameManager>
 
         PlayerTurn = true;
 
-        defaultUser = new FirebaseManager.User("", false);
+        defaultUser = new FirebaseManager.User();
 
         AvgColor = new Color((DemColor.r + RepColor.r) / 2, (DemColor.g + RepColor.g) / 2, (DemColor.b + RepColor.b) / 2);
 

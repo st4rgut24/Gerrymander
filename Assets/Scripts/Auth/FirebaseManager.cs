@@ -287,16 +287,16 @@ public class FirebaseManager : Singleton<FirebaseManager>
 
     private User ConvertSnapshotToUser(DataSnapshot snapshot)
     {
-        string username = snapshot.Child("username").GetValue(true).ToString();
-        //string profilePic = snapshot.Child("profilePic")?.GetValue(true)?.ToString();
-        //int score = int.Parse(snapshot.Child("score")?.GetValue(true)?.ToString());
-        //int highScore = int.Parse(snapshot.Child("highScore")?.GetValue(true)?.ToString());
-        //bool boughtCheckpoint = GetBoolOrDefault(snapshot.Child("boughtCheckpoint")?.GetValue(true));
-        bool boughtAds = GetBoolOrDefault(snapshot.Child("boughtAds")?.GetValue(true));
-        //bool boughtBundle = GetBoolOrDefault(snapshot.Child("boughtBundle")?.GetValue(true));
-        //bool boughtCustom = GetBoolOrDefault(snapshot.Child("boughtCustom")?.GetValue(true));
+        //string username = snapshot.Child("username").GetValue(true).ToString();
+        ////string profilePic = snapshot.Child("profilePic")?.GetValue(true)?.ToString();
+        ////int score = int.Parse(snapshot.Child("score")?.GetValue(true)?.ToString());
+        ////int highScore = int.Parse(snapshot.Child("highScore")?.GetValue(true)?.ToString());
+        ////bool boughtCheckpoint = GetBoolOrDefault(snapshot.Child("boughtCheckpoint")?.GetValue(true));
+        //bool boughtAds = GetBoolOrDefault(snapshot.Child("boughtAds")?.GetValue(true));
+        ////bool boughtBundle = GetBoolOrDefault(snapshot.Child("boughtBundle")?.GetValue(true));
+        ////bool boughtCustom = GetBoolOrDefault(snapshot.Child("boughtCustom")?.GetValue(true));
 
-        return new User(username, boughtAds);
+        return new User();
     }
 
     private bool GetBoolOrDefault(object o)
@@ -345,20 +345,20 @@ public class FirebaseManager : Singleton<FirebaseManager>
 
     public User CreateCopyOfUser(User user)
     {
-        return new User(user.username, user.hasAds);
+        return new User();
     }
 
     // User class to store user data
     [System.Serializable]
     public class User
     {
-        public string username;
-        public bool hasAds;
+        //public string username;
+        //public bool hasAds;
 
-        public User(string username, bool hasAds)
+        public User()
         {
-            this.username = username;
-            this.hasAds = hasAds;
+            //this.username = username;
+            //this.hasAds = hasAds;
         }
     }
 
