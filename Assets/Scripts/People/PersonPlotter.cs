@@ -146,7 +146,7 @@ public class PersonPlotter : Singleton<PersonPlotter>
 			PersonPrefab person = PersonGo.GetComponent<PersonPrefab>();
 
 			PersonGo.transform.position = new Vector2(randWorldX, randWorldY);
-			person.setPartyAffiliation(voterParty, PartyColors[voterParty]);
+			person.SetPartyAffiliation(voterParty, PartyColors[voterParty]);
 
 			PersonsList.Add(PersonGo);
 		}

@@ -1,35 +1,40 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 public class PersonPrefab : MonoBehaviour
 {
     public Party party;
-
-    SpriteRenderer spriteRenderer;
-
     public float moveSpeed = 2f;
     public float maxDistance = 2f;
+    public float rotationSpeed = 5f; // Speed at which rotation interpolates
 
     private Vector2 targetPosition;
     private Vector2 randomDirection;
+    private SpriteRenderer spriteRenderer;
+    private Quaternion targetRotation;
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    // Use this for initialization
     void Start()
-	{
+    {
         targetPosition = GetRandomPosition();
     }
 
-	// Update is called once per frame
-	void Update()
-	{
+    void Update()
+    {
         // Move towards the target position
+        Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
         transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+
+        // Smoothly rotate towards the direction of movement
+        if (Vector2.Distance(transform.position, targetPosition) > 0.1f) // Check if moving
+        {
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            targetRotation = Quaternion.Euler(new Vector3(0, 0, angle));
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
 
         // Check if reached the target position
         if (Vector2.Distance(transform.position, targetPosition) < 0.1f)
@@ -39,11 +44,9 @@ public class PersonPrefab : MonoBehaviour
         }
     }
 
-    //public void setPartyAffiliation(Party party, Color partyColor)
-    public void setPartyAffiliation(Party party, Sprite partySprite)
+    public void SetPartyAffiliation(Party party, Sprite partySprite)
     {
         this.party = party;
-        //spriteRenderer.color = partyColor;
         spriteRenderer.sprite = partySprite;
     }
 
@@ -55,8 +58,8 @@ public class PersonPrefab : MonoBehaviour
     Vector3 GetRandomPosition()
     {
         // Generate a random position within a maxDistance radius
-        randomDirection = Random.insideUnitSphere * maxDistance;
-        return randomDirection + (Vector2) transform.position;
+        randomDirection = Random.insideUnitCircle * maxDistance; // Use insideUnitCircle for 2D
+        return randomDirection + (Vector2)transform.position;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -64,7 +67,7 @@ public class PersonPrefab : MonoBehaviour
         if (collision.gameObject.CompareTag(Consts.RoomTag))
         {
             Vector3 closestPoint = collision.ClosestPoint(transform.position);
-            Vector2 oppositeDirection = transform.position - closestPoint; ;
+            Vector2 oppositeDirection = transform.position - closestPoint;
 
             // Set the target position based on the opposite direction and move distance
             targetPosition = transform.position + new Vector3(oppositeDirection.x, oppositeDirection.y, 0f) * 5;
@@ -72,4 +75,3 @@ public class PersonPrefab : MonoBehaviour
         }
     }
 }
-

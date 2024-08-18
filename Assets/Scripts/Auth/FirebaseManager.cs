@@ -42,7 +42,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
             {
                 // Get a reference to the database
                 mDatabase = FirebaseDatabase.DefaultInstance.RootReference;
-
+                Debug.Log("mdatabase is " + mDatabase);
                 if (!IsUserLoggedIn()) // if user isn't logged in, login anonymously
                                        // Sign in anonymously
                 {
