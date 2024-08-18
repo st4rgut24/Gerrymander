@@ -684,7 +684,10 @@ public class GameManager : Singleton<GameManager>
 
         picGo.sprite = partyDetails.partySprite;
         if (!playerTurn)
-            nameText.text = partyDetails.candidate.Split(" ")[0] + "'s\n Turn";
+        {
+            string[] candidateNames = partyDetails.candidate.Split(" ");
+            nameText.text = candidateNames[candidateNames.Length - 1] + "'s\n Turn";
+        }
         else
             nameText.text = "Your\n Turn";
         yield return new WaitForSeconds(1); // time to display the next turn ui
