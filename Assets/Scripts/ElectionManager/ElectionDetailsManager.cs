@@ -10,6 +10,9 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
     private TextMeshProUGUI SummaryText;
 
     [SerializeField]
+    private Image SummaryImage;
+
+    [SerializeField]
     private Toggle DemocratCheckbox;
 
     [SerializeField]
@@ -141,6 +144,8 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 
     void FunnelPartyTokens()
     {
+        SoundManager.Instance.PlaySoundEffect(Consts.FunnelChips);
+
         IsFunneling = true;
         CreateFunnel();
         PartyObjects.ForEach((partyGo) =>
@@ -156,6 +161,8 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         {
             return;
         }
+
+        SummaryImage.color = GameManager.Instance.RepColor;
 
         if (change.isOn && DemocratCheckbox.isOn)
             DemocratCheckbox.isOn = false;
@@ -179,6 +186,8 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
         {
             return;
         }
+
+        SummaryImage.color = GameManager.Instance.DemColor;
 
         if (change.isOn && RepublicanCheckbox.isOn)
             RepublicanCheckbox.isOn = false;

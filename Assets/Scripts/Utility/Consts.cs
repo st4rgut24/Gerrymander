@@ -12,6 +12,14 @@ public class Consts
     public const Party PlayerTutorialParty = Party.Democrat;
     public const Party AiTutorialParty = Party.Republican;
 
+    //mp3
+    public const string FunnelChips = "chipsfalling";
+    public const string CandidateCrowned = "crown";
+    public const string SpinSlotMachine = "slotmachine";
+    public const string Win = "victory";
+    public const string ButtonPress = "buttonpress";
+    public const string JoinRoomSound = "poof";
+
     //scenes
     public const string LandingScene = "LandingPage";
     public const string PlayMenu = "PlayMenu";

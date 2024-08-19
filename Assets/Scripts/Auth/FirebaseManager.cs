@@ -132,8 +132,13 @@ public class FirebaseManager : Singleton<FirebaseManager>
         });
     }
 
-    private void UpdateWinnerVoteCount(Election election, Party winningParty)
+    private void UpdateWinnerVoteCount(Election election, Party winningParty, bool DidPlayerWin)
     {
+        bool WasElectionTied = election.demVotes == election.repVotes;
+
+        if (WasElectionTied && DidPlayerWin)
+            GameManager.Instance.DidPlayerCrownPresident = true;
+
         if (winningParty == Party.Democrat)
             election.demVotes++;
         if (winningParty == Party.Republican)
@@ -144,10 +149,16 @@ public class FirebaseManager : Singleton<FirebaseManager>
     /// get user data from the logged in user
     /// </summary>
     /// <param name="userId"></param>
-    public void SetElectionVictor(Party winningParty, int electionYear, Swag swag)
+    public void SetElectionVictor(Party winningParty, int electionYear, Swag swag, bool DidPlayerWin)
     {
         if (winningParty == Party.None && swag == Swag.None)
             return;
+
+        if (mDatabase == null)
+        {
+            Debug.LogError("MDatabase is null, can't set election results");
+            return;
+        }
 
         mDatabase.Child("elections").Child(electionYear.ToString()).GetValueAsync().ContinueWith(task =>
         {
@@ -170,7 +181,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
                     election = new Election(electionYear, 0, 0, (int)Swag.None, (int)Swag.None);
                 }
 
-                UpdateWinnerVoteCount(election, winningParty);
+                UpdateWinnerVoteCount(election, winningParty, DidPlayerWin);
                 UpdateSwag(election, winningParty, swag);
 
                 // initialize the Election in the database

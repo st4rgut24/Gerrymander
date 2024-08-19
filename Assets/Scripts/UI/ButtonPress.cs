@@ -38,6 +38,7 @@ public class ButtonPress : MonoBehaviour, IPointerDownHandler
     {
         if (!buttonPressed)
         {
+            SoundManager.Instance.PlaySoundEffect(Consts.ButtonPress);
             GetComponent<Image>().sprite = pressedSprite;
             textRect.anchoredPosition = PressedTextOffset;
 

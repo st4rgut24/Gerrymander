@@ -362,6 +362,8 @@ public class Map : Singleton<Map>
     /// </summary>
     public void JoinRoom(RoomPrefab room1, RoomPrefab room2)
     {
+        SoundManager.Instance.PlaySoundEffect(Consts.JoinRoomSound);
+
         if (room1.AdjacentConnectedRooms.Contains(room2))
         {
             // exit if these rooms are already joined
@@ -395,6 +397,8 @@ public class Map : Singleton<Map>
     /// </summary>
     private void FillRoom(RoomPrefab room)
     {
+        SoundManager.Instance.PlaySoundEffect(Consts.ButtonPress);
+
         room.CreatePerimeter(true);
 
         roomsToRecalculate = new List<RoomPrefab>() { room };
@@ -412,6 +416,8 @@ public class Map : Singleton<Map>
     /// <param name="plotCoord">coord where user wants to split into new rooms</param>
     public void DivideRoom(RoomPrefab room)
     {
+        SoundManager.Instance.PlaySoundEffect(Consts.ButtonPress);
+
         if (IsDivisionValid(room.box))
         {
             if (room.district != null)

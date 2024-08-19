@@ -16,6 +16,7 @@ public enum Difficulty
 public class GameManager : Singleton<GameManager>
 {
     public GameObject CrownPrefab;
+    public bool DidPlayerCrownPresident = false;
 
     public GameObject BlueLazerPrefab;
     public GameObject RedLazerPrefab;
@@ -73,7 +74,7 @@ public class GameManager : Singleton<GameManager>
     public Party PlayerParty;
     public float DemocratPct = .5f;
 
-    public int DaysTilElection = 1;
+    public int DaysTilElection = 7;
     public float RepublicanPct;
     public int population = 50;
 
@@ -178,11 +179,11 @@ public class GameManager : Singleton<GameManager>
             {
                 2024,
                 new ElectionDetails(
-                    "Trump challenges Biden amid rising political tensions after narrowly surviving an assasination attempt.",                    2024,
+                    "Trump challenges Kamala Harris amid rising political tensions after narrowly surviving an assassination attempt.",                    2024,
                     new PartyDetails("kamala", "Kamala Harris", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f),
                     Party.None,
-                    "The election results are still pending."
+                    "The 2024 election results are still pending."
                 )
             },
             {
@@ -192,7 +193,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("biden", "Joe Biden", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f),
                     Party.Democrat,
-                            "Biden won with a 4.5% margin in the popular vote, driven by his pandemic response and recovery vision."
+                            "In 2020, Biden won with a 4.5% margin in the popular vote, driven by his pandemic response and recovery vision."
                     )
             },
             {
@@ -202,7 +203,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("clinton", "Hillary Clinton", Party.Democrat, new List<string>() {"Clinton Foundation Experience", "Expand Healthcare"}, .48f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"Make America Great Again", "Immigration Reform"}, .46f),
                     Party.Republican,
-        "Trump’s victory was driven by his change promises and appeal in battleground states, winning with a 2.1% popular vote margin."                )
+        "In 2016, Trump’s victory was driven by his change promises and appeal in battleground states, winning with a 2.1% popular vote margin."                )
             },
             {
                 2012,
@@ -211,7 +212,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("obama", "Barack Obama", Party.Democrat, new List<string>() {"Affordable Care Act", "Economic Recovery"}, .51f),
                     new PartyDetails("romney", "Mitt Romney", Party.Republican, new List<string>() {"Economic Reform", "Reduce Government Spending"}, .47f),
                     Party.Democrat,
-                        "Obama secured a 3.9% margin in the popular vote, bolstered by economic recovery and foreign policy achievements.")
+                        "In 2012, Obama secured a 3.9% margin in the popular vote, bolstered by economic recovery and foreign policy achievements.")
             },
             {
                 2008,
@@ -220,7 +221,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("obama", "Barack Obama", Party.Democrat, new List<string>() {"Change", "End the Iraq War"}, .53f),
                     new PartyDetails("mccain", "John McCain", Party.Republican, new List<string>() {"Stay the Course in Iraq", "Tax Cuts"}, .46f),
                     Party.Democrat,
-        "Obama won with a 7.3% margin in the popular vote, driven by his message of change and hope during a time of crisis."                )
+        "In 2008, Obama won with a 7.3% margin in the popular vote, driven by his message of change and hope during a time of crisis."                )
             },
             {
                 2004,
@@ -229,7 +230,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("kerry", "John Kerry", Party.Democrat, new List<string>() {"End the Iraq War", "Healthcare Reform"}, .48f),
                     new PartyDetails("bush", "George W. Bush", Party.Republican, new List<string>() {"War on Terror", "Tax Cuts"}, .51f),
                     Party.Republican,
-                    "George W. Bush's victory was secured by his strong stance on national security and the War on Terror, which resonated with many voters concerned about safety and stability. His campaign effectively used these issues to maintain a 2.5% margin in the popular vote and secure 286 electoral votes."
+                    "In 2004, George W. Bush's victory was secured by his strong stance on national security and the War on Terror, which resonated with many voters concerned about safety and stability. His campaign effectively used these issues to maintain a 2.5% margin in the popular vote and secure 286 electoral votes."
                 )
             },
             {
@@ -239,7 +240,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("gore", "Al Gore", Party.Democrat, new List<string>() {"Environmental Protection", "Social Security Reform"}, .48f),
                     new PartyDetails("bush", "George W. Bush", Party.Republican, new List<string>() {"Tax Cuts", "Education Reform"}, .48f),
                     Party.Republican,
-                "Bush won with a narrow 0.5% popular vote margin, driven by a contentious Florida recount and vote count scrutiny.")
+                "In 2000, Bush won with a narrow 0.5% popular vote margin, driven by a contentious Florida recount and vote count scrutiny.")
             },
             {
                 1996,
@@ -248,7 +249,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("billclinton", "Bill Clinton", Party.Democrat, new List<string>() {"Economic Prosperity", "Welfare Reform"}, .49f),
                     new PartyDetails("dole", "Bob Dole", Party.Republican, new List<string>() {"Tax Cuts", "Balanced Budget"}, .41f),
                     Party.Democrat,
-        "Clinton’s re-election was marked by an 8.5% margin in the popular vote, driven by economic prosperity and job growth."                )
+        "In 1996, Clinton’s re-election was marked by an 8.5% margin in the popular vote, driven by economic prosperity and job growth."                )
             },
             {
                 1992,
@@ -257,7 +258,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("billclinton", "Bill Clinton", Party.Democrat, new List<string>() {"Economic Growth", "Healthcare Reform"}, .43f),
                     new PartyDetails("hwbush", "George H. W. Bush", Party.Republican, new List<string>() {"Foreign Policy Experience", "Tax Increases"}, .37f),
                     Party.Democrat,
-        "Clinton’s win, with a 5.6% margin in the popular vote, was fueled by economic dissatisfaction and a strong challenge from Perot."                )
+        "In 1992, Clinton’s win, with a 5.6% margin in the popular vote, was fueled by economic dissatisfaction and a strong challenge from Perot."                )
             },
             {
                 1988,
@@ -266,7 +267,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("dukakis", "Michael Dukakis", Party.Democrat, new List<string>() {"Healthcare Reform", "Education Investment"}, .46f),
                     new PartyDetails("hwbush", "George H. W. Bush", Party.Republican, new List<string>() {"Continue Reagan's Policies", "Strengthen Defense"}, .53f),
                     Party.Republican,
-        "Bush secured a 7.7% margin in the popular vote, leveraging Reagan’s popularity and economic stability."                )
+        "In 1988, Bush secured a 7.7% margin in the popular vote, leveraging Reagan’s popularity and economic stability."                )
             },
             {
                 1984,
@@ -275,7 +276,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("reagan", "Ronald Reagan", Party.Republican, new List<string>() {"Economic Growth", "Strong Defense"}, .59f),
                     new PartyDetails("mondale", "Walter Mondale", Party.Democrat, new List<string>() {"Social Security Reform", "Tax Increases"}, .41f),
                     Party.Republican,
-        "Reagan’s landslide victory, with an 18.2% margin in the popular vote, was driven by economic prosperity and strong foreign policy."                )
+        "In 1984, Reagan’s landslide victory, with an 18.2% margin in the popular vote, was driven by economic prosperity and strong foreign policy."                )
             },
             {
                 1980,
@@ -284,7 +285,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("reagan", "Ronald Reagan", Party.Republican, new List<string>() {"Economic Revival", "Strong Defense"}, .55f),
                     new PartyDetails("carter", "Jimmy Carter", Party.Democrat, new List<string>() {"Energy Policy", "Inflation Control"}, .45f),
                     Party.Republican,
-        "Reagan won with a 10.8% margin in the popular vote, driven by his economic revival promises and strong national security stance."                )
+        "In 1980, Reagan won with a 10.8% margin in the popular vote, driven by his economic revival promises and strong national security stance."                )
             },
             {
                 1976,
@@ -293,7 +294,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("carter", "Jimmy Carter", Party.Democrat, new List<string>() {"Restore Integrity", "Economic Reform"}, .51f),
                     new PartyDetails("ford", "Gerald Ford", Party.Republican, new List<string>() {"Continuation of Nixon Policies", "Economic Stability"}, .49f),
                     Party.Democrat,
-        "Carter won with a 2.1% margin in the popular vote, appealing as a fresh alternative to Nixon’s administration."                )
+        "In 1976, Carter won with a 2.1% margin in the popular vote, appealing as a fresh alternative to Nixon’s administration."                )
             },
             {
                 1972,
@@ -302,7 +303,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Vietnam War Diplomacy", "Economic Prosperity"}, .62f),
                     new PartyDetails("mcgovern", "George McGovern", Party.Democrat, new List<string>() {"End the Vietnam War", "Social Reform"}, .38f),
                     Party.Republican,
-        "Nixon’s landslide victory included a 23.0% margin in the popular vote, bolstered by his foreign policy successes and strong economic performance."                )
+        "In 1972, Nixon’s landslide victory included a 23.0% margin in the popular vote, bolstered by his foreign policy successes and strong economic performance."                )
             },
             {
                 1968,
@@ -311,7 +312,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Law and Order", "Vietnam War Policy"}, .5f),
                     new PartyDetails("humphrey", "Hubert Humphrey", Party.Democrat, new List<string>() {"Great Society Continuation", "Vietnam War End"}, .5f),
                     Party.Republican,
-        "Nixon won with a 0.7% margin in the popular vote, driven by his strong stance on law and order and Vietnam policies."                )
+        "In 1968, Nixon won with a 0.7% margin in the popular vote, driven by his strong stance on law and order and Vietnam policies."                )
             },
             {
                 1964,
@@ -320,7 +321,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("johnson", "Lyndon B. Johnson", Party.Democrat, new List<string>() {"Great Society", "Civil Rights"}, .62f),
                     new PartyDetails("goldwater", "Barry Goldwater", Party.Republican, new List<string>() {"Conservative Principles", "Limited Government"}, .38f),
                     Party.Democrat,
-        "Johnson won with a 22.6% margin in the popular vote, driven by his Great Society programs and civil rights achievements."                )
+        "In 1964, Johnson won with a 22.6% margin in the popular vote, driven by his Great Society programs and civil rights achievements."                )
             },
             {
                 1960,
@@ -329,7 +330,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("kennedy", "John F. Kennedy", Party.Democrat, new List<string>() {"New Frontier", "Civil Rights"}, .50f),
                     new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Experience in Government", "Foreign Policy"}, .50f),
                     Party.Democrat,
-        "Kennedy won with a 0.2% margin in the popular vote, aided by effective use of televised debates and his New Frontier promise."                )
+        "In 1960, Kennedy won with a 0.2% margin in the popular vote, aided by effective use of televised debates and his New Frontier promise."                )
             }
 
 
@@ -575,7 +576,18 @@ public class GameManager : Singleton<GameManager>
         if (scene.name.Equals(Consts.PlayMenu))
         {
             FirebaseManager.Instance.UpdatePlayMenu();
+
+            if (DidPlayerCrownPresident)
+                PlayCrownPresidentEffects();
         }
+    }
+
+    void PlayCrownPresidentEffects()
+    {
+        // todo: consider doing something more?
+        SoundManager.Instance.PlaySoundEffect(Consts.CandidateCrowned);
+
+        DidPlayerCrownPresident = false;
     }
 
     public void AddPartyVoter(Party party)
@@ -599,6 +611,8 @@ public class GameManager : Singleton<GameManager>
 
     public void InitVoterComposition()
     {
+        PartyList.Clear();
+
         int democrats = (int) (population* DemocratPct);
         int republicans = (int)(population * RepublicanPct);
 
@@ -645,7 +659,12 @@ public class GameManager : Singleton<GameManager>
         {
             Controller.PauseTouch = true;
 
-            yield return new WaitForSeconds(Consts.AgentActiondelay);
+            if (IsTutorial)
+            {
+                yield return new WaitForSeconds(Consts.AgentActiondelay + 1);
+            }
+            else
+                yield return new WaitForSeconds(Consts.AgentActiondelay);
 
             if (IsTutorial)
                 agent.MakeMove(Agent.Move.Divide);

@@ -28,7 +28,7 @@ public class TutorialManager : Singleton<TutorialManager>
     int prevAgentScore;
 
     int playCount = 0;
-    float keepDividingBkgndSec = 3; // num sec this background is up
+    float keepDividingBkgndSec = 5; // num sec this background is up
     float keepDividingCounter = 0;
 
     const string InstructionGoName = "Instruction";
@@ -591,20 +591,20 @@ public class TutorialManager : Singleton<TutorialManager>
 
         if (slideIdx == (int)Slide.MonitorDaysLeft)
         {
-            StartCoroutine(DelayNextSlide(3));
+            StartCoroutine(DelayNextSlide(7));
             //StartCoroutine(DelayNextSlide(5));
         }
         if (slideIdx == (int)Slide.MonitorTimer)
         {
 
-            StartCoroutine(DelayNextSlide(3));
+            StartCoroutine(DelayNextSlide(7));
             //StartCoroutine(DelayNextSlide(5));
         }
         if (slideIdx == (int)Slide.DivideToScore)
         {
             if (Map.Instance.Rooms.Count > 1)
             {
-                StartCoroutine(DelayNextSlide(2));
+                StartCoroutine(DelayNextSlide(3));
             }
         }
         if (slideIdx == (int)Slide.ColorMeaning)
@@ -648,6 +648,7 @@ public class TutorialManager : Singleton<TutorialManager>
             if (joinedRoom1.IsRoomCompleted() || joinedRoom2.IsRoomCompleted())
             {
                 StartCoroutine(AdvanceSlide());
+                Timer.Instance.PauseTimer();
             }
         }
     }
