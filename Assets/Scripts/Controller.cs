@@ -15,6 +15,21 @@ public class Controller : MonoBehaviour
     Vector3 touchStart;
     float touchTime;
 
+    private void OnEnable()
+    {
+        LineAnimator.DrawPartyLine += IgnoreTouches;
+    }
+
+    private void OnDisable()
+    {
+        LineAnimator.DrawPartyLine -= IgnoreTouches;
+    }
+
+    void IgnoreTouches()
+    {
+        PauseTouch = true;
+    }
+
     void Update()
     {
         if (PauseTouch)

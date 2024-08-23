@@ -75,6 +75,7 @@ public class GameManager : Singleton<GameManager>
     public float DemocratPct = .5f;
 
     public int DaysTilElection = 7;
+    public int originalDays;
     public float RepublicanPct;
     public int population = 50;
 
@@ -133,6 +134,8 @@ public class GameManager : Singleton<GameManager>
 
         InitElectionMap();
         InitCandidateSwagPrefabDict();
+
+        originalDays = DaysTilElection;
     }
 
     public void InitCandidateSwagPrefabDict()
@@ -230,7 +233,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("kerry", "John Kerry", Party.Democrat, new List<string>() {"End the Iraq War", "Healthcare Reform"}, .48f),
                     new PartyDetails("bush", "George W. Bush", Party.Republican, new List<string>() {"War on Terror", "Tax Cuts"}, .51f),
                     Party.Republican,
-                    "In 2004, George W. Bush's victory was secured by his strong stance on national security and the War on Terror, which resonated with many voters concerned about safety and stability. His campaign effectively used these issues to maintain a 2.5% margin in the popular vote and secure 286 electoral votes."
+                    "In 2004, George W. Bush's victory was secured by his strong stance on national security and the War on Terror allowing him to maintain a 2.5% margin in the popular vote."
                 )
             },
             {
@@ -535,10 +538,20 @@ public class GameManager : Singleton<GameManager>
 
     public void LoadGameScene(float DemPartyPct, float RepPartyPct, Party PlayerParty)
     {
+        ResetGame();
         float partyPctShare = DemPartyPct / (DemPartyPct + RepPartyPct);
 
         InitPlayerParty(partyPctShare, PlayerParty);
         SceneManager.LoadScene(Consts.Game);
+    }
+
+    void ResetGame()
+    {
+        democraticDistricts = republicanDistricts = 0;
+        DaysTilElection = originalDays; // reset
+        PlayerTurn = true;
+        GameOver = false;
+        PartyList.Clear();
     }
 
     public void InitPartyAffiliations(Party PlayerParty, Difficulty difficulty)
@@ -611,8 +624,6 @@ public class GameManager : Singleton<GameManager>
 
     public void InitVoterComposition()
     {
-        PartyList.Clear();
-
         int democrats = (int) (population* DemocratPct);
         int republicans = (int)(population * RepublicanPct);
 
@@ -640,6 +651,8 @@ public class GameManager : Singleton<GameManager>
     // player has finished their turn
     public IEnumerator FinishTurn()
     {
+        Controller.PauseTouch = true;
+
         if (DaysTilElection == 0)
         {
             EndGame();
@@ -657,8 +670,6 @@ public class GameManager : Singleton<GameManager>
 
         if (!PlayerTurn)
         {
-            Controller.PauseTouch = true;
-
             if (IsTutorial)
             {
                 yield return new WaitForSeconds(Consts.AgentActiondelay + 1);
