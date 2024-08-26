@@ -12,6 +12,16 @@ public class InterstitialAds : Singleton<InterstitialAds>, IUnityAdsLoadListener
     public static Action FinishInterstitalAd;
     public static Action FailedToLoadAdEvent;
 
+    private void Update()
+    {
+        if (FinishInterstitalAd != null)
+            Debug.Log("FinishInterstitalAd is not null");
+        else
+        {
+            Debug.Log("FinishInterstitalAd is null");
+        }
+    }
+
     public void LoadInterstitialAds()
     {
         Advertisement.Load(AdUnitId, this);
