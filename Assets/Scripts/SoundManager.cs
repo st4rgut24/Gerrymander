@@ -35,6 +35,12 @@ public class SoundManager : Singleton<SoundManager>
         PlayBackgroundMusic();
     }
 
+    public void StopSoundEffect(string soundName)
+    {
+        AudioClip clip = GetClipByName(soundName, soundEffects);
+
+    }
+
     public void PlaySoundEffect(string soundName)
     {
         AudioClip clip = GetClipByName(soundName, soundEffects);
@@ -45,7 +51,7 @@ public class SoundManager : Singleton<SoundManager>
         }
         else
         {
-            Debug.LogWarning($"Sound effect '{soundName}' not found.");
+            // Debug.LogLogWarning($"Sound effect '{soundName}' not found.");
         }
     }
 
@@ -59,7 +65,7 @@ public class SoundManager : Singleton<SoundManager>
         }
         else
         {
-            Debug.LogWarning("Background music clip not assigned.");
+            // Debug.LogLogWarning("Background music clip not assigned.");
         }
     }
 

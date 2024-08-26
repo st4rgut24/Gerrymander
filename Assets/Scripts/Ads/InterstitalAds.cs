@@ -10,6 +10,7 @@ public class InterstitialAds : Singleton<InterstitialAds>, IUnityAdsLoadListener
 
     public static Action PlayInterstitalAd;
     public static Action FinishInterstitalAd;
+    public static Action FailedToLoadAdEvent;
 
     public void LoadInterstitialAds()
     {
@@ -25,32 +26,48 @@ public class InterstitialAds : Singleton<InterstitialAds>, IUnityAdsLoadListener
 
     public void OnUnityAdsAdLoaded(string placementId)
     {
-        Debug.Log("On Unity interstital Ads loaded");
+        // Debug.LogLog("On Unity interstital Ads loaded");
     }
 
     public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
     {
-        Debug.LogWarning("On Unity Ads failed to load");
+        // Debug.LogLogWarning("On Unity Ads failed to load");
+        FailedToLoadAdEvent?.Invoke();
+
     }
 
     public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
     {
-        FinishInterstitalAd?.Invoke();
-        //Debug.Log("Interstitial Ad Show Failed");
+        //FinishInterstitalAd?.Invoke();
+        // Debug.LogLog("Interstitial Ad Show Failed");
     }
 
     public void OnUnityAdsShowStart(string placementId)
     {
-        //Debug.Log("Interstitial Ad Show Start");
+        // Debug.LogLog("Interstitial Ad Show Start");
     }
 
     public void OnUnityAdsShowClick(string placementId)
     {
-        //Debug.Log("Interstitial Ad Clicked");
+        // Debug.LogLog("Interstitial Ad Clicked");
     }
 
     public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
     {
+        // Debug.LogLog("Interstitial Ad Show Complete");
+
+        //FinishInterstitalAd?.Invoke();
+        StartCoroutine(FinishInterstitalAdSideEffect());
+    }
+
+    IEnumerator FinishInterstitalAdSideEffect()
+    {
+        yield return new WaitForSeconds(1);
         FinishInterstitalAd?.Invoke();
+    }
+
+    private void OnDestroy()
+    {
+        // Debug.LogLog("Iam destroyed");
     }
 }

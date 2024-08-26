@@ -315,7 +315,7 @@ public class RoomPrefab: MonoBehaviour
 
         Perimeter.ForEach((edge) =>
         {
-            //Debug.Log("is edge with id " + edge.id + " turned on? " + edge.IsVisible());
+            //// Debug.LogLog("is edge with id " + edge.id + " turned on? " + edge.IsVisible());
             if (!edge.IsVisible())
                 NewVisibleEdges.Add(edge);
             else if (!edge.HasCollider)
@@ -367,7 +367,7 @@ public class RoomPrefab: MonoBehaviour
 
         Perimeter.ForEach((edge) =>
         {
-            //Debug.Log("is edge with id " + edge.id + " turned on? " + edge.IsVisible());
+            //// Debug.LogLog("is edge with id " + edge.id + " turned on? " + edge.IsVisible());
             if (!edge.IsVisible())
             {
                 NewVisibleEdges.Add(edge);

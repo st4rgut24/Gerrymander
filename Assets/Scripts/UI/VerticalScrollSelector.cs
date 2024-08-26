@@ -20,7 +20,7 @@ public class VerticalScrollSelector : MonoBehaviour
         // Initialize scroll position to select the top item
         int idx = GameManager.Instance.GetIndexFromElectionYear();
         scrollRect.verticalNormalizedPosition = indexToNormalizedPosition(idx);
-        Debug.Log("setting normalized position to " + indexToNormalizedPosition(idx));
+        // Debug.LogLog("setting normalized position to " + indexToNormalizedPosition(idx));
         //SetSelection(idx);
     }
 

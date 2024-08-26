@@ -20,7 +20,7 @@ public class DetailsPlayBtn : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("DynamicButtonClickHandler script attached to a GameObject without a Button component.");
+            // Debug.LogLogWarning("DynamicButtonClickHandler script attached to a GameObject without a Button component.");
         }
     }
 

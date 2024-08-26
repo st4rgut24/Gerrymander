@@ -42,6 +42,33 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
     [SerializeField]
     private GameObject Funnel;
 
+    [SerializeField]
+    private GameObject PartyBalanceGo;
+
+    [SerializeField]
+    private RectTransform DemScore;
+
+    [SerializeField]
+    private TextMeshProUGUI DemScoreText;
+
+    [SerializeField]
+    private RectTransform RepScore;
+
+    [SerializeField]
+    private Image PartySymbol;
+
+    [SerializeField]
+    private Sprite DemSprite;
+
+    [SerializeField]
+    private Sprite TieSprite;
+
+    [SerializeField]
+    private Sprite RepSprite;
+
+    [SerializeField]
+    private TextMeshProUGUI RepScoreText;
+
     bool IsFunneling = false;
 
     public ElectionDetails details;
@@ -85,6 +112,35 @@ public class ElectionDetailsManager : Singleton<ElectionDetailsManager>
 
         GameManager.Instance.demPartyDetails = details.GetDemDetails();
         GameManager.Instance.repPartyDetils = details.GetRepubDetails();
+
+        InitPopSlider();
+    }
+
+    public void InitPopSlider()
+    {
+
+        FirebaseManager.Election election = GameManager.Instance.elections.Find((e) => e.electionYear == details.year);
+
+        if (election != null)
+        {
+            float electionEntryWidth = PartyBalanceGo.GetComponent<RectTransform>().sizeDelta.x;
+            GameManager.Instance.setElectionEntrySize(election, DemScore, null, RepScore, null, electionEntryWidth);
+
+            DemScoreText.text = election.demVotes.ToString();
+            RepScoreText.text = election.repVotes.ToString();
+
+            if (election.demVotes > election.repVotes)
+                PartySymbol.sprite = DemSprite;
+            else if (election.repVotes > election.demVotes)
+                PartySymbol.sprite = RepSprite;
+            else
+                PartySymbol.gameObject.SetActive(false);
+        }
+        else
+        {
+            PartyBalanceGo.SetActive(false);
+            // Debug.LogLogWarning("No election details found to show party line");
+        }
     }
 
     public void InitGame()

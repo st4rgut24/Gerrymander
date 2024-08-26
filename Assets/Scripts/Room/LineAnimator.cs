@@ -108,7 +108,7 @@ public class LineAnimator: Singleton<LineAnimator>
                 addPointToEdgeC(edge, IsPrepending, edgeC);
 
             edge.ToggleLine(true);
-            //Debug.Log("Turn on edge with id " + edge.id + " is visible " + edge.IsVisible());
+            //// Debug.LogLog("Turn on edge with id " + edge.id + " is visible " + edge.IsVisible());
             yield return new WaitForSeconds(Consts.expandDuration);
         }
 

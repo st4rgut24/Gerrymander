@@ -15,12 +15,12 @@ public class InitializeAds : MonoBehaviour, IUnityAdsInitializationListener
 
     public void OnInitializationComplete()
     {
-        // Debug.Log("Ad initialization complete");
+        // // Debug.LogLog("Ad initialization complete");
     }
 
     public void OnInitializationFailed(UnityAdsInitializationError error, string message)
     {
-        // Debug.Log("Ad initialization failed");
+        // // Debug.LogLog("Ad initialization failed");
     }
 
     private void Awake()

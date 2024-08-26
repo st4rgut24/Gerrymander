@@ -16,7 +16,7 @@ public class BannerAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
         }
         else
         {
-            Debug.LogWarning("Unity Ads is not initialized.");
+            // Debug.LogLogWarning("Unity Ads is not initialized.");
         }
     }
 
@@ -35,7 +35,7 @@ public class BannerAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
             // Show the banner ad when it's successfully loaded
             Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER); // Set position to the bottom center
             Advertisement.Banner.Show(bannerAdUnitId);
-            Debug.Log("Banner ad loaded and displayed.");
+            // Debug.LogLog("Banner ad loaded and displayed.");
         }
     }
 
@@ -43,28 +43,28 @@ public class BannerAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
     {
         if (placementId == bannerAdUnitId)
         {
-            Debug.LogWarning($"Banner ad failed to load: {message}");
+            // Debug.LogLogWarning($"Banner ad failed to load: {message}");
         }
     }
 
     public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
     {
-        Debug.LogWarning($"Banner ad failed to show: {message}");
+        // Debug.LogLogWarning($"Banner ad failed to show: {message}");
     }
 
     public void OnUnityAdsShowStart(string placementId)
     {
-        Debug.Log("Banner ad started showing.");
+        // Debug.LogLog("Banner ad started showing.");
     }
 
     public void OnUnityAdsShowClick(string placementId)
     {
-        Debug.Log("Banner ad clicked.");
+        // Debug.LogLog("Banner ad clicked.");
     }
 
     public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
     {
-        Debug.Log("Banner ad completed showing.");
+        // Debug.LogLog("Banner ad completed showing.");
     }
 
     private void OnDestroy()

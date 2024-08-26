@@ -36,13 +36,13 @@ public class FirebaseManager : Singleton<FirebaseManager>
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("Firebase initialization failed: " + task.Exception);
+                // Debug.LogLogError("Firebase initialization failed: " + task.Exception);
             }
             else if (task.IsCompleted)
             {
                 // Get a reference to the database
                 mDatabase = FirebaseDatabase.DefaultInstance.RootReference;
-                Debug.Log("mdatabase is " + mDatabase);
+                // Debug.LogLog("mdatabase is " + mDatabase);
                 if (!IsUserLoggedIn()) // if user isn't logged in, login anonymously
                                        // Sign in anonymously
                 {
@@ -66,7 +66,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("Failed to read data: " + task.Exception);
+                // Debug.LogLogError("Failed to read data: " + task.Exception);
             }
             else if (task.IsCompleted)
             {
@@ -85,13 +85,13 @@ public class FirebaseManager : Singleton<FirebaseManager>
                                 if (task.IsFaulted)
                                 {
                                     // Handle the error
-                                    Debug.LogError("Error saving default user: " + task.Exception.Message);
+                                    // Debug.LogLogError("Error saving default user: " + task.Exception.Message);
                                     // You might want to display an error message to the user
                                 }
                                 else if (task.IsCompletedSuccessfully)
                                 {
                                     // Handle success
-                                    Debug.Log("Default user saved successfully!");
+                                    // Debug.LogLog("Default user saved successfully!");
                                 }
                             });
                 }
@@ -101,6 +101,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
 
     public void UpdatePlayMenu()
     {
+        // Debug.LogLog("UPDATE PLAY MENU");
         List<Election> elections = new List<Election>();
 
         // Get a reference to the "users" node
@@ -111,7 +112,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("Error fetching elections: " + task.Exception);
+                // Debug.LogLogError("FirebaseManager Error fetching elections: " + task.Exception);
             }
             else if (task.IsCompleted)
             {
@@ -125,7 +126,9 @@ public class FirebaseManager : Singleton<FirebaseManager>
                     Election election = ConvertSnapshotToElection(childSnapshot);
                     elections.Add(election);
 
+
                 }
+                // Debug.LogLog("FirebaseManager FETCHED ELECTIONS");
             }
 
             UnityMainThreadDispatcher.Instance().Enqueue(GameManager.Instance.PopulatePlayMenu(elections));
@@ -149,14 +152,14 @@ public class FirebaseManager : Singleton<FirebaseManager>
     /// get user data from the logged in user
     /// </summary>
     /// <param name="userId"></param>
-    public void SetElectionVictor(Party winningParty, int electionYear, Swag swag, bool DidPlayerWin)
+    public void SetElectionVictor(Party winningParty, int electionYear, Swag swag, bool DidPlayerWin, bool updateSwag)
     {
         if (winningParty == Party.None && swag == Swag.None)
             return;
 
         if (mDatabase == null)
         {
-            Debug.LogError("MDatabase is null, can't set election results");
+            // Debug.LogLogError("MDatabase is null, can't set election results");
             return;
         }
 
@@ -164,7 +167,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("Failed to read data: " + task.Exception);
+                // Debug.LogLogError("Failed to read data: " + task.Exception);
             }
             else if (task.IsCompleted)
             {
@@ -181,8 +184,10 @@ public class FirebaseManager : Singleton<FirebaseManager>
                     election = new Election(electionYear, 0, 0, (int)Swag.None, (int)Swag.None);
                 }
 
-                UpdateWinnerVoteCount(election, winningParty, DidPlayerWin);
-                UpdateSwag(election, winningParty, swag);
+                if (updateSwag)
+                    UpdateSwag(election, winningParty, swag);
+                else 
+                    UpdateWinnerVoteCount(election, winningParty, DidPlayerWin);
 
                 // initialize the Election in the database
                 UpdateElection(election);
@@ -213,20 +218,20 @@ public class FirebaseManager : Singleton<FirebaseManager>
                         if (task.IsFaulted)
                         {
                             // Handle the error
-                            Debug.LogError("Error updating election: " + task.Exception.Message);
+                            // Debug.LogLogError("Error updating election: " + task.Exception.Message);
                             // You might want to display an error message to the user
                         }
                         else if (task.IsCompletedSuccessfully)
                         {
                             // Handle success
-                            Debug.Log("Election updated successfully!");
+                            // Debug.LogLog("Election updated successfully!");
                         }
                     });
             }
         }
         catch (Exception e)
         {
-            Debug.LogError("Unable to update user, may be offline");
+            // Debug.LogLogError("Unable to update user, may be offline");
         }
     }
 
@@ -253,7 +258,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
         {
             // User is logged in
 
-            Debug.Log("User is logged in: " + user.DisplayName);
+            // Debug.LogLog("User is logged in: " + user.DisplayName);
 
             // Do something for logged-in users (e.g., show a welcome message)
             return true;
@@ -261,7 +266,7 @@ public class FirebaseManager : Singleton<FirebaseManager>
         else
         {
             // User is not logged in
-            Debug.Log("User is not logged in.");
+            // Debug.LogLog("User is not logged in.");
             // Do something for non-logged-in users (e.g., show a login screen)
             return false;
         }
@@ -274,14 +279,14 @@ public class FirebaseManager : Singleton<FirebaseManager>
         {
             if (task.IsFaulted)
             {
-                Debug.LogError("Anonymous sign-in failed: " + task.Exception);
+                // Debug.LogLogError("Anonymous sign-in failed: " + task.Exception);
             }
             else if (task.IsCompleted)
             {
                 // Get the user's UID
                 string userId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
                 SetCurrentUserFromId(userId);
-                Debug.Log("Anonymous user signed in with UID: " + userId);
+                // Debug.LogLog("Anonymous user signed in with UID: " + userId);
             }
         });
     }
@@ -337,20 +342,20 @@ public class FirebaseManager : Singleton<FirebaseManager>
                         if (task.IsFaulted)
                         {
                             // Handle the error
-                            Debug.LogError("Error updating user: " + task.Exception.Message);
+                            // Debug.LogLogError("Error updating user: " + task.Exception.Message);
                             // You might want to display an error message to the user
                         }
                         else if (task.IsCompletedSuccessfully)
                         {
                             // Handle success
-                            Debug.Log("User updated successfully!");
+                            // Debug.LogLog("User updated successfully!");
                         }
                     });
             }
         }
         catch (Exception e)
         {
-            Debug.LogError("Unable to update user, may be offline");
+            // Debug.LogLogError("Unable to update user, may be offline");
         }
     }
 

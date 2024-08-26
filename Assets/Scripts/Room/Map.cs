@@ -223,7 +223,7 @@ public class Map : Singleton<Map>
             }
         };
 
-        //Debug.Log("Republican count " + repubCount + " Democrat Count " + democratCount);
+        //// Debug.LogLog("Republican count " + repubCount + " Democrat Count " + democratCount);
 
         if (repubCount != democratCount)
         {
@@ -270,8 +270,8 @@ public class Map : Singleton<Map>
     private bool IsDivisionValid(Box box)
     {
         Vector2 PersonSize = PersonPlotter.Instance.PersonSize;
-        //Debug.Log("Person size " + PersonSize);
-        //Debug.Log("box size " + box.bounds);
+        //// Debug.LogLog("Person size " + PersonSize);
+        //// Debug.LogLog("box size " + box.bounds);
         return box.bounds.size.x / 2 > PersonSize.x || box.bounds.size.y / 2 > PersonSize.y;
     }
 
@@ -451,7 +451,7 @@ public class Map : Singleton<Map>
     /// <param name="roomAspectRatio">aspect ratio fo room being dividied</param>
     private void CreateDividedRooms(Box box, bool pretendDivide)
     {
-        //Debug.Log("Aspect camera " + Camera.main.aspect);
+        //// Debug.LogLog("Aspect camera " + Camera.main.aspect);
         float aspect = GetAspect();
         float deltaAspectRatio = Mathf.Abs(aspect - box.getAspectRatio());
 

@@ -71,7 +71,7 @@ public class PersonPrefab : MonoBehaviour
 
             // Set the target position based on the opposite direction and move distance
             targetPosition = transform.position + new Vector3(oppositeDirection.x, oppositeDirection.y, 0f) * 5;
-            Debug.DrawRay(closestPoint, oppositeDirection, Color.magenta, 1000);
+            // Debug.LogDrawRay(closestPoint, oppositeDirection, Color.magenta, 1000);
         }
     }
 }

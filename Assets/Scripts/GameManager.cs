@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DanielLochner.Assets.SimpleScrollSnap;
+using UnityEngine.Windows;
 
 public enum Difficulty
 {
@@ -75,6 +76,7 @@ public class GameManager : Singleton<GameManager>
     public float DemocratPct = .5f;
 
     public int DaysTilElection = 7;
+    public int originalDays;
     public float RepublicanPct;
     public int population = 50;
 
@@ -100,7 +102,22 @@ public class GameManager : Singleton<GameManager>
     public int startElectionYear = 1960;
     public int endElectionYear = 2024;
 
+    public List<FirebaseManager.Election> elections;
+
     public static System.Action SpinEvent;
+
+    void OnEnable()
+    {
+        //Tell our 'OnLevelFinishedLoading' function to start listening for a scene change as soon as this script is enabled.
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        //Tell our 'OnLevelFinishedLoading' function to stop listening for a scene change as soon as this script is disabled. Remember to always have an unsubscription for every delegate you subscribe to!
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
 
     private void Awake()
     {
@@ -114,7 +131,8 @@ public class GameManager : Singleton<GameManager>
 
         DontDestroyOnLoad(this.gameObject);
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        //SceneManager.sceneLoaded += OnSceneLoaded;
+        // Debug.LogLog("LOad game manager again");
 
         PlayerTurn = true;
 
@@ -133,6 +151,8 @@ public class GameManager : Singleton<GameManager>
 
         InitElectionMap();
         InitCandidateSwagPrefabDict();
+
+        originalDays = DaysTilElection;
     }
 
     public void InitCandidateSwagPrefabDict()
@@ -180,7 +200,7 @@ public class GameManager : Singleton<GameManager>
                 2024,
                 new ElectionDetails(
                     "Trump challenges Kamala Harris amid rising political tensions after narrowly surviving an assassination attempt.",                    2024,
-                    new PartyDetails("kamala", "Kamala Harris", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
+                    new PartyDetails("kamala", "Kamala Harris", Party.Democrat, new List<string>() {"Protect Democracy"}, .5f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f),
                     Party.None,
                     "The 2024 election results are still pending."
@@ -190,7 +210,7 @@ public class GameManager : Singleton<GameManager>
                 2020,
                 new ElectionDetails(
                     "The pandemic and economic downturn dominate the election debate, with Trump under scrutiny and Biden offering a recovery plan.",                    2020,
-                    new PartyDetails("biden", "Joe Biden", Party.Democrat, new List<string>() {"Beat Trump", "Protect Democracy"}, .5f),
+                    new PartyDetails("biden", "Joe Biden", Party.Democrat, new List<string>() {"Protect Democracy"}, .5f),
                     new PartyDetails("trump", "Donald Trump", Party.Republican, new List<string>() {"MAGA"}, .5f),
                     Party.Democrat,
                             "In 2020, Biden won with a 4.5% margin in the popular vote, driven by his pandemic response and recovery vision."
@@ -230,7 +250,7 @@ public class GameManager : Singleton<GameManager>
                     new PartyDetails("kerry", "John Kerry", Party.Democrat, new List<string>() {"End the Iraq War", "Healthcare Reform"}, .48f),
                     new PartyDetails("bush", "George W. Bush", Party.Republican, new List<string>() {"War on Terror", "Tax Cuts"}, .51f),
                     Party.Republican,
-                    "In 2004, George W. Bush's victory was secured by his strong stance on national security and the War on Terror, which resonated with many voters concerned about safety and stability. His campaign effectively used these issues to maintain a 2.5% margin in the popular vote and secure 286 electoral votes."
+                    "In 2004, George W. Bush's victory was secured by his strong stance on national security and the War on Terror allowing him to maintain a 2.5% margin in the popular vote."
                 )
             },
             {
@@ -273,8 +293,8 @@ public class GameManager : Singleton<GameManager>
                 1984,
                 new ElectionDetails(
             "Reagan's campaign benefits from strong economic growth and foreign policy successes, contrasting with Mondale's calls for reform.",                    1984,
-                    new PartyDetails("reagan", "Ronald Reagan", Party.Republican, new List<string>() {"Economic Growth", "Strong Defense"}, .59f),
                     new PartyDetails("mondale", "Walter Mondale", Party.Democrat, new List<string>() {"Social Security Reform", "Tax Increases"}, .41f),
+                    new PartyDetails("reagan", "Ronald Reagan", Party.Republican, new List<string>() {"Economic Growth", "Strong Defense"}, .59f),
                     Party.Republican,
         "In 1984, Reagan’s landslide victory, with an 18.2% margin in the popular vote, was driven by economic prosperity and strong foreign policy."                )
             },
@@ -282,8 +302,8 @@ public class GameManager : Singleton<GameManager>
                 1980,
                 new ElectionDetails(
             "Reagan's campaign focuses on economic discontent and the Iran hostage crisis, offering a new direction for the country.",                    1980,
-                    new PartyDetails("reagan", "Ronald Reagan", Party.Republican, new List<string>() {"Economic Revival", "Strong Defense"}, .55f),
                     new PartyDetails("carter", "Jimmy Carter", Party.Democrat, new List<string>() {"Energy Policy", "Inflation Control"}, .45f),
+                    new PartyDetails("reagan", "Ronald Reagan", Party.Republican, new List<string>() {"Economic Revival", "Strong Defense"}, .55f),
                     Party.Republican,
         "In 1980, Reagan won with a 10.8% margin in the popular vote, driven by his economic revival promises and strong national security stance."                )
             },
@@ -300,8 +320,8 @@ public class GameManager : Singleton<GameManager>
                 1972,
                 new ElectionDetails(
             "Nixon leverages stability and foreign policy successes, while McGovern's campaign faces internal divisions and limited appeal.",                    1972,
-                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Vietnam War Diplomacy", "Economic Prosperity"}, .62f),
                     new PartyDetails("mcgovern", "George McGovern", Party.Democrat, new List<string>() {"End the Vietnam War", "Social Reform"}, .38f),
+                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Vietnam War Diplomacy", "Economic Prosperity"}, .62f),
                     Party.Republican,
         "In 1972, Nixon’s landslide victory included a 23.0% margin in the popular vote, bolstered by his foreign policy successes and strong economic performance."                )
             },
@@ -309,8 +329,8 @@ public class GameManager : Singleton<GameManager>
                 1968,
                 new ElectionDetails(
             "Nixon's campaign focuses on law and order and Vietnam policy, while Humphrey struggles with social unrest and a divided party.",                    1968,
-                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Law and Order", "Vietnam War Policy"}, .5f),
                     new PartyDetails("humphrey", "Hubert Humphrey", Party.Democrat, new List<string>() {"Great Society Continuation", "Vietnam War End"}, .5f),
+                    new PartyDetails("nixon", "Richard Nixon", Party.Republican, new List<string>() {"Law and Order", "Vietnam War Policy"}, .5f),
                     Party.Republican,
         "In 1968, Nixon won with a 0.7% margin in the popular vote, driven by his strong stance on law and order and Vietnam policies."                )
             },
@@ -362,12 +382,54 @@ public class GameManager : Singleton<GameManager>
         return elections.Find((e) => e.electionYear == year);
     }
 
+    public void setElectionEntrySize(FirebaseManager.Election election, RectTransform demTop, RectTransform demBot, RectTransform repTop, RectTransform repBot, float electionEntryWidth)
+    {
+        float shareDemVotes;
+
+        if (election.demVotes + election.repVotes == 0)
+        {
+            shareDemVotes = .5f; // no votes yet, so election is tied (no outcome)
+        }
+        else
+        {
+            shareDemVotes = (float)election.demVotes / (float)(election.demVotes + election.repVotes);
+        }
+
+        float demWidth = electionEntryWidth * shareDemVotes;
+        float repWidth = electionEntryWidth - demWidth;
+
+        if (demTop != null)
+        {
+            demTop.sizeDelta = new Vector2(demWidth, demTop.sizeDelta.y);
+        }
+
+        if (demBot != null)
+        {
+            demBot.sizeDelta = new Vector2(demWidth, demBot.sizeDelta.y);
+        }
+
+        if (repTop != null)
+        {
+            repTop.sizeDelta = new Vector2(repWidth, repTop.sizeDelta.y);
+        }
+
+        if (repBot != null)
+        {
+            repBot.sizeDelta = new Vector2(repWidth, repBot.sizeDelta.y);
+        }
+    }
+
     public IEnumerator PopulatePlayMenu(List<FirebaseManager.Election> elections)
     {
+        // Debug.LogLog("POPULATE play menu");
+        this.elections = elections;
+
         for (int i = startElectionYear; i <= endElectionYear; i += 4)
         {
             int electionYear = i;
             FirebaseManager.Election election;
+
+            bool ElectionFound = FindElection(elections, i) != null;
 
             election = FindElection(elections, i) ?? new FirebaseManager.Election(i, 0, 0, (int)Swag.None, (int)Swag.None);
 
@@ -376,7 +438,10 @@ public class GameManager : Singleton<GameManager>
             Transform demTopFill = ElectionEntry.transform.Find("DemFillTop");
             Transform demBotFill = ElectionEntry.transform.Find("DemFillBottom");
 
-            float widthVal = ElectionEntry.transform.GetComponent<RectTransform>().sizeDelta.x;
+            Transform repTopFill = ElectionEntry.transform.Find("RepFillTop");
+            Transform repBotFill = ElectionEntry.transform.Find("RepFillBottom");
+
+            float electionEntryWidth = ElectionEntry.transform.GetComponent<RectTransform>().sizeDelta.x;
 
             float shareDemVotes;
 
@@ -389,30 +454,20 @@ public class GameManager : Singleton<GameManager>
                 shareDemVotes = (float)election.demVotes / (float)(election.demVotes + election.repVotes);
             }
 
-            float demWidth = widthVal * shareDemVotes;
-            float repWidth = widthVal - demWidth;
-
             RectTransform demTopFillRect = demTopFill.GetComponent<RectTransform>();
-            demTopFillRect.sizeDelta = new Vector2(demWidth, demTopFillRect.sizeDelta.y);
-
             RectTransform demBotFillRect = demBotFill.GetComponent<RectTransform>();
-            demBotFillRect.sizeDelta = new Vector2(demWidth, demBotFillRect.sizeDelta.y);
-            demTopFill.GetComponent<Image>().color = DemColor;
-            demBotFill.GetComponent<Image>().color = DemColor;
-            //}
-
-            Transform repTopFill = ElectionEntry.transform.Find("RepFillTop");
-            Transform repBotFill = ElectionEntry.transform.Find("RepFillBottom");
 
             RectTransform repTopFillRect = repTopFill.GetComponent<RectTransform>();
-            repTopFillRect.sizeDelta = new Vector2(repWidth, repTopFillRect.sizeDelta.y);
-
             RectTransform repBotFillRect = repBotFill.GetComponent<RectTransform>();
-            repBotFillRect.sizeDelta = new Vector2(repWidth, repBotFillRect.sizeDelta.y);
+
+            setElectionEntrySize(election, demTopFillRect, demBotFillRect, repTopFillRect, repBotFillRect, electionEntryWidth);
 
             repTopFill.GetComponent<Image>().color = RepColor;
             repBotFill.GetComponent<Image>().color = RepColor;
             //}
+
+            demTopFill.GetComponent<Image>().color = DemColor;
+            demBotFill.GetComponent<Image>().color = DemColor;
 
             Transform DemProfile = ElectionEntry.transform.Find("DemProfile");
             Transform RepProfile = ElectionEntry.transform.Find("RepProfile");
@@ -518,7 +573,7 @@ public class GameManager : Singleton<GameManager>
         string yearText = Year.GetComponent<TextMeshProUGUI>().text;
 
         ElectionYear = int.Parse(yearText);
-        Debug.Log("Election Year is " + ElectionYear);
+        // Debug.LogLog("Election Year is " + ElectionYear);
 
         SceneManager.LoadScene(Consts.ElectionDetails);
     }
@@ -530,15 +585,26 @@ public class GameManager : Singleton<GameManager>
     //    string yearText = Year.GetComponent<TextMeshProUGUI>().text;
 
     //    ElectionYear = int.Parse(yearText);
-    //    Debug.Log("Election Year is " + ElectionYear);
+    //    // Debug.LogLog("Election Year is " + ElectionYear);
     //}
 
     public void LoadGameScene(float DemPartyPct, float RepPartyPct, Party PlayerParty)
     {
+        ResetGame();
         float partyPctShare = DemPartyPct / (DemPartyPct + RepPartyPct);
 
         InitPlayerParty(partyPctShare, PlayerParty);
         SceneManager.LoadScene(Consts.Game);
+    }
+
+    void ResetGame()
+    {
+        democraticDistricts = republicanDistricts = 0;
+        DaysTilElection = originalDays; // reset
+        PlayerTurn = true;
+        GameOver = false;
+        PartyList.Clear();
+        Controller.PauseTouch = false;
     }
 
     public void InitPartyAffiliations(Party PlayerParty, Difficulty difficulty)
@@ -573,13 +639,21 @@ public class GameManager : Singleton<GameManager>
 
             StartCoroutine(PauseForProfile());
         }
-        if (scene.name.Equals(Consts.PlayMenu))
-        {
-            FirebaseManager.Instance.UpdatePlayMenu();
+        //if (scene.name.Equals(Consts.PlayMenu))
+        //{
+        //    FirebaseManager.Instance.UpdatePlayMenu();
 
-            if (DidPlayerCrownPresident)
-                PlayCrownPresidentEffects();
-        }
+        //    if (DidPlayerCrownPresident)
+        //        PlayCrownPresidentEffects();
+        //}
+    }
+
+    public void UpdatePlayMenu()
+    {
+        FirebaseManager.Instance.UpdatePlayMenu();
+
+        if (DidPlayerCrownPresident)
+            PlayCrownPresidentEffects();
     }
 
     void PlayCrownPresidentEffects()
@@ -611,8 +685,6 @@ public class GameManager : Singleton<GameManager>
 
     public void InitVoterComposition()
     {
-        PartyList.Clear();
-
         int democrats = (int) (population* DemocratPct);
         int republicans = (int)(population * RepublicanPct);
 
@@ -640,6 +712,8 @@ public class GameManager : Singleton<GameManager>
     // player has finished their turn
     public IEnumerator FinishTurn()
     {
+        Controller.PauseTouch = true;
+
         if (DaysTilElection == 0)
         {
             EndGame();
@@ -657,8 +731,6 @@ public class GameManager : Singleton<GameManager>
 
         if (!PlayerTurn)
         {
-            Controller.PauseTouch = true;
-
             if (IsTutorial)
             {
                 yield return new WaitForSeconds(Consts.AgentActiondelay + 1);
@@ -741,7 +813,7 @@ public class GameManager : Singleton<GameManager>
     void OnDestroy()
     {
         // Unsubscribe from the scene loaded event
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        //SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
 

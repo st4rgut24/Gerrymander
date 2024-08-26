@@ -107,6 +107,7 @@ public class TutorialController : Singleton<TutorialController>
         {
             DragEvent?.Invoke(touchStart, touchPos);
         }
+        PauseTouchEvent = true; // no touchy after one touchy
     }
 
     private bool IsSingleTouch(Vector3 endTouchPos)

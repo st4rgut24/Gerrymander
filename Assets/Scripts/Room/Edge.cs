@@ -23,7 +23,7 @@ public class Edge
     public Edge(Vector2 start, Vector2 end, Transform EdgeDaddy, int id)
 	{
         this.id = id;
-        //Debug.Log("Create edge with id " + id.ToString());
+        //// Debug.LogLog("Create edge with id " + id.ToString());
 
 		this.start = new Vector3(start.x, start.y, 0);
         this.end = new Vector3(end.x, end.y, 0);

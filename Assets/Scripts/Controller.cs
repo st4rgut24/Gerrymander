@@ -15,10 +15,29 @@ public class Controller : MonoBehaviour
     Vector3 touchStart;
     float touchTime;
 
+    private void OnEnable()
+    {
+        LineAnimator.DrawPartyLine += IgnoreTouches;
+    }
+
+    private void OnDisable()
+    {
+        LineAnimator.DrawPartyLine -= IgnoreTouches;
+    }
+
+    void IgnoreTouches()
+    {
+        PauseTouch = true;
+    }
+
     void Update()
     {
         if (PauseTouch)
+        {
+            // Debug.LogLog("ignoring touch");
             return;
+        }
+            
 
         #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
         if (Input.GetMouseButtonDown(0))

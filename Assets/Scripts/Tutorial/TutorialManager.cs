@@ -192,7 +192,7 @@ public class TutorialManager : Singleton<TutorialManager>
         RectTransform rectTransform = UI.GetComponent<RectTransform>();
         // set MIN and MAX Anchor values(positions) to the same position (ViewportPoint)
 
-        //Debug.Log("set viewport point " + viewportPoint);
+        //// Debug.LogLog("set viewport point " + viewportPoint);
 
         rectTransform.anchorMin = viewportPoint;
         rectTransform.anchorMax = viewportPoint;
@@ -248,11 +248,11 @@ public class TutorialManager : Singleton<TutorialManager>
 
         if (party == Party.Democrat)
         {
-            return "The Democrats " + GetEvaluationSubText(deltaDem) + "and the Republicans " + GetEvaluationSubText(deltaRep); 
+            return "The Democrats " + GetEvaluationSubText(deltaDem) + " and the Republicans " + GetEvaluationSubText(deltaRep); 
         }
         else
         {
-            return "The Republicans " + GetEvaluationSubText(deltaRep) + "and the Democrats " + GetEvaluationSubText(deltaDem);
+            return "The Republicans " + GetEvaluationSubText(deltaRep) + " and the Democrats " + GetEvaluationSubText(deltaDem);
         }
     }
 
@@ -320,7 +320,7 @@ public class TutorialManager : Singleton<TutorialManager>
             }
         }
 
-        Debug.Log("Couldnt find adjacent district with party " + party);
+        // Debug.LogLog("Couldnt find adjacent district with party " + party);
         return defaultRoom;
     }
 
@@ -387,7 +387,7 @@ public class TutorialManager : Singleton<TutorialManager>
             case (int)Slide.KeepDividing:
                 break;
             case (int)Slide.JoinRoom:
-                Debug.Log("Join room");
+                // Debug.LogLog("Join room");
                 RoomPrefab toDistrict;
                 RoomPrefab OppDistrict = GetOpponentDistrict();
 
@@ -410,8 +410,8 @@ public class TutorialManager : Singleton<TutorialManager>
                 // set from cursor
                 SetCursorPositionFromRoom(fromDistrict);
                 cursorEndLoc = toDistrict.GetCenter();
-                Debug.Log("To district " + toDistrict.GetCenter());
-                Debug.Log("From district " + fromDistrict.GetCenter());
+                // Debug.LogLog("To district " + toDistrict.GetCenter());
+                // Debug.LogLog("From district " + fromDistrict.GetCenter());
 
                 joinedRoomCenter = cursorEndLoc;
                 bool isFartherCenter = Vector2.Distance(topHalfWorldCenter, joinedRoomCenter) < Vector2.Distance(bottomHalfWorldCenter, joinedRoomCenter);
@@ -533,7 +533,7 @@ public class TutorialManager : Singleton<TutorialManager>
 
         if (movingToEnd)
         {
-            //Debug.Log("cursor start location " + cursorStartLocation + " cursor end location " + cursorEndLoc);
+            //// Debug.LogLog("cursor start location " + cursorStartLocation + " cursor end location " + cursorEndLoc);
             // Move towards the endLocation
             Vector2 lerpedPos = Vector3.Lerp(cursorStartLocation, cursorEndLoc, elapsedTime);
 
@@ -629,11 +629,11 @@ public class TutorialManager : Singleton<TutorialManager>
             {
                 if (playCount > 6)
                 {
-                    Debug.Log("advancing slide because more than 6 plays ahve happend");
+                    // Debug.LogLog("advancing slide because more than 6 plays ahve happend");
                 }
                 else
                 {
-                    Debug.Log("advancing slide because oooionent party exists");
+                    // Debug.LogLog("advancing slide because oooionent party exists");
                 }
                 StartCoroutine(DelayNextSlide(5)); // time for ai to move
             }
